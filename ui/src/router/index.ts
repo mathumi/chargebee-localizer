@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import BranchPage from '@/views/BranchPage.vue'
+import BranchPage from '@/views/BranchPage.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
     name: 'BranchPage',
+    path: '/',
+    alias: '/tree/*',
     component: BranchPage,
   }
 ];
