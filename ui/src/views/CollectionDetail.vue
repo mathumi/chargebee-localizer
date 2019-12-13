@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import CollectionDetail from "@/components/branch/tabs/CollectionDetail.vue";
+import CollectionDetail from "@/components/branch/CollectionDetail.vue";
 export default {
   components: {
     CollectionDetail

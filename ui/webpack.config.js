@@ -16,7 +16,13 @@ module.exports = {
         use: [
           'vue-style-loader',
           'css-loader',
-          'sass-loader'
+          'sass-loader',
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: ['./src/assets/styles/_variables.scss']
+            }
+          }
         ]
       }
     ]

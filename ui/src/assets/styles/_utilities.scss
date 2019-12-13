@@ -112,3 +112,46 @@
 .float-none {
   float: none !important;
 }
+
+h1 {
+  font-size: $fs_h1;
+}
+
+h2 {
+  font-size: $fs_h2;
+}
+
+h3 {
+  font-size: $fs_h3;
+}
+
+h4 {
+  font-size: $fs_h4;
+}
+
+.table {
+  td, th {
+    padding: $space_xs 0;
+  }
+}
+
+.va{
+  &-{
+    &mid{
+      display: inline-block;
+      vertical-align: middle;
+    }
+    &top {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+}
+
+.dis{
+  &-{
+    &in-blk{
+      display: inline-block;
+    }
+  }
+}
