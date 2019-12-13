@@ -2,24 +2,23 @@
   <div>
     <section>
       <div class="block">
-        <!-- <b-switch v-model="showTabs">Show Books item</b-switch> -->
+        <b-select>
+          <option
+            v-for="option in data"
+            :value="option.id"
+            :key="option.id"
+          >{{ option.user.first_name }}</option>
+        </b-select>
       </div>
       <b-tabs v-model="activeTab">
-        <b-tab-item label="Collections" icon="package">Lorem ipsum dolor sit amet.</b-tab-item>
+        <b-tab-item label="Collections" icon="package">
+          <Collections />
+        </b-tab-item>
         <b-tab-item label="Branches" icon="source-branch">
-          What light is light, if Silvia be not seen?
-          <br />What joy is joy, if Silvia be not by—
-          <br />Unless it be to think that she is by
-          <br />And feed upon the shadow of perfection?
-          <br />Except I be by Silvia in the night,
-          <br />There is no music in the nightingale.
+          <Branches />
         </b-tab-item>
         <b-tab-item label="Releases" icon="tag">
-          Lorem
-          <br />ipsum
-          <br />dolor
-          <br />sit
-          <br />amet.
+          <Releases />
         </b-tab-item>
       </b-tabs>
     </section>
@@ -27,11 +26,25 @@
 </template>
 
 <script>
+import Collections from "@/components/branch/tabs/Collections";
+import Branches from "@/components/branch/tabs/Branches";
+import Releases from "@/components/branch/tabs/Releases";
+
 export default {
+  components: {
+    Collections,
+    Branches,
+    Releases
+  },
   data() {
     return {
       activeTab: 0,
-      showTabs: false
+      showTabs: false,
+      branches: [
+        {
+          name
+        }
+      ]
     };
   }
 };

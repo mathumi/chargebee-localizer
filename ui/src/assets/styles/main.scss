@@ -1,38 +1,39 @@
 @import './utilities';
 @import './variables';
 
-.navbar{
-    padding: $space_mi $space_xxl;
-    box-shadow: 0 1px 0 #d2d2d3;
+.navbar {
+  padding: $space_mi $space_xxl;
+  box-shadow: 0 1px 0 #d2d2d3;
 }
-.wrapper{
-    padding: 50px 52px;
+.wrapper {
+  padding: 50px 52px;
 }
-.logo{
-    font-size: $fs_h4;
-    font-weight: 600;
-    &__{
-        &img{
-            margin-right: $space_sm;
-        }
+.logo {
+  font-size: $fs_h4;
+  font-weight: 600;
+  &__ {
+    &img {
+      margin-right: $space_sm;
     }
+  }
 }
 
-
-.collection{
-    &__{
-        &img {
-            margin-right: $space_mi;
-            width: 30px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        &name{
-            font-weight: $fw_bold;
-            font-size: $fs_body;
-        }
-        &desc {
-            font-size: $fs_caption;
-        }
+.collection {
+  &__ {
+    &img {
+      margin-right: $space_mi;
+    //   width: 30px;
+      display: inline-block;
+      vertical-align: middle;
     }
+    &name {
+      font-weight: $fw_bold;
+      font-size: $fs_body;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    &desc {
+      font-size: $fs_caption;
+    }
+  }
 }
