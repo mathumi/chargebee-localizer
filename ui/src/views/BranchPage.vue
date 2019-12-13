@@ -2,12 +2,12 @@
   <div>
     <section>
       <div class="block">
-        <b-select>
+        <b-select v-model="selectedResource">
           <option
-            v-for="option in data"
-            :value="option.id"
-            :key="option.id"
-          >{{ option.user.first_name }}</option>
+            v-for="filter in resourceFilters"
+            :value="filter.id"
+            :key="filter.id"
+          >{{ filter.name }}</option>
         </b-select>
       </div>
       <b-tabs v-model="activeTab">
@@ -40,9 +40,19 @@ export default {
     return {
       activeTab: 0,
       showTabs: false,
-      branches: [
+      selectedResource: "master",
+      resourceFilters: [
         {
-          name
+          name: "master",
+          id: "master"
+        },
+        {
+          name: "feature/shipping_charges",
+          id: "feature/shipping_charges"
+        },
+        {
+          name: "feature/salesforce",
+          id: "feature/shipping_charges"
         }
       ]
     };
