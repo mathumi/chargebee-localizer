@@ -52,3 +52,22 @@ export default class App extends Vue {
   }
 }
 </script>
+<style lang="scss" scoped>
+.collection {
+  &__ {
+    &profile {
+      display: flex;
+      align-items: center;
+    }
+    &img {
+      margin-right: $space_ti;
+    }
+    &name {
+      font-size: $fs_body;
+    }
+    &desc {
+      font-size: $fs_caption;
+    }
+  }
+}
+</style>
