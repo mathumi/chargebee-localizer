@@ -1,6 +1,14 @@
 @import './utilities';
 @import './variables';
 
+body {
+  font-size: $fs_body;
+}
+
+.th-wrap {
+  font-size: $fs_lead;
+}
+
 .navbar {
   padding: $space_mi $space_xxl;
   box-shadow: 0 1px 0 #d2d2d3;
@@ -20,17 +28,15 @@
 
 .collection {
   &__ {
+    &profile {
+      display: flex;
+      align-items: center;
+    }
     &img {
-      margin-right: $space_mi;
-    //   width: 30px;
-      display: inline-block;
-      vertical-align: middle;
+      margin-right: $space_ti;
     }
     &name {
-      font-weight: $fw_bold;
       font-size: $fs_body;
-      display: inline-block;
-      vertical-align: middle;
     }
     &desc {
       font-size: $fs_caption;
