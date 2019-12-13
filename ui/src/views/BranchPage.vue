@@ -2,13 +2,13 @@
   <div>
     <section>
       <div class="block">
-        <b-select>
+        <!-- <b-select>
           <option
             v-for="option in data"
             :value="option.id"
             :key="option.id"
           >{{ option.user.first_name }}</option>
-        </b-select>
+        </b-select> -->
       </div>
       <b-tabs v-model="activeTab">
         <b-tab-item label="Collections" icon="package">
