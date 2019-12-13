@@ -30,7 +30,20 @@
       "default": false
     },
     "collection_id": {
-      "id": 1
+      "id": 1,
+      "type": "number"
+    },
+    "created_at": {
+      "type": "date",
+      "mysql": {
+        "default":"now"
+      }
+    },
+    "updated_at": {
+      "type": "date",
+      "mysql": {
+        "default":"now"
+      }
     }
   },
   "validations": [],

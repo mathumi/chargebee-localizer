@@ -8,6 +8,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
+    "dev": "nodemon .",
     "autoupdate": "node server/scripts/autoupdate.js",
     "automigrate": "node server/scripts/automigrate.js",
     "posttest": "npm run lint && npm audit"

@@ -12,6 +12,12 @@
     },
     "description": {
       "type": "string"
+    },
+    "created_at": {
+      "type": "date",
+      "mysql": {
+        "default":"now"
+      }
     }
   },
   "validations": [],
