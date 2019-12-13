@@ -9,6 +9,14 @@ body {
   font-size: $fs_lead;
 }
 
+
+.table {
+  td, th {
+    padding: $space_xs 0;
+  }
+}
+
+
 .navbar {
   padding: $space_mi $space_xxl;
   box-shadow: 0 1px 0 #d2d2d3;
@@ -31,12 +39,18 @@ body {
     &profile {
       display: flex;
       align-items: center;
+      &:hover {
+        color: $primary;
+      }
     }
     &img {
       margin-right: $space_ti;
     }
     &name {
       font-size: $fs_body;
+      &:hover{
+        text-decoration: underline;
+      }
     }
     &desc {
       font-size: $fs_caption;
