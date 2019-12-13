@@ -6,23 +6,10 @@
           <img class="logo__img" src="@/assets/images/logo.png" />Localizer
         </b-navbar-item>
       </template>
-
-      <template slot="end">
-        <b-navbar-item tag="div">
-          <div class="buttons">
-            <a class="button is-primary">
-              <strong>Create Collection</strong>
-            </a>
-            <!-- <a class="button is-light">
-                        
-                    </a> -->
-          </div>
-        </b-navbar-item>
-      </template>
     </b-navbar>
     <transition name="fade" mode="out-in">
       <div class="wrapper">
-      <router-view />
+        <router-view />
       </div>
     </transition>
   </div>
