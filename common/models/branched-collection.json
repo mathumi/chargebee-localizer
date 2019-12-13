@@ -14,6 +14,12 @@
     "description": {
       "type": "string"
     },
+    "publised_texts_version": {
+      "type": "string"
+    },
+    "draft_texts_version": {
+      "type": "string"
+    },
     "created_at": {
       "type": "date",
       "mysql": {
