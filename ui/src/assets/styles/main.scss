@@ -5,6 +5,9 @@
     padding: $space_mi $space_xxl;
     box-shadow: 0 1px 0 #d2d2d3;
 }
+.wrapper{
+    padding: 50px 52px;
+}
 .logo{
     font-size: $fs_h4;
     font-weight: 600;
@@ -17,8 +20,13 @@
 
 
 .collection{
-    max-width: 200px;
     &__{
+        &img {
+            margin-right: $space_mi;
+            width: 30px;
+            display: inline-block;
+            vertical-align: middle;
+        }
         &name{
             font-weight: $fw_bold;
             font-size: $fs_body;
@@ -26,8 +34,5 @@
         &desc {
             font-size: $fs_caption;
         }
-    }
-    img {
-        max-width: 100px;
     }
 }
