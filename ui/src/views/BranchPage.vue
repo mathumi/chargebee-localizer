@@ -2,7 +2,7 @@
   <div>
     <section>
       <div class="block">
-        <b-select v-model="selectedResource">
+        <b-select :value="selectedResource" @input="updateSelectedResource">
           <option
             v-for="filter in resourceFilters"
             :value="filter.id"
@@ -52,10 +52,33 @@ export default {
         },
         {
           name: "feature/salesforce",
-          id: "feature/shipping_charges"
+          id: "feature/salesforce"
         }
       ]
     };
+  },
+  mounted() {
+    const urlPaths = window.location.href.split("tree");
+    if (urlPaths.length === 2) {
+      this.selectedResource = urlPaths[1].slice(1);
+    }
+    this.sanityResCheck();
+  },
+  methods: {
+    sanityResCheck() {
+      if (
+        this.resourceFilters.findIndex(f => f.id === this.selectedResource) ===
+        -1
+      ) {
+        this.selectedResource = "master";
+      }
+    },
+
+    updateSelectedResource(newValue) {
+      if (newValue) {
+        this.$router.replace(`/tree/${newValue}`);
+      }
+    }
   }
 };
 </script>

@@ -7,8 +7,13 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
     name: 'BranchPage',
+    path: '/',
+    component: BranchPage,
+  },
+  {
+    name: 'BranchPageTree',
+    path: '/tree/*',
     component: BranchPage,
   },
   {
