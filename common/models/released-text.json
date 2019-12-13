@@ -1,0 +1,45 @@
+{
+  "name": "released_text",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "version": {
+      "type": "number",
+      "required": true
+    },
+    "locale": {
+      "type": "string",
+      "required": true
+    },
+    "key": {
+      "type": "string",
+      "id": 1,
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "archived": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "collection_id": {
+      "id": 1
+    }
+  },
+  "validations": [],
+  "relations": {
+    "release_collection": {
+      "type": "belongsTo",
+      "model": "release_collection",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

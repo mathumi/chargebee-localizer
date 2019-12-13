@@ -1,0 +1,46 @@
+{
+  "name": "branch_text",
+  "plural": "text",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "version": {
+      "type": "number",
+      "required": true
+    },
+    "key": {
+      "id": 1,
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "locale": {
+      "type": "string",
+      "required": true
+    },
+    "archived": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "collection_id": {
+      "id": 1
+    }
+  },
+  "validations": [],
+  "relations": {
+    "branch": {
+      "type": "belongsTo",
+      "model": "branches",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -14,25 +14,53 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mysqldb"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "mysqldb",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "mysqldb",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mysqldb",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "mysqldb",
     "public": false
+  },
+  "release": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "release_collection": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "released_text": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branches": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branched_collection": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branch_text": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "locale": {
+    "dataSource": "mysqldb",
+    "public": true
   }
 }

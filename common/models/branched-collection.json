@@ -1,0 +1,36 @@
+{
+  "name": "branched_collection",
+  "plural": "collections",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "branch": {
+      "type": "belongsTo",
+      "model": "branches",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": false
+      }
+    },
+    "text": {
+      "type": "hasMany",
+      "model": "branch_text",
+      "foreignKey": "branch_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

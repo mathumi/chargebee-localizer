@@ -1,0 +1,38 @@
+{
+  "name": "release_collection",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "release": {
+      "type": "belongsTo",
+      "model": "release",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": false
+      }
+    },
+    "released_text": {
+      "type": "hasMany",
+      "model": "released_text",
+      "foreignKey": "collection_id",
+      "options": {
+        "nestRemoting": false
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
