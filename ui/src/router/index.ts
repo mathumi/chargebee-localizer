@@ -1,19 +1,19 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Collections from '../views/Collections.vue';
+import BranchPage from '@/views/BranchPage.vue'
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'collections',
-    component: Collections,
-  },
+    name: 'BranchPage',
+    component: BranchPage,
+  }
 ];
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
 });
 
