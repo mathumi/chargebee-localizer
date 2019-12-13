@@ -2,7 +2,7 @@
   <div>
     <section>
       <div class="block">
-        <b-select v-model="selectedResource">
+        <b-select :value="selectedResource" @input="updateSelectedResource">
           <option
             v-for="filter in resourceFilters"
             :value="filter.id"
@@ -72,12 +72,11 @@ export default {
       ) {
         this.selectedResource = "master";
       }
-    }
-  },
-  watch: {
-    selectedResource(newValue) {
+    },
+
+    updateSelectedResource(newValue) {
       if (newValue) {
-        this.$router.push(`/tree/${this.selectedResource}`);
+        this.$router.replace(`/tree/${newValue}`);
       }
     }
   }
