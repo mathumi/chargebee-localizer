@@ -1,10 +1,10 @@
-import {LocalizerApplication} from './application';
+import {ChargebeeLocalizerApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
 
-export {LocalizerApplication};
+export {ChargebeeLocalizerApplication};
 
 export async function main(options: ApplicationConfig = {}) {
-  const app = new LocalizerApplication(options);
+  const app = new ChargebeeLocalizerApplication(options);
   await app.boot();
   await app.start();
 

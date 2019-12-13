@@ -1,9 +1,9 @@
 import {Client} from '@loopback/testlab';
-import {LocalizerApplication} from '../..';
+import {ChargebeeLocalizerApplication} from '../..';
 import {setupApplication} from './test-helper';
 
 describe('HomePage', () => {
-  let app: LocalizerApplication;
+  let app: ChargebeeLocalizerApplication;
   let client: Client;
 
   before('setupApplication', async () => {

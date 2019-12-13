@@ -1,9 +1,9 @@
 import {Client, expect} from '@loopback/testlab';
-import {LocalizerApplication} from '../..';
+import {ChargebeeLocalizerApplication} from '../..';
 import {setupApplication} from './test-helper';
 
 describe('PingController', () => {
-  let app: LocalizerApplication;
+  let app: ChargebeeLocalizerApplication;
   let client: Client;
 
   before('setupApplication', async () => {
