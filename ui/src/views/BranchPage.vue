@@ -1,26 +1,34 @@
 <template>
   <div>
     <section>
-      <div class="block">
-        <b-select :value="selectedResource" @input="updateSelectedResource" icon="source-branch">
-          <option
-            v-for="filter in resourceFilters"
-            :value="filter.id"
-            :key="filter.id"
-          >{{ filter.name }}</option>
-        </b-select>
-
-        <b-button type="is-primary" icon-left="source-branch" @click="openNewBranchModal">New Branch</b-button>
-      </div>
       <b-tabs v-model="activeTab">
         <b-tab-item label="Collections" icon="package">
+          <div class="block">
+            <b-select
+              :value="selectedResource"
+              @input="updateSelectedResource"
+              icon="source-branch"
+            >
+              <option
+                v-for="filter in resourceFilters"
+                :value="filter.id"
+                :key="filter.id"
+              >{{ filter.name }}</option>
+            </b-select>
+
+            <b-button
+              type="is-primary"
+              icon-left="source-branch"
+              @click="openNewBranchModal"
+            >New Branch</b-button>
+          </div>
           <Collections />
         </b-tab-item>
         <b-tab-item label="Branches" icon="source-branch">
           <Branches />
         </b-tab-item>
         <b-tab-item label="Releases" icon="tag">
-          <Releases />
+          <Releases :branches="resourceFilters" />
         </b-tab-item>
       </b-tabs>
     </section>

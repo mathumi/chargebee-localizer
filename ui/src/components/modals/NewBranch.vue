@@ -2,7 +2,7 @@
   <form action>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">New Branch {{hello}}</p>
+        <p class="modal-card-title">New Branch</p>
       </header>
       <section class="modal-card-body">
         <b-field label="Branch Name">

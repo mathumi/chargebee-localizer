@@ -1,5 +1,10 @@
 <template>
   <div>
+    <b-button
+      type="is-primary"
+      class="is-pulled-right"
+      @click="openNewReleaseModal"
+    >Draft a new release</b-button>
     <div class="timeline">
       <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
         <div>
@@ -28,15 +33,25 @@
       :icon-prev="'chevron-left'"
       :icon-next="'chevron-right'"
     ></b-pagination>
+    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+      <NewRelease :branches="branches" :selectedBranch="''" />
+    </b-modal>
   </div>
 </template>
 
 <script>
+import NewRelease from "@/components/modals/NewRelease.vue";
+
 export default {
   name: "Releases",
+  props: ["branches"],
+  components: {
+    NewRelease
+  },
   data() {
     return {
       currentPage: 0,
+      isNewReleaseModalActive: false,
       releases: [
         {
           id: 0,
@@ -64,6 +79,11 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    openNewReleaseModal() {
+      this.isNewReleaseModalActive = true;
+    }
   }
 };
 </script>
