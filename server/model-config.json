@@ -103,5 +103,18 @@
         }
       }
     }
+  },
+  "version": {
+    "dataSource": "mysqldb",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createVersion": true,
+          "getVersion": true,
+          "find": true
+        }
+      }
+    }
   }
 }

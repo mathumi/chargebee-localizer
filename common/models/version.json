@@ -1,0 +1,75 @@
+{
+  "name": "version",
+  "plural": "versions",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "indexes": {
+    "name_index": {
+      "columns": ["name", "level"],
+      "kind": "unique"
+    }
+  },
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "level": {
+      "type": "number",
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "required": true,
+      "default": false,
+      "mysql": {
+        "default": "0"
+      }
+    },
+    "attribute1": {
+      "type": "string"
+    },
+    "operator1": {
+      "type": "string"
+    },
+    "value1": {
+      "type": "string"
+    },
+    "attribute2": {
+      "type": "string"
+    },
+    "operator2": {
+      "type": "string"
+    },
+    "value2": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "string",
+      "required": true
+    },
+    "created_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    },
+    "updated_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

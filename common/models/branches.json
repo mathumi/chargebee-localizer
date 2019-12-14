@@ -16,8 +16,8 @@
       "type": "string",
       "required": true,
       "mysql": {
-        "dataType":"VARCHAR",
-        "dataLength":50
+        "dataType": "VARCHAR",
+        "dataLength": 50
       }
     },
     "description": {
