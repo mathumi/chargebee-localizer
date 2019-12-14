@@ -24,6 +24,12 @@
       "type": "string",
       "required": true
     },
+    "publised_version": {
+      "type": "string"
+    },
+    "draft_version": {
+      "type": "string"
+    },
     "created_at": {
       "type": "date",
       "mysql": {
