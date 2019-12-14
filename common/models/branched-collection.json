@@ -7,17 +7,19 @@
     "validateUpsert": true
   },
   "properties": {
+    "version": {
+      "type": "string",
+      "required": true
+    },
+    "handle": {
+      "type": "string",
+      "required": true
+    },
     "name": {
       "type": "string",
       "required": true
     },
     "description": {
-      "type": "string"
-    },
-    "publised_texts_version": {
-      "type": "string"
-    },
-    "draft_texts_version": {
       "type": "string"
     },
     "created_at": {
@@ -46,7 +48,7 @@
     "text": {
       "type": "hasMany",
       "model": "branch_text",
-      "foreignKey": "branch_collection_id",
+      "foreignKey": "collection_id",
       "options": {
         "nestRemoting": false
       }

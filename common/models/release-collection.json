@@ -6,6 +6,10 @@
     "validateUpsert": true
   },
   "properties": {
+    "handle": {
+      "type": "string",
+      "required": true
+    },
     "name": {
       "type": "string",
       "required": true
