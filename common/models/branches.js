@@ -17,28 +17,7 @@ module.exports = function(Branches) {
       }
     ],
     returns: { arg: "release", type: "object", root: true },
-    http: { path: "/create", verb: "post", errorStatus: 400 }
-  });
-
-  Branches.remoteMethod("publish", {
-    description: "Publish a branch",
-    accepts: [
-      {
-        arg: "branchId",
-        type: "number",
-        required: true,
-        description: "Branch Id"
-      },
-      {
-        arg: "data",
-        type: "object",
-        required: true,
-        description: "Release name and description",
-        http: { source: "body" }
-      }
-    ],
-    returns: { arg: "release", type: "object", root: true },
-    http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
+    http: { path: "/", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {
@@ -61,51 +40,6 @@ module.exports = function(Branches) {
       errorStatus: 400
     }
   });
-
-  Branches.remoteMethod("getKeys", {
-    accepts: [
-      {
-        arg: "versionId",
-        required: true,
-        type: "string"
-      },
-      {
-        arg: "branchId",
-        required: true,
-        type: "number"
-      },
-      {
-        arg: "collectionId",
-        required: true,
-        type: "string"
-      },
-      {
-        arg: "locale",
-        required: true,
-        type: "string",
-        http: { source: "query" }
-      }
-    ],
-    returns: { arg: "keys", type: "object", root: true },
-    http: {
-      verb: "get",
-      path: "/:branchId/:versionId/collections/:collectionId/keys",
-      errorStatus: 400
-    }
-  });
-
-  Branches.createBranch = function(data, cb) {
-    const { name, description } = data;
-    if (!name && description) return cb(new Error("Missing parameters"));
-
-    Branches.create(
-      {
-        name,
-        description
-      },
-      cb
-    );
-  };
 
   Branches.remoteMethod("getKeys", {
     accepts: [
