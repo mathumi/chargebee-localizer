@@ -91,3 +91,14 @@ table {
 .router-link-active {
   color: #1746ab;
 }
+
+.button.is-danger {
+  background-color: #ff3860;
+  border-color: transparent;
+  color: #fff;
+
+  &:focus,
+  .is-focused {
+    color: #fff !important;
+  }
+}

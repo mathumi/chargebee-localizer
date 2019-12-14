@@ -2,35 +2,52 @@
   <div class="container">
     <div class="mar--t-lg">
       <b-tabs type="is-toggle">
-        <b-tab-item label="All"></b-tab-item>
-        <b-tab-item label="Published"></b-tab-item>
-        <b-tab-item label="In Draft"></b-tab-item>
+        <b-tab-item label="All">
+          <BranchPanel :data="defaultBranch" title="Default Branch" :icon="true" />
+          <br />
+          <BranchPanel :data="otherBranches" title="Other Branches" />
+        </b-tab-item>
+        <b-tab-item label="Published">
+          <BranchPanel v-if="publishedBranches.length" :data="publishedBranches" title="Branches" />
+          <div v-else>No Published Found</div>
+        </b-tab-item>
+        <b-tab-item label="In Draft">
+          <BranchPanel :data="draftBranches" title="Branches" />
+        </b-tab-item>
       </b-tabs>
-      <Panel :data="defaultBranch" title="Default Branch" />
     </div>
   </div>
 </template>
 
 <script>
-import Panel from "@/components/Panel.vue";
+import BranchPanel from "@/components/BranchPanel.vue";
+
 export default {
   name: "Branches",
   components: {
-    Panel
+    BranchPanel
+  },
+  data() {
+    return {};
   },
   computed: {
     defaultBranch() {
-      return {
-        name: "master",
-        description: "This is a base branch",
-        publised_version: null,
-        draft_version: "1000",
-        created_at: "2019-12-14T18:48:08.000Z",
-        updated_at: "2019-12-14T13:18:08.000Z",
-        id: 1
-      };
+      return this.allBranches.filter(branch => branch.name === "master");
+    },
+    otherBranches() {
+      return this.allBranches.filter(branch => branch.name !== "master");
+    },
+    allBranches() {
+      return this.$store.getters.branches || [];
+    },
+    draftBranches() {
+      return this.allBranches.filter(branch => Boolean(branch.draft_version));
+    },
+    publishedBranches() {
+      return this.allBranches.filter(branch => !Boolean(branch.draft_version));
     }
-  }
+  },
+  methods: {}
 };
 </script>
 

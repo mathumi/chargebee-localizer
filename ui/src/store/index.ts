@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { branchService } from "@/service";
-import { branches, releases, collections } from './stub';
+import { releases, collections } from './stub';
 
 Vue.use(Vuex);
 
@@ -24,13 +24,12 @@ export default new Vuex.Store({
   },
   actions: {
     async init({ commit }) {
-      const results = await Promise.all([branchService.getBranches()]);
-      console.log(results);
+      const [branches] = await Promise.all([branchService.getBranches()]);
+      commit('setBranches', branches);
     },
 
     async mockInit({ commit }) {
       await new Promise(resolve => {
-        commit('setBranches', branches);
         commit('setReleases', releases);
         commit('setCollections', {
           branchId: 10,
