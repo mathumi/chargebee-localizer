@@ -15,7 +15,7 @@
         </b-field>
 
         <b-field label="Description">
-          <b-input type="textarea" placeholder="Super snappingly scalable"></b-input>
+          <b-input type="textarea" placeholder="Macro Edition"></b-input>
         </b-field>
       </section>
       <footer class="modal-card-foot">
