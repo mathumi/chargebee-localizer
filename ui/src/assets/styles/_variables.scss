@@ -1,0 +1,62 @@
+$fs_tiny: 10px;
+$fs_caption: 12px;
+$fs_body: 14px;
+$fs_lead: 16px;
+$fs_h4: 20px;
+$fs_h3: 24px;
+$fs_h2: 32px;
+$fs_h1: 48px;
+$fs_hero: 80px;
+$fs_super: 112px;
+
+$fw_normal: 400;
+$fw_medium: 500;
+$fw_bold: 600;
+$fw_bolder: 700;
+
+
+$space_ti: 4px;
+$space_mi: 8px;
+$space_xs: 12px;
+$space_sm: 16px;
+$space_st: 20px;
+$space_md: 24px;
+$space_lg: 32px;
+$space_xl: 36px;
+$space_xxl: 40px;
+
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
+
+// Overrides
+$primary:#3367d6;
+$primary-invert: findColorInvert($primary);
+$twitter: #8c67ef;
+$twitter-invert: findColorInvert($twitter);
+
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: (
+    "white": ($white, $black),
+    "black": ($black, $white),
+    "light": ($light, $light-invert),
+    "dark": ($dark, $dark-invert),
+    "primary": ($primary, $primary-invert),
+    "info": ($info, $info-invert),
+    "success": ($success, $success-invert),
+    "warning": ($warning, $warning-invert),
+    "danger": ($danger, $danger-invert),
+    "twitter": ($twitter, $twitter-invert)
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";

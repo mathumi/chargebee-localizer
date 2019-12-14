@@ -1,0 +1,60 @@
+@import './variables';
+@import './utilities';
+@import '~bulma-timeline';
+
+body {
+  font-size: $fs_body;
+}
+
+.th-wrap {
+  font-size: $fs_lead;
+}
+
+.navbar {
+  padding: $space_mi $space_xxl;
+  box-shadow: 0 1px 0 #d2d2d3;
+}
+.wrapper {
+  padding: 50px 10%;
+}
+.logo {
+  font-size: $fs_h4;
+  font-weight: 600;
+  &__ {
+    &img {
+      margin-right: $space_sm;
+    }
+  }
+}
+
+.collection {
+  &__ {
+    &profile {
+      display: flex;
+      align-items: center;
+      &:hover {
+        color: $primary;
+      }
+    }
+    &img {
+      margin-right: $space_ti;
+    }
+    &name {
+      font-size: $fs_body;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    &desc {
+      font-size: $fs_caption;
+    }
+  }
+}
+
+.modal-card-foot {
+  justify-content: flex-end !important;
+}
+
+.modal .animation-content .modal-card {
+  margin: 0 auto;
+}
