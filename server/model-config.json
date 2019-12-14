@@ -42,7 +42,8 @@
       "remoting": {
         "sharedMethods": {
           "createRelease": true,
-          "getReleases": true
+          "getReleases": true,
+          "getCollections": true
         }
       }
     }
