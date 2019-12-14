@@ -42,7 +42,7 @@
       "remoting": {
         "sharedMethods": {
           "createRelease": true,
-          "find": true
+          "getReleases": true
         }
       }
     }

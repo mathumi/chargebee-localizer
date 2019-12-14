@@ -50,3 +50,12 @@ export default {
   }
 }
 </style>
+
+<style lang="scss">
+.collection table {
+  //border: 1px solid#dbdbdb;
+  th {
+    //border-width: 1px !important;
+  }
+}
+</style>

@@ -11,13 +11,13 @@ module.exports = function(Branches) {
       {
         arg: "data",
         type: "object",
-        http: { source: "body" },
         required: true,
-        description: "name, description"
+        description: "Release name and description",
+        http: { source: "body" }
       }
     ],
     returns: { arg: "release", type: "object", root: true },
-    http: { path: "/", verb: "post", errorStatus: 400 }
+    http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {
@@ -204,6 +204,30 @@ module.exports = function(Branches) {
       }
     });
   };
+
+  function getCollections(branchData) {
+    const result = branchData.included
+      .filter(obj => obj.type == "collections")
+      .map(collection => ({
+        id: collection.id,
+        name: collection.attributes.name,
+        handle: collection.attributes.handle,
+        description: collection.attributes.description
+      }));
+    return result;
+  }
+
+  function getTexts(branchData) {
+    const result = branchData.included
+      .filter(obj => obj.type == "text")
+      .map(text => ({
+        key: text.id,
+        value: text.attributes.value,
+        locale: text.attributes.locale,
+        collection_id: text.attributes.collection_id
+      }));
+    return result;
+  }
 
   function getCollections(branchData) {
     const result = branchData.included

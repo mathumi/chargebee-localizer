@@ -128,7 +128,16 @@
   float: none !important;
 }
 
+.flex {
+  display: flex !important;
+}
+
+.flex-grow  {
+  flex: 1;
+}
+
 .ai-center {
+  display: flex !important;
   align-items: center !important;
 }
 
