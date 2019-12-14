@@ -1,6 +1,6 @@
-@import './variables';
-@import './utilities';
-@import '~bulma-timeline';
+@import "./variables";
+@import "./utilities";
+@import "~bulma-timeline";
 
 body {
   font-size: $fs_body;
@@ -10,7 +10,8 @@ body {
   font-size: $fs_lead;
 }
 
-a, a:hover{
+a,
+a:hover {
   color: $primary !important;
 }
 
@@ -19,9 +20,7 @@ a, a:hover{
   box-shadow: 0 1px 0 #d2d2d3;
   z-index: 2 !important;
 }
-.flex {
-  display: flex !important;
-}
+
 .wrapper {
   padding: 0 150px;
   overflow: auto;
@@ -40,6 +39,12 @@ a, a:hover{
       margin-right: $space_sm;
     }
   }
+}
+
+.upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .collection {

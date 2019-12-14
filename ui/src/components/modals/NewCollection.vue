@@ -11,6 +11,21 @@
         <b-field label="Description">
           <b-input type="textarea" placeholder="Super snappingly scalable"></b-input>
         </b-field>
+        <b-field label="Collections">
+          <b-upload drag-drop>
+            <section class="section">
+                <div class="content has-text-centered">
+                    <p>
+                        <b-icon
+                            icon="upload"
+                            size="is-large">
+                        </b-icon>
+                    </p>
+                    <p>Drop your translation file here</p>
+                </div>
+            </section>
+          </b-upload>
+        </b-field>
       </section>
       <footer class="modal-card-foot">
         <button class="button is-primary">Create</button>

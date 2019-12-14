@@ -2,17 +2,40 @@
   <div class="collection-detail">
     <!-- Collection Heading -->
     <div class="columns ai-center">
-      <div class="column flex">
+      <div class="column ai-center">
         <h3 class="va-mid">
           Collections -
         </h3>
-               <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
-        <div class="va-top collection-name" style="padding-left:6px;">
+        <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
+        <div class="va-top collection-name flex" style="padding-left:6px;">
+          <div class="flex flex-grow ai-center">
           <h3>
             <a @click="openEdit()" class="popover-trigger">{{
               collectionName
             }}</a>
           </h3>
+           <b-select value="en" class="mar--l-st"
+          >
+            <option
+              v-for="(locale, index) in locales"
+              :value="locale.code"
+              :key="locale.code"
+            >{{ locale.name }}</option>
+          </b-select>
+          </div>
+           <b-input
+                  class="mar--r-sm collection-detail__input"
+                  placeholder="Search Keys"
+                  type="text"
+                ></b-input>
+          <b-button
+            class="float-right"
+            type="is-primary"
+            outlined
+            icon-left="key-variant"
+            @click="openAddKeyModal"
+            >Add Key</b-button
+          >
           <transition name="fade">
             <div class="card popover" v-if="editName">
               <div class="card-content">
@@ -38,20 +61,10 @@
         </div>
       </div>
     </div>
-    <div>
-      <b-button
-        class="float-right"
-        type="is-primary"
-        outlined
-        icon-left="key-variant"
-        @click="openAddKeyModal"
-        >Add Key</b-button
-      >
-    </div>
+    <div></div>
 
     <!-- Keys-->
     <div class="collection-detail__keys mar--t-md">
-      <h4 class="mar--b-sm">Keys</h4>
       <div class="columns">
         <div class="column">
           <div class="collection-detail__cards">
@@ -168,6 +181,13 @@ export default {
       collectionInput: "",
       editName: false,
       isNewKeyModalActive: false,
+      locales: [{
+        name: 'en',
+        code: 'en'
+      }, {
+        name: 'fr',
+        code: 'fr'
+      }],
       collectionData: [
         {
           key: "apikey_heading",
