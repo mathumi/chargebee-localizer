@@ -1,4 +1,4 @@
-"use strict";
+var Promise = require("bluebird");
 const app = require("../../server/server");
 const serialize = require("loopback-jsonapi-model-serializer");
 
@@ -105,6 +105,141 @@ module.exports = function(Branches) {
       },
       cb
     );
+  };
+
+  Branches.remoteMethod("getKeys", {
+    accepts: [
+      {
+        arg: "versionId",
+        required: true,
+        type: "string"
+      },
+      {
+        arg: "branchId",
+        required: true,
+        type: "number"
+      },
+      {
+        arg: "collectionId",
+        required: true,
+        type: "string"
+      },
+      {
+        arg: "locale",
+        required: true,
+        type: "string",
+        http: { source: "query" }
+      }
+    ],
+    returns: { arg: "keys", type: "object", root: true },
+    http: {
+      verb: "get",
+      path: "/:branchId/:versionId/collections/:collectionId/keys",
+      errorStatus: 400
+    }
+  });
+
+  Branches.remoteMethod("listBranches", {
+    description: "List all the branches",
+    returns: { arg: "branches", type: "array", root: true },
+    http: { path: "/", verb: "get", errorStatus: 400 }
+  });
+
+  Branches.remoteMethod("publish", {
+    description: "Publish a branch",
+    accepts: [
+      {
+        arg: "branchId",
+        type: "number",
+        required: true,
+        description: "Branch Id"
+      },
+      {
+        arg: "data",
+        type: "object",
+        required: true,
+        description: "Release name and description",
+        http: { source: "body" }
+      }
+    ],
+    returns: { arg: "release", type: "object", root: true },
+    http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
+  });
+
+  Branches.createBranch = async function(data, callback) {
+    const { name, description, from_branch } = data;
+    let draft_version;
+
+    if (!name || !description) {
+      return callback(new Error("Missing parameters"));
+    }
+
+    const newBranch = await Branches.find({
+      order: "publised_version DESC",
+      limit: 1
+    }).then(data => {
+      draft_version =
+        parseInt((data && data[0] && data[0]["publised_version"]) || 999) + 1;
+      return Branches.create({ name, description, draft_version });
+    });
+
+    if (from_branch) {
+      await duplicateCollectionsAndText(from_branch, newBranch);
+    }
+
+    return callback(null, newBranch);
+  };
+
+  let duplicateCollectionsAndText = async function(fromBranchId, newBranch) {
+    const filter = {
+      include: {
+        relation: "collections",
+        scope: {
+          include: {
+            relation: "text",
+            scope: { where: { archived: false } }
+          }
+        }
+      }
+    };
+
+    const baseBranch = await Branches.findById(fromBranchId, filter);
+
+    for (let i = 0; i < baseBranch.collections().length; i++) {
+      let collection = baseBranch.collections()[i];
+
+      let newCollection = {
+        version: newBranch.draft_version,
+        handle: collection.handle,
+        name: collection.name,
+        description: collection.description,
+        branch_id: newBranch.id
+      };
+
+      await Branches.app.models.branched_collection
+        .create(newCollection)
+        .then(data => {
+          let newTextArr = [];
+          for (let i = 0; i < collection.text().length; i++) {
+            let text = collection.text()[i];
+            newTextArr.push({
+              key: text.key,
+              value: text.value,
+              locale: text.locale,
+              collection_id: data.id
+            });
+          }
+          return Branches.app.models.branch_text.create(newTextArr);
+        });
+    }
+
+    return Promise.resolve(true);
+  };
+
+  Branches.listBranches = function(callback) {
+    Branches.find().then(data => {
+      return callback(null, data);
+    });
   };
 
   Branches.getCollections = function(branchId, versionId, cb) {
