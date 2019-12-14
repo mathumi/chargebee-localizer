@@ -16,15 +16,6 @@
         />
       </b-modal>
     </section>-->
-    <b-navbar class="navbar-secondary navbar-warning">
-      <template slot="brand">
-        <b-navbar-item class="fs-st">You have some unpublished changes which are saved as draft.</b-navbar-item>
-      </template>
-      <template slot="end">
-        <b-button type="is-text" class="mar--r-mi" @click="openNewBranchModal">Discard</b-button>
-        <b-button type="is-primary" @click="openNewBranchModal">Publish</b-button>
-      </template>
-    </b-navbar>
 
     <section> 
       <b-tabs v-model="activeTab">
