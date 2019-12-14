@@ -74,9 +74,10 @@ export default {
       isNewBranchModalActive: false
     };
   },
-  get resourceBranches() {
-    debugger;
-    return this.$store.getters.branches;
+  computed: {
+    resourceBranches() {
+      return this.$store.getters.branches;
+    }
   },
   mounted() {
     const urlPaths = window.location.href.split("tree");
