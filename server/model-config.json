@@ -41,7 +41,8 @@
     "options": {
       "remoting": {
         "sharedMethods": {
-          "createRelease": true
+          "createRelease": true,
+          "getReleases": true
         }
       }
     }
@@ -62,7 +63,8 @@
         "sharedMethods": {
           "createBranch": true,
           "getCollections": true,
-          "getKeys": true
+          "getKeys": true,
+          "publish": true
         }
       }
     }
@@ -92,6 +94,14 @@
   },
   "locale": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "create": true,
+          "find": true
+        }
+      }
+    }
   }
 }

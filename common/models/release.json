@@ -29,9 +29,6 @@
       "mysql": {
         "default": "now"
       }
-    },
-    "updated_at": {
-      "type": "date"
     }
   },
   "validations": [],
