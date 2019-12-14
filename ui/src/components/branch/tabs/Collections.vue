@@ -10,8 +10,12 @@
               <div class="collection__name">{{ props.row.name }}</div>
             </router-link>
           </b-table-column>
-          <b-table-column label="No of Keys">{{ props.row.locales }}</b-table-column>
-          <b-table-column label="Last updated on" centered>{{ props.row.updated_at }}</b-table-column>
+          <b-table-column label="No of Keys">{{
+            props.row.locales
+          }}</b-table-column>
+          <b-table-column label="Last updated on" centered>{{
+            props.row.updated_at
+          }}</b-table-column>
         </template>
       </b-table>
     </div>
@@ -70,63 +74,74 @@ export default class App extends Vue {
           name: "Add-ons",
           locales: "4",
           updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
-          id: "3",
-          name: "Add-ons",
-          locales: "4",
-          updated_at: "Sept 10, 2019"
-        },{
+        },
+        {
           id: "3",
           name: "Add-ons",
           locales: "4",
           updated_at: "Sept 10, 2019"
         },
-      ],
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        }
+      ]
     };
   }
 }
@@ -147,6 +162,15 @@ export default class App extends Vue {
     &desc {
       font-size: $fs_caption;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.collection table {
+  //border: 1px solid#dbdbdb;
+  th {
+    //border-width: 1px !important;
   }
 }
 </style>

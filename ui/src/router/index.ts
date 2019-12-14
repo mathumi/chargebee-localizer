@@ -10,16 +10,25 @@ const routes = [
     name: 'BranchPage',
     path: '/',
     component: BranchPage,
+    meta: {
+      namespace: 'branch'
+    }
   },
   {
     name: 'BranchPageTree',
     path: '/tree/*',
     component: BranchPage,
+    meta: {
+      namespace: 'branch'
+    }
   },
   {
     path: '/:branch/collection/',
     name: 'CollectionDetail',
     component: CollectionDetail,
+    meta: {
+      namespace: 'collection-detail'
+    }
   }
 ];
 

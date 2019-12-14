@@ -15,7 +15,7 @@
     </b-navbar>
 
     <transition name="fade" mode="out-in">
-      <div class="wrapper">
+      <div class="wrapper" :class="pageClass">
         <b-navbar
           class="navbar-secondary"
           :class="[isEditMode ? 'navbar-warning' : 'navbar-info']"
@@ -59,6 +59,10 @@ Vue.use(Buefy);
 })
 export default class App extends Vue {
   isEditMode: Boolean = true;
+    get pageClass() {
+      return this.$route.meta.namespace ? `${this.$route.meta.namespace}-body`: '';
+    }
+  
 }
 </script>
 

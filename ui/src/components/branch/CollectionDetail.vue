@@ -1,46 +1,52 @@
 <template>
   <div class="collection-detail">
     <!-- Collection Heading -->
-    <div class="columns">
-      <div class="column">
+    <div class="columns ai-center">
+      <div class="column flex">
         <h3 class="va-mid">
           Collections -
         </h3>
-        <div class="va-top" style="padding-left:6px;">
-          <h3 v-if="!editName">
-            <a @click="openEdit()">{{ collectionName }}</a>
+               <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
+        <div class="va-top collection-name" style="padding-left:6px;">
+          <h3>
+            <a @click="openEdit()" class="popover-trigger">{{
+              collectionName
+            }}</a>
           </h3>
-          <template v-else>
-            <b-input
-              class="mar--b-mi collection-detail__input"
-              placeholder="Name of your collection"
-              v-model="collectionInput"
-              type="text"
-            ></b-input>
-            <b-button
-              @click="updateCollectionName()"
-              class="button is-twitter mar--r-mi"
-              rounded
-            >
-              <b-icon icon="check"></b-icon
-            ></b-button>
-            <b-button @click="cancelUpdate()" class="button" rounded>
-              <b-icon icon="close"></b-icon
-            ></b-button>
-          </template>
+          <transition name="fade">
+            <div class="card popover" v-if="editName">
+              <div class="card-content">
+                <b-input
+                  class="mar--b-mi collection-detail__input"
+                  placeholder="Name of your collection"
+                  v-model="collectionInput"
+                  type="text"
+                ></b-input>
+                <b-button
+                  @click="updateCollectionName()"
+                  class="button is-twitter mar--r-mi"
+                >
+                  Update
+                </b-button>
+
+                <b-button @click="cancelUpdate()" class="button" rounded>
+                  Cancel
+                </b-button>
+              </div>
+            </div>
+          </transition>
         </div>
-          <p class="fs-sm"><b>Branch:</b> Master</p>
       </div>
-      <div class="column">
-        <b-button
-            class="float-right"
-            type="is-primary"
-            outlined
-            icon-left="key-variant"
-            @click="openAddKeyModal"
-            >Add Key</b-button
-          >
-      </div>
+    </div>
+    <div>
+      <b-button
+        class="float-right"
+        type="is-primary"
+        outlined
+        icon-left="key-variant"
+        @click="openAddKeyModal"
+        >Add Key</b-button
+      >
     </div>
 
     <!-- Keys-->
@@ -103,9 +109,8 @@
         </div>
       </div>
     </div>
-     <b-modal :active.sync="isNewKeyModalActive" :width="640">
-      <NewKey
-      />
+    <b-modal :active.sync="isNewKeyModalActive" :width="640">
+      <NewKey />
     </b-modal>
   </div>
 </template>
@@ -113,7 +118,7 @@
 <script>
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
-import NewKey from '@/components/modals/NewKey.vue';
+import NewKey from "@/components/modals/NewKey.vue";
 export default {
   components: {
     NewKey
@@ -152,7 +157,7 @@ export default {
     closeUpdate: function(key) {
       key.showEdit = false;
     },
-    openAddKeyModal(){
+    openAddKeyModal() {
       this.isNewKeyModalActive = true;
     }
   },
@@ -183,6 +188,17 @@ export default {
 </script>
 
 <style lang="scss">
+.popover {
+  position: absolute;
+  top: 30px;
+  left: 0;
+}
+.collection-name {
+  padding-left: 6px;
+  position: relative;
+  flex: 1;
+  border-radius: 4px;
+}
 .collection-detail {
   margin-top: $space_lg;
   &__ {
