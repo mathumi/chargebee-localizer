@@ -9,25 +9,8 @@ module.exports = function(Branches) {
     description: "Create a branch",
     accepts: [
       {
-        arg: "data",
-        type: "object",
-        http: { source: "body" },
-        required: true,
-        description: "name, description"
-      }
-    ],
-    returns: { arg: "release", type: "object", root: true },
-    http: { path: "/create", verb: "post", errorStatus: 400 }
-  });
-
-  Branches.remoteMethod("publish", {
-    description: "Publish a branch",
-    accepts: [
-      {
-        arg: "branchId",
-        type: "number",
-        required: true,
-        description: "Branch Id"
+        arg: 'data', type: 'object', http: { source: 'body' }, required: true,
+        description: 'name, description, fromBranch (branch id)'
       },
       {
         arg: "data",
