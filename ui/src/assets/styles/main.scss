@@ -1,5 +1,6 @@
 @import './variables';
 @import './utilities';
+@import '~bulma-timeline';
 
 body {
   font-size: $fs_body;
@@ -40,7 +41,7 @@ body {
     }
     &name {
       font-size: $fs_body;
-      &:hover{
+      &:hover {
         text-decoration: underline;
       }
     }
