@@ -56,7 +56,15 @@
   },
   "branches": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createBranch": true,
+          "listBranches": true
+        }
+      }
+    }
   },
   "branched_collection": {
     "dataSource": "mysqldb",
