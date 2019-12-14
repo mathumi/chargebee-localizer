@@ -1,6 +1,6 @@
-@import './variables';
-@import './utilities';
-@import '~bulma-timeline';
+@import "./variables";
+@import "./utilities";
+@import "~bulma-timeline";
 
 body {
   font-size: $fs_body;
@@ -10,12 +10,26 @@ body {
   font-size: $fs_lead;
 }
 
-.navbar {
-  padding: $space_mi $space_xxl;
-  box-shadow: 0 1px 0 #d2d2d3;
+a,
+a:hover {
+  color: $primary !important;
 }
+
+.navbar {
+  padding: 0 150px;
+  box-shadow: 0 1px 0 #d2d2d3;
+  z-index: 2 !important;
+}
+
 .wrapper {
-  padding: 50px 10%;
+  padding: 0 150px;
+  overflow: auto;
+}
+.collection-detail-body{
+  .navbar-secondary {
+    position: sticky !important;
+    top:0;
+  }
 }
 .logo {
   font-size: $fs_h4;
@@ -25,6 +39,12 @@ body {
       margin-right: $space_sm;
     }
   }
+}
+
+.upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .collection {

@@ -12,7 +12,7 @@ module.exports = function(Release) {
       },
     ],
     returns: {arg: 'release', type: 'object', "root": true},
-    http: {path: '/create', verb: 'post', errorStatus: 400}
+    http: {path: '/', verb: 'post', errorStatus: 400}
   });
 
   Release.remoteMethod('getReleases', {

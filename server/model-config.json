@@ -62,6 +62,7 @@
       "remoting": {
         "sharedMethods": {
           "createBranch": true,
+          "listBranches": true,
           "getCollections": true,
           "getKeys": true,
           "publish": true
