@@ -1,0 +1,57 @@
+{
+  "name": "branched_collection",
+  "plural": "collections",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "publised_texts_version": {
+      "type": "string"
+    },
+    "draft_texts_version": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    },
+    "updated_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    }
+  },
+  "validations": [],
+  "relations": {
+    "branch": {
+      "type": "belongsTo",
+      "model": "branches",
+      "foreignKey": "",
+      "options": {
+        "nestRemoting": false
+      }
+    },
+    "text": {
+      "type": "hasMany",
+      "model": "branch_text",
+      "foreignKey": "branch_collection_id",
+      "options": {
+        "nestRemoting": false
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

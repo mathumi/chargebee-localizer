@@ -1,0 +1,11 @@
+{
+  "mysqldb": {
+    "host": "localhost",
+    "port": 3306,
+    "database": "localiser",
+    "password": "",
+    "name": "mysqldb",
+    "user": "root",
+    "connector": "mysql"
+  }
+}
