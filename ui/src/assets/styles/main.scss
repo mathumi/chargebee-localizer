@@ -1,0 +1,76 @@
+@import "./variables";
+@import "./utilities";
+@import "~bulma-timeline";
+
+body {
+  font-size: $fs_body;
+}
+
+.th-wrap {
+  font-size: $fs_lead;
+}
+
+a,
+a:hover {
+  color: $primary !important;
+}
+
+.navbar {
+  padding: 0 150px;
+  box-shadow: 0 1px 0 #d2d2d3;
+  z-index: 2 !important;
+}
+.flex {
+  display: flex;
+}
+.wrapper {
+  padding: 0 150px;
+  overflow: auto;
+}
+.logo {
+  font-size: $fs_h4;
+  font-weight: 600;
+  &__ {
+    &img {
+      margin-right: $space_sm;
+    }
+  }
+}
+
+.upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collection {
+  &__ {
+    &profile {
+      display: flex;
+      align-items: center;
+      &:hover {
+        color: $primary;
+      }
+    }
+    &img {
+      margin-right: $space_ti;
+    }
+    &name {
+      font-size: $fs_body;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    &desc {
+      font-size: $fs_caption;
+    }
+  }
+}
+
+.modal-card-foot {
+  justify-content: flex-end !important;
+}
+
+.modal .animation-content .modal-card {
+  margin: 0 auto;
+}

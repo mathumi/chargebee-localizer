@@ -1,26 +1,30 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import BranchPage from '@/views/BranchPage.vue';
+import CollectionDetail from '@/views/CollectionDetail.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
+    name: 'BranchPage',
     path: '/',
-    name: 'home',
-    component: Home,
+    component: BranchPage,
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    name: 'BranchPageTree',
+    path: '/tree/*',
+    component: BranchPage,
   },
+  {
+    path: '/:branch/collection/',
+    name: 'CollectionDetail',
+    component: CollectionDetail,
+  }
 ];
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
 });
 
