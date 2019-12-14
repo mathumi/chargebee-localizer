@@ -5,10 +5,10 @@
         <template slot-scope="props">
           <b-table-column label="Collections">
             <!-- <img class="collection__img" src="@/assets/images/folder.png" /> -->
-            <a class="collection__profile">
+            <router-link to="/master/collection" class="collection__profile">
               <b-icon class="collection__img" icon="file-document-box"></b-icon>
               <div class="collection__name">{{ props.row.name }}</div>
-            </a>
+            </router-link>
           </b-table-column>
           <b-table-column label="No of Keys">{{ props.row.locales }}</b-table-column>
           <b-table-column label="Last updated on" centered>{{ props.row.updated_at }}</b-table-column>
