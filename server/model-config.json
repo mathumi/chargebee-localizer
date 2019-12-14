@@ -37,7 +37,14 @@
   },
   "release": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createRelease": true
+        }
+      }
+    }
   },
   "release_collection": {
     "dataSource": "mysqldb",
