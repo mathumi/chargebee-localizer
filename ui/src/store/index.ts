@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import ApiService from ''
+import Vue from "vue";
+import Vuex from "vuex";
+import ApiService from "@/service";
 
 Vue.use(Vuex);
 
@@ -17,15 +17,16 @@ export default new Vuex.Store({
       state.branches = payload;
     }
   },
-  actions: {
-    async init({ commit }) { }
-  },
+  actions: {},
   getters: {
+    branches: state => {
+      return state.branches;
+    },
     draftBranches: state => {
       return state.branches.filter(branch => Boolean(branch.draftVersionId));
     },
     liveBranches: state => {
       return state.branches.filter(branch => !Boolean(branch.draftVersionId));
     }
-  },
+  }
 });
