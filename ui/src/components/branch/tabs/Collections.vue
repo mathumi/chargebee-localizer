@@ -39,13 +39,13 @@ export default {
       align-items: center;
     }
     &img {
-      margin-right: $space_ti;
+      margin-right: 4px;
     }
     &name {
-      font-size: $fs_body;
+      font-size: 14px;
     }
     &desc {
-      font-size: $fs_caption;
+      font-size: 12px;
     }
   }
 }

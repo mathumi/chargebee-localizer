@@ -137,10 +137,10 @@ export default {
 
 .notification {
   i:before {
-    font-size: $fs_h3 !important;
+    font-size: 24px !important;
   }
-  padding: $space_mi $space_st;
+  padding: 8px 20px;
   width: 100%;
-  font-size: $fs_body;
+  font-size: 14px;
 }
 </style>
