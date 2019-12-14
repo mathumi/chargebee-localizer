@@ -34,3 +34,12 @@ export default class App extends Vue { }
 </script>
 
 <style lang="scss" src="@/assets/styles/main.scss"></style>
+<style lang="scss" scoped>
+  #app{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+</style>

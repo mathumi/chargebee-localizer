@@ -35,8 +35,9 @@ $twitter: #8c67ef;
 $twitter-invert: findColorInvert($twitter);
 $danger	:  #dc3545;
 $danger-invert: findColorInvert($danger);
+$warning: #fff3da;
+$danger-invert: findColorInvert($warning);
 $light: #736e6e;
-
 
 $link: $primary;
 $link-invert: $primary-invert;

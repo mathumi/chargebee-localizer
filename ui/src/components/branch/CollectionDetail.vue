@@ -27,6 +27,8 @@
         ></b-button>
       </template>
     </div>
+    
+    <p class="fs-sm"><b>Branch:</b> Master</p>
 
     <!-- Keys-->
     <div class="collection-detail__keys mar--t-md">
