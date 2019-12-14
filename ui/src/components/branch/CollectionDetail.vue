@@ -162,6 +162,7 @@ export default {
 
 <style lang="scss">
 .collection-detail {
+  margin-top: $space_lg;
   &__ {
     &input {
       min-width: 300px;
@@ -180,5 +181,27 @@ export default {
       }
     }
   }
+}
+
+.navbar-secondary {
+  margin-top: 1px;
+  box-shadow: none;
+  padding: 4px 16px;
+  align-items: center !important;
+  z-index: 1 !important;
+  .tab-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.navbar-warning {
+  background: $warning !important;
+  border-bottom: 1px solid #ffeab8;
+}
+
+.navbar-info {
+   background-color: #f1f8ff !important;
+  border-bottom: 1px solid #c8e1ff;
 }
 </style>
