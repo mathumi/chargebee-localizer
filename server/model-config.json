@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "loopback/server/mixins",
+      "../common/mixins",
+      "./mixins"
+    ]
+  },
+  "User": {
+    "dataSource": "mysqldb"
+  },
+  "AccessToken": {
+    "dataSource": "mysqldb",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "mysqldb",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "mysqldb",
+    "public": false,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "Role": {
+    "dataSource": "mysqldb",
+    "public": false
+  },
+  "release": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "release_collection": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "released_text": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branches": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branched_collection": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "branch_text": {
+    "dataSource": "mysqldb",
+    "public": true
+  },
+  "locale": {
+    "dataSource": "mysqldb",
+    "public": true
+  }
+}
