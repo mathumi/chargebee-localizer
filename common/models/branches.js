@@ -50,7 +50,7 @@ module.exports = function(Branches) {
   });
 
   Branches.createBranch = async function(data, callback) {
-    const { name, description, fromBranch } = data;
+    const { name, description, from_branch } = data;
     let draft_version;
 
     if( !name || !description ) {
@@ -59,12 +59,12 @@ module.exports = function(Branches) {
 
     const newBranch = await Branches.find({order: 'publised_version DESC', limit: 1})
     .then(data => {
-      draft_version = (data && data [0] && data[0]["publised_version"] || 999) + 1;
+      draft_version = parseInt(data && data [0] && data[0]["publised_version"] || 999) + 1;
       return Branches.create({ name, description, draft_version})
     });
 
-    if(fromBranch) {
-      duplicateCollectionsAndText(fromBranch, newBranch);
+    if(from_branch) {
+      await duplicateCollectionsAndText(from_branch, newBranch);
     }
 
     return callback(null, newBranch)
@@ -83,29 +83,38 @@ module.exports = function(Branches) {
         }
       }
     };
+
     const baseBranch = await Branches.findById(fromBranchId, filter);
-    baseBranch.collections.array.forEach(collection => {
+
+    for(let i = 0; i < baseBranch.collections().length; i++ ) {
+      
+      let collection = baseBranch.collections()[i];
+
       let newCollection = {
-        version: collection.version,
+        version: newBranch.draft_version,
         handle: collection.handle,
         name: collection.name,
         description: collection.description,
         branch_id: newBranch.id
       };
-      Branches.app.models.Branchedcollection.create(newCollection)
+
+      await Branches.app.models.branched_collection.create(newCollection)
       .then(data => {
         let newTextArr = [];
-        collection.texts.array.forEach(text => {
+        for(let i = 0; i < collection.text().length; i++ ) {
+          let text = collection.text()[i];
           newTextArr.push({
             key: text.key,
             value: text.value,
             locale: text.locale,
             collection_id: data.id
           })
-        });
-        return Branches.app.models.branched_text.create(newTextArr);
+        }
+        return Branches.app.models.branch_text.create(newTextArr);
       });
-    });
+    }
+
+    return Promise.resolve(true);
   }
 
   Branches.listBranches = function(callback) {
