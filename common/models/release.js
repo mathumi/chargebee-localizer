@@ -15,6 +15,30 @@ module.exports = function(Release) {
     http: {path: '/', verb: 'post', errorStatus: 400}
   });
 
+  Release.remoteMethod('getReleases', {
+    returns: {arg: 'releases', type:'array', root: true},
+    http: {verb: 'get', path: '/', errorStatus: 400}
+  })
+
+  Release.remoteMethod('getReleaseText', {
+    accepts: [{
+        arg: 'locale', required: true, type: 'string', http: {source: 'query'}
+      }, {
+        arg: 'release', type: 'string', http: {source: 'query'}
+      }, {
+        arg: 'collections', type: 'string', http: {source: 'query'}
+      }],
+      returns: {arg: 'texts', type: 'object', root: true},
+      http: {verb: 'get', path: '/release/texts', errorStatus: 400}
+  })
+
+  
+  Release.getReleases = function(cb) {
+    Release.find(function(err, releases) {
+      if(err) return cb(err);
+      cb(null, releases);
+    })
+  }
   Release.createRelease = function(data, cb) {
     const { name, description, branchId } = data;
     if(!(name && description && branchId)) {
@@ -54,12 +78,6 @@ module.exports = function(Release) {
         Branch.findById(branchId, filters, function(err, branch) {
           return callback(err, branch, release)
         })
-      },
-      // Move text from current branch to release
-      function(branch, release, callback) {
-
-        console.log(JSON.stringify(branch), release)
-        return callback(null)
       }
     ], cb);
     
