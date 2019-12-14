@@ -17,28 +17,27 @@
       </b-modal>
     </section>-->
 
-    <section> 
+    <section>
       <b-tabs v-model="activeTab">
         <div class="nav-block">
           <div class="flex ai-center">
-          <b-select
-            :value="selectedBranchId"
-            @input="updateselectedBranchId"
-            icon="source-branch"
-          >
-            <option
-              v-for="filter in resourceBranches"
-              :value="filter.id"
-              :key="filter.id"
-            >{{ filter.name }}</option>
-          </b-select>
-          <b-button
-            type="is-primary"
-            class="mar--l-xs"
-            icon-left="source-branch"
-            @click="openNewBranchModal"
-            >New Branch</b-button
-          >
+            <b-select
+              :value="selectedBranchId"
+              @input="updateselectedBranchId"
+              icon="source-branch"
+            >
+              <option
+                v-for="filter in resourceBranches"
+                :value="filter.id"
+                :key="filter.id"
+              >{{ filter.name }}</option>
+            </b-select>
+            <b-button
+              type="is-primary"
+              class="mar--l-xs"
+              icon-left="source-branch"
+              @click="openNewBranchModal"
+            >New Branch</b-button>
           </div>
           <b-button
             class="float-right"
@@ -46,8 +45,7 @@
             outlined
             icon-left="file-document-box-plus-outline"
             @click="openNewCollectioModal"
-            >Add Collection</b-button
-          >
+          >Add Collection</b-button>
         </div>
         <Collections :branchId="selectedBranchId" />
       </b-tabs>
@@ -56,25 +54,19 @@
       <NewBranch :resourceBranches="resourceBranches" :selectedBranchId="selectedBranchId" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
-      <NewCollection
-
-      />
+      <NewCollection />
     </b-modal>
   </div>
 </template>
 
 <script>
 import Collections from "@/components/branch/tabs/Collections";
-import Branches from "@/components/branch/tabs/Branches";
-import Releases from "@/components/branch/tabs/Releases";
 import NewBranch from "@/components/modals/NewBranch.vue";
 import NewCollection from "@/components/modals/NewCollection.vue";
 
 export default {
   components: {
     Collections,
-    Branches,
-    Releases,
     NewBranch,
     NewCollection
   },
@@ -84,7 +76,7 @@ export default {
       showTabs: false,
       selectedBranchId: 10,
       isNewBranchModalActive: false,
-      isNewCollectionModalActive: false,
+      isNewCollectionModalActive: false
     };
   },
   computed: {
@@ -107,9 +99,8 @@ export default {
   methods: {
     sanityResCheck() {
       if (
-        this.resourceBranches.findIndex(
-          f => f.id === this.selectedBranchId
-        ) === -1
+        this.resourceBranches.findIndex(f => f.id === this.selectedBranchId) ===
+        -1
       ) {
         this.selectedBranchId = 10;
       }
@@ -139,9 +130,9 @@ export default {
   align-items: center;
   justify-content: space-between;
   flex: 1;
-    margin: 10px 0 30px;
-    border-bottom: 1px solid #dbdbdb;
-    padding-bottom: 30px;
+  margin: 10px 0 30px;
+  border-bottom: 1px solid #dbdbdb;
+  padding-bottom: 30px;
 }
 
 .notification {

@@ -10,7 +10,7 @@ body {
   font-size: $fs_lead;
 }
 
-a{
+a {
   color: $primary !important;
 }
 
@@ -28,10 +28,10 @@ a:hover {
   padding: 0 150px;
   overflow: auto;
 }
-.collection-detail-body{
+.collection-detail-body {
   .navbar-secondary {
     position: sticky !important;
-    top:0;
+    top: 0;
   }
 }
 .logo {
@@ -46,9 +46,13 @@ a:hover {
 }
 
 .upload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &-draggable {
+    width: 100%;
+  }
 }
 
 .collection {
