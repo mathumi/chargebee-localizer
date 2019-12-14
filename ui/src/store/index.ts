@@ -40,9 +40,6 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    branches: state => {
-      return state.branches;
-    },
     draftBranches: state => {
       return state.branches.filter(branch => Boolean(branch.draftVersionId));
     },

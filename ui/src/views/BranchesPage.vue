@@ -41,7 +41,7 @@ export default {
       return this.allBranches.filter(branch => branch.name !== "master");
     },
     allBranches() {
-      return this.$store.getters.branches || [];
+      return this.$store.state.branches || [];
     },
     draftBranches() {
       return this.allBranches.filter(branch => Boolean(branch.draft_version));

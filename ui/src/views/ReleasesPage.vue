@@ -1,12 +1,8 @@
 <template>
   <div class="container">
-    <div class="mar--t-xl">
-      <b-button
-        type="is-primary"
-        class="is-pulled-right"
-        @click="openNewReleaseModal"
-      >Draft a new release</b-button>
-      <div class="timeline">
+    <div class="release-wrapper">
+      <div class="is-size-3 mar--b-xs">Releases</div>
+      <div class="timeline" v-if="releases.length > 0">
         <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
           <div>
             <p class="heading">
@@ -22,18 +18,8 @@
             </div>
           </div>
         </div>
-        <!-- <div class="timeline-header">
-        <span class="tag is-medium is-primary">End</span>
-        </div>-->
       </div>
-      <b-pagination
-        :total="releases.length"
-        :current.sync="currentPage"
-        range-before="3"
-        :per-page="8"
-        :icon-prev="'chevron-left'"
-        :icon-next="'chevron-right'"
-      ></b-pagination>
+      <div v-else>No Releases Found</div>
       <b-modal :active.sync="isNewReleaseModalActive" :width="640">
         <NewRelease :branches="branches" :selectedBranch="''" />
       </b-modal>
@@ -53,34 +39,13 @@ export default {
   data() {
     return {
       currentPage: 0,
-      isNewReleaseModalActive: false,
-      releases: [
-        {
-          id: 0,
-          name: "summer_release",
-          description: "This is a summer release",
-          created_at: "12 days ago"
-        },
-        {
-          id: 1,
-          name: "winter_release",
-          description: "This is a summer release",
-          created_at: "22 days ago"
-        },
-        {
-          id: 2,
-          name: "fall_release",
-          description: "This is a summer release",
-          created_at: "2 months ago"
-        },
-        {
-          id: 3,
-          name: "spring_release",
-          description: "This is a summer release",
-          created_at: "1 year ago"
-        }
-      ]
+      isNewReleaseModalActive: false
     };
+  },
+  computed: {
+    releases() {
+      return this.$store.state.releases || [];
+    }
   },
   methods: {
     openNewReleaseModal() {
@@ -91,12 +56,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.timeline {
+  border-top: 1px solid #dbdbdb;
+  border-bottom: 1px solid #dbdbdb;
+}
+
 .timeline-wrapper {
   display: flex;
   align-items: baseline;
 
   div:first-child {
-    flex-basis: 16%;
+    flex-basis: 11%;
   }
+}
+
+.release-wrapper {
+  margin: 80px 0 0 0;
 }
 </style>

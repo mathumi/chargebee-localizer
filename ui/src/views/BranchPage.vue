@@ -81,10 +81,10 @@ export default {
   },
   computed: {
     resourceBranches() {
-      return this.$store.getters.branches;
+      return this.$store.state.branches;
     },
     selectedBranchData() {
-      return this.$store.getters.branches.find(
+      return this.$store.state.branches.find(
         branch => branch.id === this.selectedBranchId
       );
     }
