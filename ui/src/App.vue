@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar>
+    <b-navbar class="header">
       <template slot="brand">
         <b-navbar-item class="logo" tag="router-link" :to="{ path: '/' }">
           <img class="logo__img" src="@/assets/images/logo.png" />Localizer
@@ -73,5 +73,9 @@ export default {
   &:not(:first-child) {
     padding-left: 20px;
   }
+}
+
+.header {
+  height: 6em;
 }
 </style>
