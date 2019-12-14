@@ -8,12 +8,12 @@
   },
   "properties": {
     "version": {
-      "type": "number",
+      "type": "string",
       "required": true
     },
     "key": {
-      "id": 1,
       "type": "string",
+      "id": 1,
       "required": true
     },
     "value": {
@@ -30,19 +30,19 @@
       "default": false
     },
     "collection_id": {
-      "id": 1,
-      "type": "number"
+      "type": "number",
+      "id": 1
     },
     "created_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     },
     "updated_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     }
   },
@@ -50,7 +50,7 @@
   "relations": {
     "branch": {
       "type": "belongsTo",
-      "model": "branches",
+      "model": "branched_collection",
       "foreignKey": ""
     }
   },

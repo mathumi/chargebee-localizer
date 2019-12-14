@@ -23,13 +23,13 @@
     "created_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     },
     "updated_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     }
   },

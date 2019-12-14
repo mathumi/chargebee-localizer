@@ -15,7 +15,7 @@ module.exports = function(Branchedcollection) {
 
   Branchedcollection.remoteMethod('publish',{
     accepts: {arg: 'collectionId', type: 'number'},
-    returns: {arg: 'collection', type: 'Branchedcollection', "root": true},
+    returns: {arg: 'collection', type: 'object', "root": true},
     http: {path: '/:collectionId/publish', verb: 'post', errorStatus: 400}
   });
   

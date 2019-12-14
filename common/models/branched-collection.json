@@ -23,13 +23,13 @@
     "created_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     },
     "updated_at": {
       "type": "date",
       "mysql": {
-        "default":"now"
+        "default": "now"
       }
     }
   },
@@ -46,7 +46,10 @@
     "text": {
       "type": "hasMany",
       "model": "branch_text",
-      "foreignKey": "branch_id"
+      "foreignKey": "branch_collection_id",
+      "options": {
+        "nestRemoting": false
+      }
     }
   },
   "acls": [],
