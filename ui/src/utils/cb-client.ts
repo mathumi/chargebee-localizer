@@ -93,6 +93,43 @@ class CbClient {
         });
     });
   }
+
+  public perform(method: string, urlEndPoint: string, queryParams = {}, headers = {}, body = {}) {
+    const that = this;
+    return new Promise((resolve, reject) => {
+      window['requestInTransit'] = true;
+
+      let fn: any = '';
+
+      if (method === 'GET') {
+        fn = that.restClient.get;
+      } else if (method === 'POST') {
+        fn = that.restClient.post;
+      } else {
+        fn = that.restClient.put;
+      }
+
+      fn(urlEndPoint, queryParams, body, headers)
+        .then(response => {
+          resolve(response.data);
+          window['requestInTransit'] = false;
+        })
+        .catch(error => {
+          window['requestInTransit'] = false;
+          if (error.response) {
+            if (error.response.status === 401) {
+              // AuthUtils.logout();
+            }
+            const cbError = new CbError(
+              error.response.status,
+              error.response.data
+            );
+            reject(cbError);
+          }
+          reject(error);
+        });
+    });
+  }
 }
 
 export default new CbClient();

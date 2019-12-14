@@ -56,6 +56,10 @@ export default class RestClient {
     return this.axios.request(this._post.apply(this, arguments));
   }
 
+  public put(...args: any[]) {
+    return this.axios.request(this._put.apply(this, arguments));
+  }
+
   private _get(path: string, params: any, headers = {}, baseUrl) {
     const config = {
       method: 'get',
@@ -71,7 +75,7 @@ export default class RestClient {
     return config;
   }
 
-  private _post(path: string, params: any, data = {}, headers = {}, baseUrl) {
+  private _put(path: string, params: any, data = {}, headers = {}, baseUrl) {
     const csrfToken: string | null = getCSRFToken();
     if (
       headers['Content-Type'] === 'application/x-www-form-urlencoded' ||
@@ -82,6 +86,34 @@ export default class RestClient {
     headers['cb-csrf-token'] = headers['_csrf_token'] = csrfToken;
     const config = {
       method: 'post',
+      params,
+      withCredentials: getCors(),
+      data,
+      url: path,
+      baseUrl,
+      headers: Object.assign(
+        {
+          ...headers,
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        headers
+      )
+    };
+  }
+
+
+  private _post(path: string, params: any, data = {}, headers = {}, baseUrl) {
+    const csrfToken: string | null = getCSRFToken();
+    if (
+      headers['Content-Type'] === 'application/x-www-form-urlencoded' ||
+      headers['Content-Type'] === 'multipart/form-data'
+    ) {
+      data['_csrf_token'] = csrfToken;
+    }
+    headers['cb-csrf-token'] = headers['_csrf_token'] = csrfToken;
+    const config = {
+      method: 'put',
       params,
       withCredentials: getCors(),
       data,
