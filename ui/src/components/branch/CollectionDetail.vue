@@ -1,7 +1,7 @@
 <template>
   <div class="collection-detail">
     <!-- Collection Heading -->
-    <div class="columns ai-center">
+    <div class="columns ai-center collection-detail__block">
       <div class="column ai-center">
         <h3 class="va-mid">
           Collections -
@@ -9,25 +9,25 @@
         <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
         <div class="va-top collection-name flex" style="padding-left:6px;">
           <div class="flex flex-grow ai-center">
-          <h3>
-            <a @click="openEdit()" class="popover-trigger">{{
-              collectionName
-            }}</a>
-          </h3>
-           <b-select value="en" class="mar--l-st"
-          >
-            <option
-              v-for="(locale, index) in locales"
-              :value="locale.code"
-              :key="locale.code"
-            >{{ locale.name }}</option>
-          </b-select>
+            <h3>
+              <a @click="openEdit()" class="popover-trigger">{{
+                collectionName
+              }}</a>
+            </h3>
+            <b-select value="en" class="mar--l-st">
+              <option
+                v-for="(locale, index) in locales"
+                :value="locale.code"
+                :key="locale.code"
+                >{{ locale.name }}</option
+              >
+            </b-select>
           </div>
-           <b-input
-                  class="mar--r-sm collection-detail__input"
-                  placeholder="Search Keys"
-                  type="text"
-                ></b-input>
+          <b-input
+            class="mar--r-sm collection-detail__input"
+            placeholder="Search Keys"
+            type="text"
+          ></b-input>
           <b-button
             class="float-right"
             type="is-primary"
@@ -181,13 +181,16 @@ export default {
       collectionInput: "",
       editName: false,
       isNewKeyModalActive: false,
-      locales: [{
-        name: 'en',
-        code: 'en'
-      }, {
-        name: 'fr',
-        code: 'fr'
-      }],
+      locales: [
+        {
+          name: "en",
+          code: "en"
+        },
+        {
+          name: "fr",
+          code: "fr"
+        }
+      ],
       collectionData: [
         {
           key: "apikey_heading",
@@ -236,7 +239,18 @@ export default {
         td.col_value {
           width: 60%;
         }
+        td:first-child {
+          padding-left: 0;
+        }
+        td:last-child {
+          padding-right: 0;
+        }
       }
+    }
+    &block {
+      border-bottom: 1px solid #dbdbdb;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
     }
   }
 }

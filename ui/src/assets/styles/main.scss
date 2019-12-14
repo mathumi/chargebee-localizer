@@ -10,9 +10,12 @@ body {
   font-size: $fs_lead;
 }
 
-a,
-a:hover {
+a{
   color: $primary !important;
+}
+
+a:hover {
+  color: #1746ab !important;
 }
 
 .navbar {
@@ -34,6 +37,7 @@ a:hover {
 .logo {
   font-size: $fs_h4;
   font-weight: 600;
+  color: #4a4a4a !important;
   &__ {
     &img {
       margin-right: $space_sm;
