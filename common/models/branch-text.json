@@ -9,7 +9,8 @@
   "properties": {
     "version": {
       "type": "string",
-      "required": true
+      "required": true,
+      "id": 1
     },
     "key": {
       "type": "string",
