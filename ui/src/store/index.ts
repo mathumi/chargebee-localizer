@@ -24,7 +24,8 @@ export default new Vuex.Store({
   },
   actions: {
     async init({ commit }) {
-      return Promise.all([]);
+      const results = await Promise.all([branchService.getBranches()]);
+      console.log(results);
     },
 
     async mockInit({ commit }) {

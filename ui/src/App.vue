@@ -55,7 +55,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('mockInit');
+    this.$store.dispatch('init');
   }
 }
 </script>

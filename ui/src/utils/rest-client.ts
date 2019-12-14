@@ -100,6 +100,8 @@ export default class RestClient {
         headers
       )
     };
+
+    return config;
   }
 
 
