@@ -46,7 +46,86 @@ export default class App extends Vue {
           name: "Add-ons",
           locales: "4",
           updated_at: "Sept 10, 2019"
-        }
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
+        {
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },{
+          id: "3",
+          name: "Add-ons",
+          locales: "4",
+          updated_at: "Sept 10, 2019"
+        },
       ],
     };
   }

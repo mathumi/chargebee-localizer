@@ -1,26 +1,69 @@
 <template>
   <div>
+    <!-- <section class="columns">
+      <div class="column"></div>
+      <div class="column"></div>
+      <b-button
+        type="is-primary"
+        icon-left="source-branch"
+        @click="openNewBranchModal"
+        >New Branch</b-button
+      >
+      <b-modal :active.sync="isNewBranchModalActive" :width="640">
+        <NewBranch
+          :resourceFilters="resourceFilters"
+          :selectedResource="selectedResource"
+        />
+      </b-modal>
+    </section> -->
+    <b-navbar class="navbar-secondary navbar-warning">
+      <template slot="brand">
+        <b-navbar-item class="fs-st">
+          You have some unpublished changes which are saved as draft.
+        </b-navbar-item>
+      </template>
+      <template slot="end">
+        <b-button type="is-text" class="mar--r-mi" @click="openNewBranchModal"
+          >Discard</b-button
+        >
+        <b-button type="is-primary" @click="openNewBranchModal"
+          >Publish</b-button
+        >
+      </template>
+    </b-navbar>
+
     <section>
       <b-tabs v-model="activeTab">
         <div class="block">
-          <b-select :value="selectedResource" @input="updateSelectedResource" icon="source-branch">
+          <b-select
+            :value="selectedResource"
+            @input="updateSelectedResource"
+            icon="source-branch"
+          >
             <option
               v-for="filter in resourceFilters"
               :value="filter.id"
               :key="filter.id"
-            >{{ filter.name }}</option>
+              >{{ filter.name }}</option
+            >
           </b-select>
           <b-button
+            class="float-right"
             type="is-primary"
-            icon-left="source-branch"
+            outlined
+            icon-left="file-document-box-plus-outline"
             @click="openNewBranchModal"
-          >New Branch</b-button>
+            >Add Collection</b-button
+          >
         </div>
         <Collections />
       </b-tabs>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :resourceFilters="resourceFilters" :selectedResource="selectedResource" />
+      <NewBranch
+        :resourceFilters="resourceFilters"
+        :selectedResource="selectedResource"
+      />
     </b-modal>
   </div>
 </template>
@@ -94,5 +137,25 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.navbar-secondary {
+  margin-top: 1px;
+  background-color: #f1f8ff !important;
+  border-bottom: 1px solid #c8e1ff;
+  box-shadow: none;
+  padding: 4px 8px;
+  align-items: center !important;
+}
+
+.navbar-warning {
+  background: $warning;
+}
+.notification {
+  i:before {
+    font-size: $fs_h3 !important;
+  }
+  padding: $space_mi $space_st;
+  width: 100%;
+  font-size: $fs_body;
 }
 </style>

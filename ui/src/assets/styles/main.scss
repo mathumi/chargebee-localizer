@@ -11,11 +11,12 @@ body {
 }
 
 .navbar {
-  padding: $space_mi $space_xxl;
+  padding: 0 150px;
   box-shadow: 0 1px 0 #d2d2d3;
 }
 .wrapper {
-  padding: 50px 10%;
+  padding: 0 150px;
+  overflow: auto;
 }
 .logo {
   font-size: $fs_h4;
