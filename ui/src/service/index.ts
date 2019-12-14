@@ -14,7 +14,7 @@
 
 /* tslint-disable */
 
-import CBClient from "@/app/utils/common/core/cb-client";
+import CBClient from "@/utils/cb-client";
 const BASE_PATH = "/chargebee/chargebee-localiser/1.0.0".replace(/\/+$/, "");
 /**
  *

@@ -11,41 +11,30 @@
       >
       <b-modal :active.sync="isNewBranchModalActive" :width="640">
         <NewBranch
-          :resourceFilters="resourceFilters"
-          :selectedResource="selectedResource"
+          :resourceBranches="resourceBranches"
+          :selectedBranch="selectedBranch"
         />
       </b-modal>
-    </section> -->
+    </section>-->
     <b-navbar class="navbar-secondary navbar-warning">
       <template slot="brand">
-        <b-navbar-item class="fs-st">
-          You have some unpublished changes which are saved as draft.
-        </b-navbar-item>
+        <b-navbar-item class="fs-st">You have some unpublished changes which are saved as draft.</b-navbar-item>
       </template>
       <template slot="end">
-        <b-button type="is-text" class="mar--r-mi" @click="openNewBranchModal"
-          >Discard</b-button
-        >
-        <b-button type="is-primary" @click="openNewBranchModal"
-          >Publish</b-button
-        >
+        <b-button type="is-text" class="mar--r-mi" @click="openNewBranchModal">Discard</b-button>
+        <b-button type="is-primary" @click="openNewBranchModal">Publish</b-button>
       </template>
     </b-navbar>
 
     <section>
       <b-tabs v-model="activeTab">
         <div class="block">
-          <b-select
-            :value="selectedResource"
-            @input="updateSelectedResource"
-            icon="source-branch"
-          >
+          <b-select :value="selectedBranch" @input="updateselectedBranch" icon="source-branch">
             <option
-              v-for="filter in resourceFilters"
+              v-for="filter in resourceBranches"
               :value="filter.id"
               :key="filter.id"
-              >{{ filter.name }}</option
-            >
+            >{{ filter.name }}</option>
           </b-select>
           <b-button
             class="float-right"
@@ -53,17 +42,13 @@
             outlined
             icon-left="file-document-box-plus-outline"
             @click="openNewBranchModal"
-            >Add Collection</b-button
-          >
+          >Add Collection</b-button>
         </div>
         <Collections />
       </b-tabs>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch
-        :resourceFilters="resourceFilters"
-        :selectedResource="selectedResource"
-      />
+      <NewBranch :resourceBranches="resourceBranches" :selectedBranch="selectedBranch" />
     </b-modal>
   </div>
 </template>
@@ -85,42 +70,32 @@ export default {
     return {
       activeTab: 0,
       showTabs: false,
-      selectedResource: "master",
-      isNewBranchModalActive: false,
-      resourceFilters: [
-        {
-          name: "master",
-          id: "master"
-        },
-        {
-          name: "feature/shipping_charges",
-          id: "feature/shipping_charges"
-        },
-        {
-          name: "feature/salesforce",
-          id: "feature/salesforce"
-        }
-      ]
+      selectedBranch: "master",
+      isNewBranchModalActive: false
     };
+  },
+  get resourceBranches() {
+    debugger;
+    return this.$store.getters.branches;
   },
   mounted() {
     const urlPaths = window.location.href.split("tree");
     if (urlPaths.length === 2) {
-      this.selectedResource = urlPaths[1].slice(1);
+      this.selectedBranch = urlPaths[1].slice(1);
     }
     this.sanityResCheck();
   },
   methods: {
     sanityResCheck() {
       if (
-        this.resourceFilters.findIndex(f => f.id === this.selectedResource) ===
+        this.resourceBranches.findIndex(f => f.id === this.selectedBranch) ===
         -1
       ) {
-        this.selectedResource = "master";
+        this.selectedBranch = "master";
       }
     },
 
-    updateSelectedResource(newValue) {
+    updateselectedBranch(newValue) {
       if (newValue) {
         this.$router.replace(`/tree/${newValue}`);
       }
