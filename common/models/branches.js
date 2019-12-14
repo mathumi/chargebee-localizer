@@ -40,17 +40,17 @@ module.exports = function (Branches) {
     }
   });
 
-  Branches.remoteMethod("getKeys", {
+  Branches.remoteMethod("getTextKeys", {
     accepts: [
-      {
-        arg: "versionId",
-        required: true,
-        type: "string"
-      },
       {
         arg: "branchId",
         required: true,
         type: "number"
+      },
+      {
+        arg: "versionId",
+        required: true,
+        type: "string"
       },
       {
         arg: "collectionId",
@@ -223,18 +223,44 @@ module.exports = function (Branches) {
       .catch(err => cb(err))
   };
 
-  Branches.getKeys = function (branchId, versionId, collectionId, cb) {
-    Branchedcollection.find({
-      where: {
-        version: versionId,
-        id: branchId,
-        branch_collection_id: collectionId
-      },
-      function(err, keys) {
-        if (err || !keys) return cb(err);
-        return cb(null, keys);
+  Branches.getTextKeys = function (branchId, versionId, collectionId, locale, cb) {
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          fields: ['text', 'branch_id', 'id'],
+          where: {
+            id: collectionId
+          },
+          include: {
+            relation: 'text',
+            scope: {
+              where: {
+                locale,
+                archived: false,
+              }
+            }
+          }
+        }
       }
-    });
+    };
+
+    Branches.findById(branchId, filter, function(err, branch) {
+        if (err || !branch) return cb(err);
+
+        const rawData = serialize(branch, Branches)
+        const texts = rawData.included ?
+          rawData.included.filter(obj => obj.type == 'text' && obj.attributes.archived == false)
+          .map(text => ({
+            key: text.id,
+            value: text.attributes.value,
+            locale: text.attributes.locale,
+            collection_id: text.attributes.collection_id,
+          })) : []
+
+        return cb(null, texts);
+      }
+    );
   };
 
   function getCollectionsJSON(branchData) {

@@ -65,7 +65,7 @@
           "createBranch": true,
           "listBranches": true,
           "getCollections": true,
-          "getKeys": true,
+          "getTextKeys": true,
           "publish": true,
           "createCollection": true
         }
