@@ -11,13 +11,13 @@ module.exports = function(Branches) {
       {
         arg: "data",
         type: "object",
+        http: { source: "body" },
         required: true,
-        description: "Release name and description",
-        http: { source: "body" }
+        description: "name, description"
       }
     ],
     returns: { arg: "release", type: "object", root: true },
-    http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
+    http: { path: "/", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {

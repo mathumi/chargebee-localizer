@@ -5,6 +5,12 @@
         <b-navbar-item class="logo" tag="router-link" :to="{ path: '/' }">
           <img class="logo__img" src="@/assets/images/logo.png" />Localizer
         </b-navbar-item>
+         <b-navbar-item  tag="router-link" :to="{ path: '/' }">
+         Branches
+        </b-navbar-item>
+         <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          Releases
+        </b-navbar-item>
       </template>
       <template slot="end">
         <b-navbar-dropdown label="User" right>
@@ -66,5 +72,11 @@ export default {
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+}
+.navbar-item{
+  padding-left:0;
+  &:not(:first-child){
+    padding-left: 20px;
+  }
 }
 </style>
