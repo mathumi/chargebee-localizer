@@ -43,7 +43,8 @@
         "sharedMethods": {
           "createRelease": true,
           "getReleases": true,
-          "getCollections": true
+          "getCollections": true,
+          "getTextKeys": true
         }
       }
     }

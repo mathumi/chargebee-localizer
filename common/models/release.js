@@ -137,6 +137,66 @@ module.exports = function (Release) {
       .catch(err => cb(err))
   }
 
+  Release.remoteMethod("getTextKeys", {
+    accepts: [
+      {
+        arg: "releaseId",
+        required: true,
+        type: "number"
+      },
+      {
+        arg: "collectionId",
+        required: true,
+        type: "number"
+      },
+      {
+        arg: "locale",
+        required: true,
+        type: "string",
+        http: { source: "query" }
+      }
+    ],
+    returns: { arg: "keys", type: "object", root: true },
+    http: {
+      verb: "get",
+      path: "/:releaseId/collections/:collectionId/keys",
+      errorStatus: 400
+    }
+  });
+
+  Release.getTextKeys = function (releaseId, collectionId, locale, cb) {
+    if(!locale) locale = 'en'
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          where: { id: collectionId },
+          include: {
+            relation: 'text',
+            scope: {
+              where: { locale }
+            }
+          }
+        }
+      }
+    };
+    Release.findById(releaseId, filter, function(err, release) {
+      if (err || !release) return cb(err);
+      const rawData = serialize(release, Release)
+      const texts = rawData.included ?
+        rawData.included.filter(obj => obj.type == 'released_texts')
+        .map(text => ({
+          key: text.id,
+          value: text.attributes.value,
+          locale: text.attributes.locale,
+          collection_id: text.attributes.collection_id,
+        })) : []
+
+      return cb(null, texts);
+    }
+  );
+};
+
   Release.observe('before save', async function (ctx) {
     ctx.instance.updated_at = new Date()
     return;

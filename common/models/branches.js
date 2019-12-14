@@ -50,12 +50,12 @@ module.exports = function (Branches) {
       {
         arg: "versionId",
         required: true,
-        type: "string"
+        type: "number"
       },
       {
         arg: "collectionId",
         required: true,
-        type: "string"
+        type: "number"
       },
       {
         arg: "locale",
@@ -224,6 +224,8 @@ module.exports = function (Branches) {
   };
 
   Branches.getTextKeys = function (branchId, versionId, collectionId, locale, cb) {
+    if(!locale) locale = 'en'
+
     const filter = {
       include: {
         relation: 'collections',
