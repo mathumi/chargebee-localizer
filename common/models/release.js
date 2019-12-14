@@ -1,5 +1,6 @@
 'use strict';
 const async = require('async')
+const serialize = require("loopback-jsonapi-model-serializer");
 
 module.exports = function (Release) {
   Release.disableRemoteMethod("create", true);
@@ -93,7 +94,7 @@ module.exports = function (Release) {
     http: { verb: 'get', path: '/:releaseId/collections', errorStatus: 400 }
   })
 
-  Release.getCollections = function(releaseId, callback) {
+  Release.getCollections = function(releaseId, cb) {
     const Collection = Release.app.models.ReleaseCollection
     Release.findById(releaseId)
       .then(release => {
