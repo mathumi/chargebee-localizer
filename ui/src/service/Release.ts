@@ -1,5 +1,5 @@
-import { ReleaseApiBase } from './api';
+import { ReleaseApiBase } from '@/service/api';
 
 class ReleaseService extends ReleaseApiBase { }
 
-export default new ReleaseService();
+export const releaseService = new ReleaseService();

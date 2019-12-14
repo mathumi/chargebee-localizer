@@ -1,5 +1,5 @@
-import { BranchApiBase } from './api';
+import { BranchApiBase } from '@/service/api';
 
 class BranchService extends BranchApiBase { }
 
-export default new BranchService();
+export const branchService = new BranchService();

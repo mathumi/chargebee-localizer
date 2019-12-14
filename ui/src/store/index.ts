@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import ApiService from "@/service/api";
+import { branchService } from "@/service";
 import { branches, releases, collections } from './stub';
 
 Vue.use(Vuex);
@@ -24,7 +24,7 @@ export default new Vuex.Store({
   },
   actions: {
     async init({ commit }) {
-      return Promise.all([ApiService.]);
+      return Promise.all([]);
     },
 
     async mockInit({ commit }) {
