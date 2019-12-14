@@ -1,34 +1,47 @@
 <template>
   <div class="collection-detail">
     <!-- Collection Heading -->
-    <h3 class="va-mid">
-      Collections -
-    </h3>
-    <div class="va-top" style="padding-left:6px;">
-      <h3 v-if="!editName">
-        <a @click="openEdit()">{{ collectionName }}</a>
-      </h3>
-      <template v-else>
-        <b-input
-          class="mar--b-mi collection-detail__input"
-          placeholder="Name of your collection"
-          v-model="collectionInput"
-          type="text"
-        ></b-input>
+    <div class="columns">
+      <div class="column">
+        <h3 class="va-mid">
+          Collections -
+        </h3>
+        <div class="va-top" style="padding-left:6px;">
+          <h3 v-if="!editName">
+            <a @click="openEdit()">{{ collectionName }}</a>
+          </h3>
+          <template v-else>
+            <b-input
+              class="mar--b-mi collection-detail__input"
+              placeholder="Name of your collection"
+              v-model="collectionInput"
+              type="text"
+            ></b-input>
+            <b-button
+              @click="updateCollectionName()"
+              class="button is-twitter mar--r-mi"
+              rounded
+            >
+              <b-icon icon="check"></b-icon
+            ></b-button>
+            <b-button @click="cancelUpdate()" class="button" rounded>
+              <b-icon icon="close"></b-icon
+            ></b-button>
+          </template>
+        </div>
+          <p class="fs-sm"><b>Branch:</b> Master</p>
+      </div>
+      <div class="column">
         <b-button
-          @click="updateCollectionName()"
-          class="button is-twitter mar--r-mi"
-          rounded
-        >
-          <b-icon icon="check"></b-icon
-        ></b-button>
-        <b-button @click="cancelUpdate()" class="button" rounded>
-          <b-icon icon="close"></b-icon
-        ></b-button>
-      </template>
+            class="float-right"
+            type="is-primary"
+            outlined
+            icon-left="key-variant"
+            @click="openAddKeyModal"
+            >Add Key</b-button
+          >
+      </div>
     </div>
-    
-    <p class="fs-sm"><b>Branch:</b> Master</p>
 
     <!-- Keys-->
     <div class="collection-detail__keys mar--t-md">
@@ -90,15 +103,20 @@
         </div>
       </div>
     </div>
+     <b-modal :active.sync="isNewKeyModalActive" :width="640">
+      <NewKey
+      />
+    </b-modal>
   </div>
 </template>
 
 <script>
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
+import NewKey from '@/components/modals/NewKey.vue';
 export default {
   components: {
-    KeyCard
+    NewKey
   },
   methods: {
     mounted() {
@@ -133,6 +151,9 @@ export default {
     },
     closeUpdate: function(key) {
       key.showEdit = false;
+    },
+    openAddKeyModal(){
+      this.isNewKeyModalActive = true;
     }
   },
 
@@ -141,6 +162,7 @@ export default {
       collectionName: "API Keys",
       collectionInput: "",
       editName: false,
+      isNewKeyModalActive: false,
       collectionData: [
         {
           key: "apikey_heading",
@@ -162,6 +184,7 @@ export default {
 
 <style lang="scss">
 .collection-detail {
+  margin-top: $space_lg;
   &__ {
     &input {
       min-width: 300px;
@@ -180,5 +203,27 @@ export default {
       }
     }
   }
+}
+
+.navbar-secondary {
+  margin-top: 1px;
+  box-shadow: none;
+  padding: 4px 16px;
+  align-items: center !important;
+  z-index: 1 !important;
+  .tab-content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.navbar-warning {
+  background: $warning !important;
+  border-bottom: 1px solid #ffeab8;
+}
+
+.navbar-info {
+  background-color: #f1f8ff !important;
+  border-bottom: 1px solid #c8e1ff;
 }
 </style>
