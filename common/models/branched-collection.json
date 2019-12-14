@@ -6,6 +6,12 @@
   "options": {
     "validateUpsert": true
   },
+  "indexes": {
+    "handle_index": {
+      "columns": "handle",
+      "kind": "unique"
+    }
+  },
   "properties": {
     "version": {
       "type": "string",
@@ -13,7 +19,11 @@
     },
     "handle": {
       "type": "string",
-      "required": true
+      "required": true,
+      "mysql": {
+        "dataType": "VARCHAR",
+        "dataLength": 50
+      }
     },
     "name": {
       "type": "string",

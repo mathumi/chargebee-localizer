@@ -1,6 +1,9 @@
 var Promise = require("bluebird");
 const app = require("../../server/server");
 const serialize = require("loopback-jsonapi-model-serializer");
+const path = require('path')
+const multer = require('multer')
+const fs = require('fs')
 
 module.exports = function (Branches) {
   Branches.disableRemoteMethod("create", true);
@@ -10,7 +13,7 @@ module.exports = function (Branches) {
     accepts: [
       {
         arg: 'data', type: 'object', http: { source: 'body' }, required: true,
-        description: 'name, description, fromBranch (branch id)'
+        description: 'name, description, from_branch (branch id)'
       },
       {
         arg: "data",
@@ -20,8 +23,8 @@ module.exports = function (Branches) {
         http: { source: "body" }
       }
     ],
-    returns: { arg: "release", type: "object", root: true },
-    http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
+    returns: { arg: "branch", type: "object", root: true },
+    http: { path: "/create", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {
@@ -44,51 +47,6 @@ module.exports = function (Branches) {
       errorStatus: 400
     }
   });
-
-  Branches.remoteMethod("getKeys", {
-    accepts: [
-      {
-        arg: "versionId",
-        required: true,
-        type: "string"
-      },
-      {
-        arg: "branchId",
-        required: true,
-        type: "number"
-      },
-      {
-        arg: "collectionId",
-        required: true,
-        type: "string"
-      },
-      {
-        arg: "locale",
-        required: true,
-        type: "string",
-        http: { source: "query" }
-      }
-    ],
-    returns: { arg: "keys", type: "object", root: true },
-    http: {
-      verb: "get",
-      path: "/:branchId/:versionId/collections/:collectionId/keys",
-      errorStatus: 400
-    }
-  });
-
-  Branches.createBranch = function(data, cb) {
-    const { name, description } = data;
-    if (!name && description) return cb(new Error("Missing parameters"));
-
-    Branches.create(
-      {
-        name,
-        description
-      },
-      cb
-    );
-  };
 
   Branches.remoteMethod("getKeys", {
     accepts: [
@@ -149,7 +107,7 @@ module.exports = function (Branches) {
     http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
   });
 
-  Branches.createBranch = async function(data, callback) {
+  Branches.createBranch = async function (data, callback) {
     const { name, description, from_branch } = data;
     let draft_version;
 
@@ -173,7 +131,7 @@ module.exports = function (Branches) {
     return callback(null, newBranch);
   };
 
-  let duplicateCollectionsAndText = async function(fromBranchId, newBranch) {
+  let duplicateCollectionsAndText = async function (fromBranchId, newBranch) {
     const filter = {
       include: {
         relation: "collections",
@@ -219,13 +177,13 @@ module.exports = function (Branches) {
     return Promise.resolve(true);
   };
 
-  Branches.listBranches = function(callback) {
+  Branches.listBranches = function (callback) {
     Branches.find().then(data => {
       return callback(null, data);
     });
   };
 
-  Branches.getCollections = function(branchId, versionId, cb) {
+  Branches.getCollections = function (branchId, versionId, cb) {
     Branches.find(
       {
         where: {
@@ -233,14 +191,14 @@ module.exports = function (Branches) {
           version: versionId
         }
       },
-      function(err, collections) {
+      function (err, collections) {
         if (err || !collections) return cb(err);
         return cb(null, collections);
       }
     );
   };
 
-  Branches.getKeys = function(branchId, versionId, collectionId, cb) {
+  Branches.getKeys = function (branchId, versionId, collectionId, cb) {
     Branchedcollection.find({
       where: {
         version: versionId,
@@ -255,37 +213,26 @@ module.exports = function (Branches) {
   };
 
   function getCollections(branchData) {
-    const result = branchData.included
+    const result = branchData.included ? branchData.included
       .filter(obj => obj.type == "collections")
       .map(collection => ({
         id: collection.id,
         name: collection.attributes.name,
         handle: collection.attributes.handle,
         description: collection.attributes.description
-      }));
+      })) : [];
     return result;
   }
 
   function getTexts(branchData) {
-    const result = branchData.included
+    const result = branchData.included ? branchData.included
       .filter(obj => obj.type == "text")
       .map(text => ({
         key: text.id,
         value: text.attributes.value,
         locale: text.attributes.locale,
         collection_id: text.attributes.collection_id
-      }));
-    return result;
-  }
-
-  function getCollections(branchData) {
-
-    const result = branchData.included.filter(obj => obj.type == "collections").map(collection => ({
-      id: collection.id,
-      name: collection.attributes.name,
-      handle: collection.attributes.handle,
-      description: collection.attributes.description,
-    }))
+      })) : [];
     return result;
   }
 
@@ -363,6 +310,114 @@ module.exports = function (Branches) {
       return cb(e)
     }
 
+  }
+
+  Branches.remoteMethod("createCollection", {
+    accepts: [
+      { arg: 'req', type: 'object', http: { source: 'req' } },
+      { arg: 'res', type: 'object', http: { source: 'res' } },
+      { arg: 'branchId', type: 'number' },
+      { arg: 'versionId', type: 'number' },
+    ],
+    returns: { arg: "collection", type: "object", root: true },
+    http: { verb: "post", path: "/:branchId/:versionId/collections", errorStatus: 400 }
+  });
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      const downloadPath = path.join(__dirname, '../../server/storage')
+      cb(null, downloadPath + '/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`)
+    }
+  });
+
+  const isValidLocale = (locale) => {
+    return !!~['en', 'fr', 'de', 'pt', 'es', 'it'].indexOf(locale)
+  }
+
+  Branches.createCollection = function (req, res, branchId, versionId, callback) {
+    let fileData, name, handle, locale, description;
+
+    // Read contents of file
+    new Promise((resolve, reject) => {
+      var upload = multer({
+        storage: storage
+      }).single('file');
+
+      upload(req, res, function (err) {
+        if (err) return reject(err)
+        const data = req.body || {};
+        name = data.name
+        handle = data.handle
+        locale = data.locale
+        description = data.description
+
+        if(!(name && handle)) return reject(new Error('Missing parameters'))
+
+        fileData = JSON.parse(fs.readFileSync(req.file.path, { encoding: 'utf8' }))
+        return resolve(fileData)
+      });
+
+    })
+      .then(data => {
+        // Fetch branch
+        return new Promise((resolve, reject) => {
+          Branches.findOne({
+            where: {
+              and: [
+                { id: branchId },
+                { draft_version: versionId }
+              ]
+            }
+          }, function (err, branch) {
+            if (err || !branch) return reject(err || new Error('Not found'))
+            return resolve(branch)
+          })
+        })
+      })
+      .then(branch => {
+        // Create collection
+        return new Promise((resolve, reject) => {
+          const Collection = Branches.app.models.BranchedCollection
+          Collection.create({
+            version: versionId,
+            handle: handle,
+            name: name,
+            description: description,
+            branch_id: branch.id
+          }, function (err, collection) {
+            if (err) return reject(err)
+            return resolve(collection)
+          })
+        })
+      })
+      .then(collection => {
+        // Create text for collection
+        return new Promise((resolve, reject) => {
+          const Text = Branches.app.models.BranchText
+          const locales = locale ? [locale] : Object.keys(fileData).filter(locale => isValidLocale(locale))
+          let textArray = []
+          locales.map(locale => {
+            let textData = fileData[locale]
+            if (!textData) return reject(new Error('Missing locale data in file'))
+            Object.keys(textData).map(key => {
+              textArray.push({ key, value: textData[key], locale, collection_id: collection.id })
+            })
+          })
+          Text.create(
+            textArray,
+            function (err, texts) {
+              if (err) return reject(err)
+              return resolve(collection)
+            }
+          )
+
+        })
+      })
+      .then(collection => callback(null, collection))
+      .catch(err => callback(err))
   }
 
   Branches.observe('before save', async function (ctx) {

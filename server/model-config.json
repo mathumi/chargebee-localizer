@@ -65,7 +65,8 @@
           "listBranches": true,
           "getCollections": true,
           "getKeys": true,
-          "publish": true
+          "publish": true,
+          "createCollection": true
         }
       }
     }

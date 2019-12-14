@@ -24,7 +24,7 @@ module.exports = function(Version) {
       {arg: 'name', type: 'string', required: true},
       {
         arg: 'payload',
-        type: 'json',
+        type: 'string',
         required: false,
         description:
           'Must be JSON encoded string `{"domain":"siva","env":"prod"...}`',
