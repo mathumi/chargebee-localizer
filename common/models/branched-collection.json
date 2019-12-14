@@ -7,6 +7,10 @@
     "validateUpsert": true
   },
   "properties": {
+    "version": {
+      "type": "string",
+      "required": true
+    },
     "handle": {
       "type": "string",
       "required": true
@@ -16,12 +20,6 @@
       "required": true
     },
     "description": {
-      "type": "string"
-    },
-    "publised_texts_version": {
-      "type": "string"
-    },
-    "draft_texts_version": {
       "type": "string"
     },
     "created_at": {
