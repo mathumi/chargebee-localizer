@@ -12,9 +12,9 @@
 
 // @ts-ignore
 
-/* eslint-disable */
+/* tslint-disable */
 
-import CBClient from "@/utils/cb-client";
+import CBClient from "@/app/utils/common/core/cb-client";
 const BASE_PATH = "/chargebee/chargebee-localiser/1.0.0".replace(/\/+$/, "");
 /**
  *
@@ -88,6 +88,18 @@ export interface Branch {
    * @memberof Branch
    */
   'draftVersionId'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Branch
+   */
+  'createdAt'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Branch
+   */
+  'updatedAt'?: string;
 }
 
 /**
@@ -113,7 +125,77 @@ export interface Collection {
    * @type {string}
    * @memberof Collection
    */
+  'handle'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Collection
+   */
   'description'?: string;
+  /**
+   * 
+   * @type {number}
+   * @memberof Collection
+   */
+  'keysCount'?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface CreateBranchInput
+ */
+export interface CreateBranchInput {
+  /**
+   * 
+   * @type {number}
+   * @memberof CreateBranchInput
+   */
+  'fromBranch'?: number;
+  /**
+   * 
+   * @type {string}
+   * @memberof CreateBranchInput
+   */
+  'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof CreateBranchInput
+   */
+  'description'?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface CreateCollectionInput
+ */
+export interface CreateCollectionInput {
+  /**
+   * 
+   * @type {string}
+   * @memberof CreateCollectionInput
+   */
+  'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof CreateCollectionInput
+   */
+  'handle'?: string;
+  /**
+   * 
+   * @type {any}
+   * @memberof CreateCollectionInput
+   */
+  'file'?: any;
+  /**
+   * 
+   * @type {string}
+   * @memberof CreateCollectionInput
+   */
+  'locale'?: string;
 }
 
 /**
@@ -146,6 +228,12 @@ export interface Key {
    * @memberof Key
    */
   'value'?: string;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof Key
+   */
+  'archived'?: boolean;
 }
 
 /**
@@ -168,12 +256,110 @@ export interface Locale {
   'name': string;
 }
 
+/**
+ * 
+ * @export
+ * @interface PublishBranchInput
+ */
+export interface PublishBranchInput {
+  /**
+   * 
+   * @type {string}
+   * @memberof PublishBranchInput
+   */
+  'releaseName'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof PublishBranchInput
+   */
+  'releaseDesc'?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface Release
+ */
+export interface Release {
+  /**
+   * 
+   * @type {number}
+   * @memberof Release
+   */
+  'id'?: number;
+  /**
+   * 
+   * @type {string}
+   * @memberof Release
+   */
+  'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Release
+   */
+  'description'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Release
+   */
+  'createdAt'?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface UpdateKeyInput
+ */
+export interface UpdateKeyInput {
+  /**
+   * 
+   * @type {string}
+   * @memberof UpdateKeyInput
+   */
+  'locale'?: string;
+  /**
+   * 
+   * @type {Key}
+   * @memberof UpdateKeyInput
+   */
+  'key'?: Key;
+}
+
 
 /**
  * BranchApi - fetch parameter creator
  */
 const BranchApiFetchParamCreator = function () {
   return {
+    /**
+      * 
+      * @summary create a Branch
+      * @param {CreateBranchInput} [createBranchInput] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    createBranch(createBranchInput?: CreateBranchInput, options: any = {}): FetchArgs {
+      const localVarPath = `/branches`;
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      output['body'] = createBranchInput
+      return output;
+    },
     /**
       * 
       * @summary to discard a branch changes
@@ -250,10 +436,11 @@ const BranchApiFetchParamCreator = function () {
       * 
       * @summary to publish a branch changes
       * @param {number} branchId 
+      * @param {PublishBranchInput} [publishBranchInput] 
       * @param {*} [options] Override http request option.
       * @throws {RequiredError}
       */
-    publishDraft(branchId: number, options: any = {}): FetchArgs {
+    publishDraft(branchId: number, publishBranchInput?: PublishBranchInput, options: any = {}): FetchArgs {
       // verify required parameter 'branchId' is not null or undefined
       if (branchId === null || branchId === undefined) {
         throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling publishDraft.');
@@ -262,12 +449,19 @@ const BranchApiFetchParamCreator = function () {
         .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)));
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
 
       let output = {
         url: localVarPath,
         headers: Object.assign(localVarHeaderParameter, options),
         queryParams: localVarQueryParameter,
       };
+      output['body'] = publishBranchInput
       return output;
     },
   }
@@ -281,6 +475,18 @@ const BranchApiFetchParamCreator = function () {
 export class BranchApiBase {
   /**
     * 
+    * @summary create a Branch
+    * @param {CreateBranchInput} [createBranchInput] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof BranchApi
+    */
+  public createBranch(createBranchInput?: CreateBranchInput, options?: any): Promise<{}> {
+    const localVarFetchArgs = BranchApiFetchParamCreator().createBranch(createBranchInput, options);
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+  /**
+    * 
     * @summary to discard a branch changes
     * @param {number} branchId 
     * @param {*} [options] Override http request option.
@@ -289,7 +495,7 @@ export class BranchApiBase {
     */
   public discardDraft(branchId: number, options?: any): Promise<{}> {
     const localVarFetchArgs = BranchApiFetchParamCreator().discardDraft(branchId, options);
-    return <Promise<{}>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
     * 
@@ -300,7 +506,7 @@ export class BranchApiBase {
     */
   public getBranches(options?: any): Promise<Array<Branch>> {
     const localVarFetchArgs = BranchApiFetchParamCreator().getBranches(options);
-    return <Promise<Array<Branch>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Branch>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
     * 
@@ -313,19 +519,20 @@ export class BranchApiBase {
     */
   public getCollections(branchId: number, versionId: string, options?: any): Promise<Array<Collection>> {
     const localVarFetchArgs = BranchApiFetchParamCreator().getCollections(branchId, versionId, options);
-    return <Promise<Array<Collection>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Collection>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
     * 
     * @summary to publish a branch changes
     * @param {number} branchId 
+    * @param {PublishBranchInput} [publishBranchInput] 
     * @param {*} [options] Override http request option.
     * @throws {RequiredError}
     * @memberof BranchApi
     */
-  public publishDraft(branchId: number, options?: any): Promise<{}> {
-    const localVarFetchArgs = BranchApiFetchParamCreator().publishDraft(branchId, options);
-    return <Promise<{}>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+  public publishDraft(branchId: number, publishBranchInput?: PublishBranchInput, options?: any): Promise<Array<Release>> {
+    const localVarFetchArgs = BranchApiFetchParamCreator().publishDraft(branchId, publishBranchInput, options);
+    return <Promise<Array<Release>>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
 }
 
@@ -334,6 +541,88 @@ export class BranchApiBase {
  */
 const CollectionApiFetchParamCreator = function () {
   return {
+    /**
+      * 
+      * @summary to create a collection
+      * @param {number} branchId 
+      * @param {string} versionId 
+      * @param {CreateCollectionInput} [createCollectionInput] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    createCollection(branchId: number, versionId: string, createCollectionInput?: CreateCollectionInput, options: any = {}): FetchArgs {
+      // verify required parameter 'branchId' is not null or undefined
+      if (branchId === null || branchId === undefined) {
+        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling createCollection.');
+      }
+      // verify required parameter 'versionId' is not null or undefined
+      if (versionId === null || versionId === undefined) {
+        throw new RequiredError('versionId', 'Required parameter versionId was null or undefined when calling createCollection.');
+      }
+      const localVarPath = `/branches/{branchId}/{versionId}/collections`
+        .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)))
+        .replace(`{${"versionId"}}`, encodeURIComponent(String(versionId)));
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      output['body'] = createCollectionInput
+      return output;
+    },
+    /**
+      * 
+      * @summary to create or update a key
+      * @param {number} branchId 
+      * @param {string} versionId 
+      * @param {number} collectionId 
+      * @param {UpdateKeyInput} [updateKeyInput] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    createOrUpdateKey(branchId: number, versionId: string, collectionId: number, updateKeyInput?: UpdateKeyInput, options: any = {}): FetchArgs {
+      // verify required parameter 'branchId' is not null or undefined
+      if (branchId === null || branchId === undefined) {
+        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling createOrUpdateKey.');
+      }
+      // verify required parameter 'versionId' is not null or undefined
+      if (versionId === null || versionId === undefined) {
+        throw new RequiredError('versionId', 'Required parameter versionId was null or undefined when calling createOrUpdateKey.');
+      }
+      // verify required parameter 'collectionId' is not null or undefined
+      if (collectionId === null || collectionId === undefined) {
+        throw new RequiredError('collectionId', 'Required parameter collectionId was null or undefined when calling createOrUpdateKey.');
+      }
+      const localVarPath = `/branches/{branchId}/{versionId}/collections/{collectionId}/keys`
+        .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)))
+        .replace(`{${"versionId"}}`, encodeURIComponent(String(versionId)))
+        .replace(`{${"collectionId"}}`, encodeURIComponent(String(collectionId)));
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      output['body'] = updateKeyInput
+      return output;
+    },
     /**
       * 
       * @summary to get the collections of a branch for a live or draft version
@@ -419,6 +708,35 @@ const CollectionApiFetchParamCreator = function () {
 export class CollectionApiBase {
   /**
     * 
+    * @summary to create a collection
+    * @param {number} branchId 
+    * @param {string} versionId 
+    * @param {CreateCollectionInput} [createCollectionInput] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof CollectionApi
+    */
+  public createCollection(branchId: number, versionId: string, createCollectionInput?: CreateCollectionInput, options?: any): Promise<{}> {
+    const localVarFetchArgs = CollectionApiFetchParamCreator().createCollection(branchId, versionId, createCollectionInput, options);
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+  /**
+    * 
+    * @summary to create or update a key
+    * @param {number} branchId 
+    * @param {string} versionId 
+    * @param {number} collectionId 
+    * @param {UpdateKeyInput} [updateKeyInput] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof CollectionApi
+    */
+  public createOrUpdateKey(branchId: number, versionId: string, collectionId: number, updateKeyInput?: UpdateKeyInput, options?: any): Promise<{}> {
+    const localVarFetchArgs = CollectionApiFetchParamCreator().createOrUpdateKey(branchId, versionId, collectionId, updateKeyInput, options);
+    return <Promise<{}>>CBClient.perform("PUT", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+  /**
+    * 
     * @summary to get the collections of a branch for a live or draft version
     * @param {number} branchId 
     * @param {string} versionId 
@@ -428,7 +746,7 @@ export class CollectionApiBase {
     */
   public getCollections(branchId: number, versionId: string, options?: any): Promise<Array<Collection>> {
     const localVarFetchArgs = CollectionApiFetchParamCreator().getCollections(branchId, versionId, options);
-    return <Promise<Array<Collection>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Collection>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
     * 
@@ -443,7 +761,7 @@ export class CollectionApiBase {
     */
   public getKeys(branchId: number, versionId: string, collectionId: number, locale: string, options?: any): Promise<Array<Key>> {
     const localVarFetchArgs = CollectionApiFetchParamCreator().getKeys(branchId, versionId, collectionId, locale, options);
-    return <Promise<Array<Key>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Key>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
 }
 
@@ -518,7 +836,7 @@ export class KeysApiBase {
     */
   public getKeys(branchId: number, versionId: string, collectionId: number, locale: string, options?: any): Promise<Array<Key>> {
     const localVarFetchArgs = KeysApiFetchParamCreator().getKeys(branchId, versionId, collectionId, locale, options);
-    return <Promise<Array<Key>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Key>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
 }
 
@@ -590,7 +908,7 @@ export class LocaleApiBase {
     */
   public createLocale(locale?: Locale, options?: any): Promise<{}> {
     const localVarFetchArgs = LocaleApiFetchParamCreator().createLocale(locale, options);
-    return <Promise<{}>>CBClient.post(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.body, localVarFetchArgs.headers)
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
     * 
@@ -601,7 +919,52 @@ export class LocaleApiBase {
     */
   public getLocales(options?: any): Promise<Array<Locale>> {
     const localVarFetchArgs = LocaleApiFetchParamCreator().getLocales(options);
-    return <Promise<Array<Locale>>>CBClient.get(localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers)
+    return <Promise<Array<Locale>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+}
+
+/**
+ * ReleaseApi - fetch parameter creator
+ */
+const ReleaseApiFetchParamCreator = function () {
+  return {
+    /**
+      * 
+      * @summary get all releases
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    getReleases(options: any = {}): FetchArgs {
+      const localVarPath = `/releases`;
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      return output;
+    },
+  }
+};
+
+/**
+ * ReleaseApi - object-oriented interface
+ * @export
+ * @class ReleaseApi
+ */
+export class ReleaseApiBase {
+  /**
+    * 
+    * @summary get all releases
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof ReleaseApi
+    */
+  public getReleases(options?: any): Promise<Array<Release>> {
+    const localVarFetchArgs = ReleaseApiFetchParamCreator().getReleases(options);
+    return <Promise<Array<Release>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
 }
 

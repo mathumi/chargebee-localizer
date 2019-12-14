@@ -12,6 +12,8 @@
     "ordered-imports": false,
     "quotemark": [true, "single"],
     "max-classes-per-file": false,
-    "no-any": false
+    "no-any": false,
+    "arrow-parens": false,
+    "trailing-comma": false
   }
 }
