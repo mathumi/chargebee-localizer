@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import ApiService from ''
+import ApiService from '@/service';
 
 Vue.use(Vuex);
 
@@ -18,7 +18,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async init({ commit }) { }
+    async init({ commit }) {
+      
+    }
   },
   getters: {
     draftBranches: state => {
