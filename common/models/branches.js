@@ -11,7 +11,7 @@ module.exports = function (Branches) {
     accepts: [
       {
         arg: 'data', type: 'object', http: { source: 'body' }, required: true,
-        description: 'name, description'
+        description: 'name, description, fromBranch (branch id)'
       },
     ],
     returns: {arg: 'branch', type: 'object', "root": true},
