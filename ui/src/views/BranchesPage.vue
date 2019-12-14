@@ -3,15 +3,18 @@
     <div class="mar--t-lg">
       <b-tabs type="is-toggle">
         <b-tab-item label="All">
+          <br />
           <BranchPanel :data="defaultBranch" title="Default Branch" :icon="true" />
           <br />
           <BranchPanel :data="otherBranches" title="Other Branches" />
         </b-tab-item>
         <b-tab-item label="Published">
+          <br />
           <BranchPanel v-if="publishedBranches.length" :data="publishedBranches" title="Branches" />
           <div v-else>No Published Found</div>
         </b-tab-item>
         <b-tab-item label="In Draft">
+          <br />
           <BranchPanel :data="draftBranches" title="Branches" />
         </b-tab-item>
       </b-tabs>

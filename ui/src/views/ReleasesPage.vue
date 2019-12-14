@@ -1,41 +1,43 @@
 <template>
-  <div>
-    <b-button
-      type="is-primary"
-      class="is-pulled-right"
-      @click="openNewReleaseModal"
-    >Draft a new release</b-button>
-    <div class="timeline">
-      <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
-        <div>
-          <p class="heading">
-            {{release.created_at}}
-            <b-icon icon="tag" size="is-small" />
-          </p>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <p class="heading">{{release.name}}</p>
-            <p>{{release.description}}</p>
+  <div class="container">
+    <div class="mar--t-xl">
+      <b-button
+        type="is-primary"
+        class="is-pulled-right"
+        @click="openNewReleaseModal"
+      >Draft a new release</b-button>
+      <div class="timeline">
+        <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
+          <div>
+            <p class="heading">
+              {{release.created_at}}
+              <b-icon icon="tag" size="is-small" />
+            </p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <p class="heading">{{release.name}}</p>
+              <p>{{release.description}}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- <div class="timeline-header">
+        <!-- <div class="timeline-header">
         <span class="tag is-medium is-primary">End</span>
-      </div>-->
+        </div>-->
+      </div>
+      <b-pagination
+        :total="releases.length"
+        :current.sync="currentPage"
+        range-before="3"
+        :per-page="8"
+        :icon-prev="'chevron-left'"
+        :icon-next="'chevron-right'"
+      ></b-pagination>
+      <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+        <NewRelease :branches="branches" :selectedBranch="''" />
+      </b-modal>
     </div>
-    <b-pagination
-      :total="releases.length"
-      :current.sync="currentPage"
-      range-before="3"
-      :per-page="5"
-      :icon-prev="'chevron-left'"
-      :icon-next="'chevron-right'"
-    ></b-pagination>
-    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
-      <NewRelease :branches="branches" :selectedBranch="''" />
-    </b-modal>
   </div>
 </template>
 
