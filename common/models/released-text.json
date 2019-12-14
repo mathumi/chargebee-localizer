@@ -6,10 +6,6 @@
     "validateUpsert": true
   },
   "properties": {
-    "version": {
-      "type": "number",
-      "required": true
-    },
     "locale": {
       "type": "string",
       "required": true

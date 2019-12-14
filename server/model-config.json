@@ -37,7 +37,15 @@
   },
   "release": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createRelease": true,
+          "find": true
+        }
+      }
+    }
   },
   "release_collection": {
     "dataSource": "mysqldb",
@@ -49,18 +57,51 @@
   },
   "branches": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createBranch": true,
+          "listBranches": true,
+          "getCollections": true,
+          "getKeys": true
+        }
+      }
+    }
   },
   "branched_collection": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "publish": true
+        }
+      }
+    }
   },
   "branch_text": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "publish": true,
+          "getTexts": true
+        }
+      }
+    }
   },
   "locale": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "create": true,
+          "find": true
+        }
+      }
+    }
   }
 }

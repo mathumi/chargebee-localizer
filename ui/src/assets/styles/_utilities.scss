@@ -66,6 +66,13 @@
     }
 }
 
+.pad-0{
+  padding: 0 !important;
+}
+.mar-0{
+  margin: 0 !important;
+}
+
 
 .text-justify {
   text-align: justify !important;
@@ -101,6 +108,14 @@
   text-align: center !important;
 }
 
+.text-danger {
+  color: $danger;
+}
+
+.text-light {
+  color: $light;
+}
+
 .float-left {
   float: left !important;
 }
@@ -111,6 +126,19 @@
 
 .float-none {
   float: none !important;
+}
+
+.flex {
+  display: flex !important;
+}
+
+.flex-grow  {
+  flex: 1;
+}
+
+.ai-center {
+  display: flex !important;
+  align-items: center !important;
 }
 
 h1 {
@@ -128,6 +156,17 @@ h3 {
 h4 {
   font-size: $fs_h4;
 }
+
+.fs-sm{
+  font-size: $fs_caption;
+}
+
+
+.fs-st{
+  font-size: $fs_body;
+}
+
+
 
 .table {
   td, th {

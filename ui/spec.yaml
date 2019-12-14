@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  title: Chargebee Copy Management API
+  description: Chargebee Copy Management API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://virtserver.swaggerhub.com/chargebee/chargebee-localiser/1.0.0
+    description: SwaggerHub API Auto Mocking
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /locales:
+    get:
+      tags:
+        - Locale
+      summary: get all locales
+      operationId: getLocales
+      responses:
+        "200":
+          description: to get all locales
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Locale"
+    post:
+      tags:
+        - Locale
+      summary: create a Locale
+      operationId: createLocale
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Locale"
+      responses:
+        "200":
+          description: OK
+  /branches:
+    get:
+      tags:
+        - Branch
+      summary: get all branches
+      operationId: getBranches
+      responses:
+        "200":
+          description: to get all branches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Branch"
+  /branches/{branchId}/discard_draft:
+    post:
+      tags:
+        - Branch
+      summary: to discard a branch changes
+      operationId: discardDraft
+      parameters:
+        - name: branchId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+  /branches/{branchId}/publish:
+    post:
+      tags:
+        - Branch
+      summary: to publish a branch changes
+      operationId: publishDraft
+      parameters:
+        - name: branchId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+  /branches/{branchId}/{versionId}/collections:
+    get:
+      tags:
+        - Branch
+        - Collection
+      summary: to get the collections of a branch for a live or draft version
+      operationId: getCollections
+      parameters:
+        - name: branchId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+        - name: versionId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: to get all collections for particular branch version
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Collection"
+  /branches/{branchId}/{versionId}/collections/{collectionId}/keys:
+    get:
+      tags:
+        - Collection
+        - Keys
+      summary: to get the keys of a collections
+      operationId: getKeys
+      parameters:
+        - name: branchId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+        - name: versionId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: collectionId
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: number
+        - name: locale
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: to get all keys of a collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Key"
+components:
+  schemas:
+    Locale:
+      required:
+        - code
+        - name
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+    Branch:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        liveVersionId:
+          type: string
+        draftVersionId:
+          type: string
+    Collection:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+    Key:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        value:
+          type: string
