@@ -29,16 +29,8 @@ module.exports = function (Branches) {
 
   Branches.remoteMethod("getCollections", {
     accepts: [
-      {
-        arg: "branchId",
-        type: "number",
-        required: true
-      },
-      {
-        arg: "versionId",
-        type: "string",
-        required: true
-      }
+      { arg: "branchId", type: "number", required: true },
+      { arg: "versionId", type: "string", required: true }
     ],
     returns: { arg: "collections", type: "array", root: true },
     http: {
@@ -184,18 +176,51 @@ module.exports = function (Branches) {
   };
 
   Branches.getCollections = function (branchId, versionId, cb) {
-    Branches.find(
-      {
-        where: {
-          id: branchId,
-          version: versionId
+    const Collection = Branches.app.models.BranchedCollection
+    Branches.findById(branchId)
+      .then(branch => {
+        if(!branch) throw new Error('Not found')
+
+        return Collection.find({
+          where: {
+            and: [
+              {branch_id: branch.id},
+              {version: versionId}
+            ]
+          },
+          include: {
+            relation: 'text',
+            scope: {
+              fields: ['key']
+            }
+          }
+        })
+      })
+      .then(data => {
+        const rawData = serialize(data, Collection)
+        const collectionMap = {}
+        rawData.data.map(collection => {
+          collectionMap[collection.id] = {
+            id: collection.id,
+            handle: collection.attributes.handle,
+            name: collection.attributes.name,
+            description: collection.attributes.description,
+            keyCount: 0
+          }
+        })
+
+        if(rawData.included) {
+          rawData.included.map(key => {
+            const _collection = collectionMap[key.attributes.collection_id]
+            _collection.keyCount = _collection.keyCount + 1
+          })
         }
-      },
-      function (err, collections) {
-        if (err || !collections) return cb(err);
-        return cb(null, collections);
-      }
-    );
+
+        const formattedData = Object.values(collectionMap)
+        
+        cb(null, formattedData)
+      })
+      .catch(err => cb(err))
   };
 
   Branches.getKeys = function (branchId, versionId, collectionId, cb) {
@@ -212,7 +237,7 @@ module.exports = function (Branches) {
     });
   };
 
-  function getCollections(branchData) {
+  function getCollectionsJSON(branchData) {
     const result = branchData.included ? branchData.included
       .filter(obj => obj.type == "collections")
       .map(collection => ({
@@ -224,7 +249,7 @@ module.exports = function (Branches) {
     return result;
   }
 
-  function getTexts(branchData) {
+  function getTextsJSON(branchData) {
     const result = branchData.included ? branchData.included
       .filter(obj => obj.type == "text")
       .map(text => ({
@@ -234,16 +259,6 @@ module.exports = function (Branches) {
         collection_id: text.attributes.collection_id
       })) : [];
     return result;
-  }
-
-  function getTexts(branchData) {
-    const result = branchData.included.filter(obj => obj.type == "text").map(text => ({
-      key: text.id,
-      value: text.attributes.value,
-      locale: text.attributes.locale,
-      collection_id: text.attributes.collection_id
-    }))
-    return result
   }
 
   Branches.publish = async function (branchId, releaseData, cb) {
@@ -277,8 +292,8 @@ module.exports = function (Branches) {
           description: releaseData.description
         })
 
-        const collections = getCollections(serialize(branch, Branches))
-        const texts = getTexts(serialize(branch, Branches))
+        const collections = getCollectionsJSON(serialize(branch, Branches))
+        const texts = getTextsJSON(serialize(branch, Branches))
 
         for (let i = 0; i < collections.length; i++) {
           const collectionObj = collections[i]

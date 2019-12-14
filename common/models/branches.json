@@ -25,10 +25,10 @@
       "required": true
     },
     "publised_version": {
-      "type": "string"
+      "type": "number"
     },
     "draft_version": {
-      "type": "string"
+      "type": "number"
     },
     "created_at": {
       "type": "date",
