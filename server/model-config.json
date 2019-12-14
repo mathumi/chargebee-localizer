@@ -68,6 +68,14 @@
   },
   "locale": {
     "dataSource": "mysqldb",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "create": true,
+          "find": true
+        }
+      }
+    }
   }
 }
