@@ -1,4 +1,5 @@
 'use strict';
+var Promise = require('bluebird');
 
 module.exports = function(Branches) {
   Branches.disableRemoteMethod("create", true);
@@ -11,8 +12,8 @@ module.exports = function(Branches) {
         description: 'name, description'
       },
     ],
-    returns: {arg: 'release', type: 'object', "root": true},
-    http: {path: '/create', verb: 'post', errorStatus: 400}
+    returns: {arg: 'branch', type: 'object', "root": true},
+    http: {path: '/', verb: 'post', errorStatus: 400}
   });
 
   Branches.remoteMethod('getCollections', {
@@ -28,7 +29,7 @@ module.exports = function(Branches) {
     http: {verb: 'get', path: '/:branchId/:versionId/collections', errorStatus: 400}
   });
 
-    Branches.remoteMethod('getKeys', {
+  Branches.remoteMethod('getKeys', {
     accepts: [{
       arg: 'versionId', required: true, type: 'string'
     }, {
@@ -42,16 +43,76 @@ module.exports = function(Branches) {
     http: {verb: 'get', path: '/:branchId/:versionId/collections/:collectionId/keys', errorStatus: 400}
   });
 
-  Branches.createBranch = function (data, cb) {
-    const { name, description } = data;
-    if(!name && description) return cb(new Error('Missing parameters'))
+  Branches.remoteMethod("listBranches", {
+    description: 'List all the branches',
+    returns: {arg: 'branches', type: 'array', root: true},
+    http: {path: '/', verb: 'get', errorStatus: 400}
+  });
 
-    Branches.create({
-      name,
-      description
-    }, cb)
+  Branches.createBranch = async function(data, callback) {
+    const { name, description, fromBranch } = data;
+    let draft_version;
+
+    if( !name || !description ) {
+      return callback(new Error("Missing parameters"))
+    }
+
+    const newBranch = await Branches.find({order: 'publised_version DESC', limit: 1})
+    .then(data => {
+      draft_version = (data && data [0] && data[0]["publised_version"] || 999) + 1;
+      return Branches.create({ name, description, draft_version})
+    });
+
+    if(fromBranch) {
+      duplicateCollectionsAndText(fromBranch, newBranch);
+    }
+
+    return callback(null, newBranch)
+
   }
 
+  let duplicateCollectionsAndText = async function(fromBranchId, newBranch) {
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          include: {
+            relation: 'text',
+            scope: { where: { archived: false } }
+          }
+        }
+      }
+    };
+    const baseBranch = await Branches.findById(fromBranchId, filter);
+    baseBranch.collections.array.forEach(collection => {
+      let newCollection = {
+        version: collection.version,
+        handle: collection.handle,
+        name: collection.name,
+        description: collection.description,
+        branch_id: newBranch.id
+      };
+      Branches.app.models.Branchedcollection.create(newCollection)
+      .then(data => {
+        let newTextArr = [];
+        collection.texts.array.forEach(text => {
+          newTextArr.push({
+            key: text.key,
+            value: text.value,
+            locale: text.locale,
+            collection_id: data.id
+          })
+        });
+        return Branches.app.models.branched_text.create(newTextArr);
+      });
+    });
+  }
+
+  Branches.listBranches = function(callback) {
+    Branches.find().then(data => {
+      return callback(null, data);
+    });
+  }
   
   Branches.getCollections = function(branchId, versionId, cb) {
     Branches.find({where: {
