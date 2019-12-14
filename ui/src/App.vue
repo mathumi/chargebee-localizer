@@ -21,25 +21,20 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Buefy from "buefy";
-
-Vue.use(Buefy);
-
-@Component({
-  components: {}
-})
-export default class App extends Vue { }
+<script lang="js">
+export default {
+  mounted() {
+    this.$store.dispatch('mockInit');
+  }
+}
 </script>
 
 <style lang="scss" src="@/assets/styles/main.scss"></style>
 <style lang="scss" scoped>
-  #app{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 </style>

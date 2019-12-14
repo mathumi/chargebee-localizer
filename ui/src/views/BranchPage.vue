@@ -12,7 +12,7 @@
       <b-modal :active.sync="isNewBranchModalActive" :width="640">
         <NewBranch
           :resourceBranches="resourceBranches"
-          :selectedBranch="selectedBranch"
+          :selectedBranchId="selectedBranchId"
         />
       </b-modal>
     </section>-->
@@ -29,7 +29,11 @@
     <section>
       <b-tabs v-model="activeTab">
         <div class="block">
-          <b-select :value="selectedBranch" @input="updateselectedBranch" icon="source-branch">
+          <b-select
+            :value="selectedBranchId"
+            @input="updateselectedBranchId"
+            icon="source-branch"
+          >
             <option
               v-for="filter in resourceBranches"
               :value="filter.id"
@@ -44,11 +48,11 @@
             @click="openNewBranchModal"
           >Add Collection</b-button>
         </div>
-        <Collections />
+        <Collections :branchId="selectedBranchId" />
       </b-tabs>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :resourceBranches="resourceBranches" :selectedBranch="selectedBranch" />
+      <NewBranch :resourceBranches="resourceBranches" :selectedBranchId="selectedBranchId" />
     </b-modal>
   </div>
 </template>
@@ -70,33 +74,39 @@ export default {
     return {
       activeTab: 0,
       showTabs: false,
-      selectedBranch: "master",
+      selectedBranchId: 10,
       isNewBranchModalActive: false
     };
   },
   computed: {
     resourceBranches() {
       return this.$store.getters.branches;
+    },
+    selectedBranchData() {
+      return this.$store.getters.branches.find(
+        branch => branch.id === this.selectedBranchId
+      );
     }
   },
   mounted() {
     const urlPaths = window.location.href.split("tree");
     if (urlPaths.length === 2) {
-      this.selectedBranch = urlPaths[1].slice(1);
+      this.selectedBranchId = urlPaths[1].slice(1);
     }
     this.sanityResCheck();
   },
   methods: {
     sanityResCheck() {
       if (
-        this.resourceBranches.findIndex(f => f.id === this.selectedBranch) ===
-        -1
+        this.resourceBranches.findIndex(
+          f => f.id === this.selectedBranchId
+        ) === -1
       ) {
-        this.selectedBranch = "master";
+        this.selectedBranchId = 10;
       }
     },
 
-    updateselectedBranch(newValue) {
+    updateselectedBranchId(newValue) {
       if (newValue) {
         this.$router.replace(`/tree/${newValue}`);
       }
