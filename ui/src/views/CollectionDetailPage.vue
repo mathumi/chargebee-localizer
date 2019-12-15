@@ -37,7 +37,7 @@
                     }}
                   </a>
                 </h3>
-                <div class="mar--l-xs">Total Keys : {{ keys.length }}</div>
+                <div class="mar--l-xs">( Total Keys : {{ keys.length }} )</div>
               </div>
 
               <b-input
@@ -117,7 +117,10 @@
                       <b-button @click="cancelUpdateKey(props.row)" class="button" rounded>Cancel</b-button>
                     </template>
                   </b-table-column>
-                  <b-table-column class="text-right">
+                  <b-table-column
+                    class="text-right cursor-pointer"
+                    @click.native="confirmArchive(props.row.key)"
+                  >
                     <b-icon
                       v-if="!props.row.archived"
                       type="is-danger"
@@ -145,7 +148,7 @@ import { Vue } from "vue-property-decorator";
 import AddKey from "@/components/modals/AddKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
 import UpdateCollection from "@/components/modals/UpdateCollection.vue";
-import { keyService } from "@/services";
+import { keyService, textService } from "@/services";
 
 export default {
   name: "CollectionDetailPage",
@@ -240,6 +243,34 @@ export default {
     },
     openUpdateCollectionModal() {
       this.isUpdateCollectionModalActive = true;
+    },
+    confirmArchive(key) {
+      const keysData = this.keys.find(k => k.key === key) || {};
+      this.$buefy.dialog.confirm({
+        title: "Archiving Key",
+        message:
+          "Are you sure you want to <b>archive</b> key? This action cannot be undone.",
+        confirmText: "Archive",
+        type: "is-danger",
+        hasIcon: true,
+        onConfirm: () => {
+          textService
+            .createOrUpdateText({
+              key,
+              ...keysData,
+              branchId: this.branchData.id,
+              collectionId: keysData.collection_id,
+              versionId: this.branchData.draft_version,
+              archived: true
+            })
+            .then(() => {
+              this.$success("Key Archived!");
+              this.fetchKeys();
+              this.$store.dispatch("init");
+            })
+            .catch(this.$error);
+        }
+      });
     }
   },
   watch: {
@@ -254,7 +285,6 @@ export default {
     selectedLocale: {
       handler(newValue) {
         if (newValue) {
-          debugger
           this.fetchKeys();
         }
       }
