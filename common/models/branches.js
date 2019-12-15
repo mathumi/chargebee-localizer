@@ -140,14 +140,11 @@ module.exports = function (Branches) {
 
   Branches.createBranch = async function (data) {
     const { name, description, from_branch } = data;
-    let draft_version;
-
-    if (!name || !description) {
-      throw new Error("Missing parameters");
-    }
+    if (!name || !description) throw new Error("Missing parameters");
 
     const newDraftVersion = await getNewDraftVersion()
-    const newBranch = Branches.create({ name, description, draft_version: newDraftVersion });
+    const newBranch = await Branches
+      .create({ name, description, draft_version: newDraftVersion });
 
     if (from_branch) {
       await duplicateCollectionsAndText(from_branch, newBranch);
@@ -156,11 +153,16 @@ module.exports = function (Branches) {
     return newBranch;
   };
 
-  let duplicateCollectionsAndText = async function (fromBranchId, newBranch) {
+  async function duplicateCollectionsAndText (fromBranchId, newBranch) {
+    let baseBranch = await Branches.findById(fromBranchId);
+    if(!baseBranch.published_version) 
+      throw new Error('Cannot create a new branch from an unpublished branch')
+
     const filter = {
       include: {
         relation: "collections",
         scope: {
+          where : { version: baseBranch.published_version },
           include: {
             relation: "text",
             scope: { where: { archived: false } }
@@ -169,10 +171,10 @@ module.exports = function (Branches) {
       }
     };
 
-    const baseBranch = await Branches.findById(fromBranchId, filter);
-
-    for (let i = 0; i < baseBranch.collections().length; i++) {
-      let collection = baseBranch.collections()[i];
+    baseBranch = await Branches.findById(fromBranchId, filter);
+    const collections = baseBranch.collections()
+    for (let i in collections) {
+      let collection = collections[i];
 
       let newCollection = {
         version: newBranch.draft_version,
@@ -182,24 +184,22 @@ module.exports = function (Branches) {
         branch_id: newBranch.id
       };
 
-      await Branches.app.models.branched_collection
+      const newCollectionInstance = await Branches.app.models.BranchedCollection
         .create(newCollection)
-        .then(data => {
-          let newTextArr = [];
-          for (let i = 0; i < collection.text().length; i++) {
-            let text = collection.text()[i];
-            newTextArr.push({
-              key: text.key,
-              value: text.value,
-              locale: text.locale,
-              collection_id: data.id
-            });
-          }
-          return Branches.app.models.branch_text.create(newTextArr);
-        });
-    }
 
-    return Promise.resolve(true);
+      const newTexts = []
+      const texts = collection.text()
+      texts.map(text => {
+        newTexts.push({
+          key: text.key,
+          value: text.value,
+          locale: text.locale,
+          description: text.description,
+          collection_id: newCollectionInstance.id
+        })
+      })
+      await Branches.app.models.BranchText.create(newTextArr);
+    }
   };
 
   Branches.listBranches = function (callback) {
