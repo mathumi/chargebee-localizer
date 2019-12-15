@@ -10,7 +10,8 @@
               v-for="(locale, index) in locales"
               :value="locale.code"
               :key="locale.code"
-            >{{ locale.name }}</option>
+              >{{ locale.name }}</option
+            >
           </b-select>
           <div class="level-right" v-if="isBranchInDraftMode">
             <b-button
@@ -18,23 +19,20 @@
               type="is-primary"
               icon-left="upload"
               @click="openUpdateCollectionModal"
-            >Update Collection</b-button>
+              >Update Collection</b-button
+            >
           </div>
         </div>
         <div class="columns ai-center" v-if="collectionData">
           <div class="column ai-center">
             <h3 class="va-mid">Collections -</h3>
-            <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
             <div class="va-top collection-name flex" style="padding-left:6px;">
               <div class="flex flex-grow ai-center">
                 <h3>
                   <a @click="openEdit()" class="popover-trigger">
-                    {{
-                    collectionData.name
-                    }}
+                    {{ collectionData.name }}
                   </a>
                 </h3>
-                <div class="mar--l-xs">Total Keys : {{ keys.length }}</div>
               </div>
 
               <b-input
@@ -56,19 +54,24 @@
                     <b-button
                       @click="updateCollectionName()"
                       class="button is-twitter mar--r-mi"
-                    >Update</b-button>
+                      >Update</b-button
+                    >
 
-                    <b-button @click="cancelUpdate()" class="button" rounded>Cancel</b-button>
+                    <b-button @click="cancelUpdate()" class="button" rounded
+                      >Cancel</b-button
+                    >
                   </div>
                 </div>
               </transition>
             </div>
           </div>
         </div>
-        <div class="level">
-          <div class="level-left" v-if="collectionData.description">{{collectionData.description}}</div>
-          <div class="level-right">{{`Created on ${$time(collectionData.created_at)}`}}</div>
+        <div><b>Branch:</b> Master</div>
+         <div><b>Total Keys:</b> {{ keys.length }}</div>
+        <div v-if="collectionData.description">
+          {{ collectionData.description }}
         </div>
+        <div>{{ `Created on ${$time(collectionData.created_at)}` }}</div>
       </div>
       <!-- Keys-->
       <div class="collection-detail__keys mar--t-md">
@@ -81,15 +84,15 @@
                 <template slot-scope="props">
                   <b-table-column class="col_key">
                     <b>{{ props.row.key }}:</b>
-                    <p
-                      class="fs-sm text-light mar--t-ti"
-                    >{{ props.row.description || 'This is a sample description' }}</p>
+                    <p class="fs-sm text-light mar--t-ti">
+                      {{
+                        props.row.description || "This is a sample description"
+                      }}
+                    </p>
                   </b-table-column>
                   <b-table-column class="col_val">
                     <a v-if="!props.row.showEdit" @click="showEdit(props.row)">
-                      {{
-                      props.row.value
-                      }}
+                      {{ props.row.value }}
                     </a>
                     <b-input
                       v-else
@@ -104,18 +107,19 @@
                         @click="updateKey(props.row)"
                         class="button is-twitter mar--r-mi"
                         rounded
-                      >Update</b-button>
-                      <b-button @click="cancelUpdateKey(props.row)" class="button" rounded>Cancel</b-button>
+                        >Update</b-button
+                      >
+                      <b-button
+                        @click="cancelUpdateKey(props.row)"
+                        class="button"
+                        rounded
+                        >Cancel</b-button
+                      >
                     </template>
                   </b-table-column>
                   <b-table-column class="text-right">
-                    <b-icon
-                      v-if="!props.row.archived"
-                      type="is-danger"
-                      size="is-small"
-                      icon="delete"
-                    ></b-icon>
-                    <span v-else class="text-danger">Archived</span>
+                    <b-icon v-if="!props.row.archived" icon="delete"></b-icon>
+                    <span v-else class="text-light">Archived</span>
                   </b-table-column>
                 </template>
               </b-table>
@@ -125,7 +129,10 @@
       </div>
     </template>
     <b-modal :active.sync="isUpdateCollectionModalActive" :width="640">
-      <update-collection :collectionData="collectionData" :selectedBranchData="branchData" />
+      <update-collection
+        :collectionData="collectionData"
+        :selectedBranchData="branchData"
+      />
     </b-modal>
   </div>
 </template>
@@ -314,4 +321,3 @@ export default {
   border-bottom: 1px solid #c8e1ff;
 }
 </style>
-
