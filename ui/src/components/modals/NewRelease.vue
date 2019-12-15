@@ -34,7 +34,7 @@ export default {
   computed: {
     releaseId() {
       return this.releaseName
-        .replace(/[^a-zA-Z0-9 ]/g, "")
+        .replace(/[^a-zA-Z0-9_ ]/g, "")
         .toLowerCase()
         .replace(/ /g, "_");
     }
