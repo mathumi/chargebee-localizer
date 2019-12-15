@@ -14,7 +14,7 @@
             </div>
           </div>
         </div>
-        <div class="column is-half" v-if="item.updated_at">Updated {{ $time(item.updated_at) }}</div>
+        <div class="column is-half" v-if="item.updated_at">Updated on {{ $time(item.updated_at) }}</div>
         <div class="column text-right">
           <b-icon icon="delete" @click.native="confirmDelete" class="cursor-pointer" />
         </div>
