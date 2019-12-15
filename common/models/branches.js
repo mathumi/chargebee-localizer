@@ -1,6 +1,5 @@
 var Promise = require("bluebird");
 const app = require("../../server/server");
-const serialize = require("loopback-jsonapi-model-serializer");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
@@ -345,30 +344,28 @@ module.exports = function (Branches) {
         description: releaseData.description
       });
 
-      const collections = getCollectionsJSON(serialize(branch, Branches));
-      const texts = getTextsJSON(serialize(branch, Branches));
+      const collections = branch.collections()
+      for(i in collections) {
+        const collection = collections[i]
+        const texts = collection.text()
 
-      for (let i = 0; i < collections.length; i++) {
-        const collectionObj = collections[i];
         // Create each collection under release
         const releaseCollection = await ReleaseCollection.create({
-          name: collectionObj.name,
-          handle: collectionObj.handle,
-          description: collectionObj.description,
+          name: collection.name,
+          handle: collection.handle,
+          description: collection.description,
           release_id: release.id
         });
 
-        const filteredText = texts
-          .filter(text => text.collection_id == collectionObj.id)
-          .map(text => ({
-            key: text.key,
-            value: text.value,
-            locale: text.locale,
-            collection_id: releaseCollection.id
-          }));
+        const newTexts = texts.map(text => ({
+          key: text.key,
+          value: text.value,
+          locale: text.locale,
+          collection_id: releaseCollection.id
+        }))
 
         // Create text under each collection
-        await ReleasedText.create(filteredText);
+        await ReleasedText.create(newTexts);
       }
 
       return release;

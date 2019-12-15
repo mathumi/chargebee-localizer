@@ -21,6 +21,9 @@
       "id": 1,
       "required": true
     },
+    "description": {
+      "type": "string"
+    },
     "archived": {
       "type": "boolean",
       "required": true,
