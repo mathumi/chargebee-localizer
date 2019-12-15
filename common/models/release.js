@@ -181,6 +181,7 @@ module.exports = function (Release) {
           key: text.id,
           value: text.value,
           locale: text.locale,
+          description: text.description,
           collection_id: text.collection_id,
         })
       })

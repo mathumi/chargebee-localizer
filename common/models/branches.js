@@ -272,40 +272,13 @@ module.exports = function (Branches) {
           key: text.key,
           value: text.value,
           locale: text.locale,
+          description: text.description,
           collection_id: text.collection_id,
         })
       })
     })
     return output;
   };
-
-  function getCollectionsJSON(branchData) {
-    const result = branchData.included
-      ? branchData.included
-        .filter(obj => obj.type == "collections")
-        .map(collection => ({
-          id: collection.id,
-          name: collection.attributes.name,
-          handle: collection.attributes.handle,
-          description: collection.attributes.description
-        }))
-      : [];
-    return result;
-  }
-
-  function getTextsJSON(branchData) {
-    const result = branchData.included
-      ? branchData.included
-        .filter(obj => obj.type == "text")
-        .map(text => ({
-          key: text.id,
-          value: text.attributes.value,
-          locale: text.attributes.locale,
-          collection_id: text.attributes.collection_id
-        }))
-      : [];
-    return result;
-  }
 
   Branches.publish = async function (branchId, releaseData) {
     await app.dataSources.mysqldb.transaction(async models => {
@@ -361,7 +334,8 @@ module.exports = function (Branches) {
           key: text.key,
           value: text.value,
           locale: text.locale,
-          collection_id: releaseCollection.id
+          collection_id: releaseCollection.id,
+          description: text.description,
         }))
 
         // Create text under each collection
@@ -432,6 +406,7 @@ module.exports = function (Branches) {
           key,
           value: textData[key],
           locale,
+          description: '',
           collection_id: collection.id
         });
       });
@@ -492,6 +467,7 @@ module.exports = function (Branches) {
         key: text.key,
         value: text.value,
         locale: text.locale,
+        description: text.description,
         archived: false,
         collection_id: newCollection.id
       }))
@@ -586,6 +562,7 @@ module.exports = function (Branches) {
               key,
               value: textMap[key],
               locale,
+              description: '',
               archived: false,
               collection_id: collection.id
             })
