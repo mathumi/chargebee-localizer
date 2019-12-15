@@ -5,6 +5,12 @@
   "options": {
     "validateUpsert": true
   },
+  "indexes": {
+    "handle_index": {
+      "columns": "handle, release_id",
+      "kind": "unique"
+    }
+  },
   "properties": {
     "handle": {
       "type": "string",
