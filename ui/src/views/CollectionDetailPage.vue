@@ -4,6 +4,13 @@
       <!-- Collection Heading -->
       <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
       <div class="collection-detail__block">
+        <b-select v-model="selectedLocale" class="mar--b-st">
+          <option
+            v-for="(locale, index) in locales"
+            :value="locale.code"
+            :key="locale.code"
+          >{{ locale.name }}</option>
+        </b-select>
         <div class="columns ai-center" v-if="collectionData">
           <div class="column ai-center">
             <h3 class="va-mid">Collections -</h3>
@@ -17,13 +24,7 @@
                     }}
                   </a>
                 </h3>
-                <b-select v-model="selectedLocale" class="mar--l-st">
-                  <option
-                    v-for="(locale, index) in locales"
-                    :value="locale.code"
-                    :key="locale.code"
-                  >{{ locale.name }}</option>
-                </b-select>
+                <div class="mar--l-xs">Total Keys : {{ keys.length }}</div>
               </div>
 
               <b-input

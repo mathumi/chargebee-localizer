@@ -4,7 +4,6 @@
       <b-navbar
         class="mar--t-sm mar--b-md navbar-secondary"
         :type="draft ? 'is-warning': 'is-info'"
-        v-if="draft"
       >
         <template slot="brand">
           <div style="display:flex;align-items:center;">
@@ -38,9 +37,13 @@
 </template>
 
 <script>
+import NewRelease from "@/components/modals/NewRelease";
+
 export default {
   props: ["draft", "branchId"],
-  components: {},
+  components: {
+    NewRelease
+  },
   data() {
     return {
       discardLoader: false,
