@@ -5,6 +5,12 @@ module.exports = {
   entry: [
     './src/main.ts'
   ],
+  resolve: {
+    extensions: ['.ts', '.js', '.vue', '.json', '.styl', '.scss'],
+    alias: {
+      '@': resolve('src')
+    }
+  },
   module: {
     rules: [
       {
@@ -20,7 +26,7 @@ module.exports = {
           {
             loader: 'sass-resources-loader',
             options: {
-              resources: ['./src/assets/styles/_variables.scss']
+              resources: ['src/assets/styles/_variables.scss']
             }
           }
         ]

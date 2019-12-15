@@ -2,14 +2,17 @@
   <div class="panel" v-if="data && data.length > 0">
     <p class="panel-heading" v-if="title">{{title}}</p>
     <a class="panel-block" v-for="item in data" :key="item.id">
-      <div class="columns container">
-        <div class="column is-one-third flex">
+      <div class="columns container ai-center">
+        <div class="column is-one-third">
+          <div class="flex ai-center">
           <b-icon icon="shield-lock" class="mar--r-xs" v-if="icon" />
-          <span v-if="item.name">{{ item.name }}</span>
+          <div><p class="fs-md" v-if="item.name">{{ item.name }}</p>
+            <p class="fs-sm text-light" v-if="item.description">{{ item.description }}</p></div>
+          </div>
         </div>
-        <div class="column is-half" v-if="item.description">{{ item.description }}</div>
-        <div class="column">
-          <b-icon icon="delete" @click.native="confirmDelete" />
+        <div class="column is-half" v-if="item.updated_at">Updated {{ relativeTime(item.updated_at) }}</div>
+        <div class="column text-right">
+          <b-icon icon="delete" @click.native="confirmDelete" class="cursor-pointer" />
         </div>
       </div>
     </a>
@@ -17,6 +20,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   name: "Panel",
   props: ["data", "title", "icon"],
@@ -33,6 +37,9 @@ export default {
           this.$success("Branch deleted!");
         }
       });
+    },
+     relativeTime(ts) {
+      return moment(ts).fromNow()
     }
   }
 };
