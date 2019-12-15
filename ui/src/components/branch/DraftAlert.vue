@@ -27,7 +27,7 @@
             :loading="discardLoader"
             @click="confirmDiscardDraft"
           >Discard</b-button>
-          <b-button type="is-primary" :loading="publishLoader">Publish</b-button>
+          <b-button type="is-primary" :loading="publishLoader" @click="$emit('publish')">Publish</b-button>
         </template>
       </b-navbar>
     </transition>
@@ -72,8 +72,7 @@ export default {
         .finally(() => {
           this.discardLoader = false;
         });
-    },
-    publish() {}
+    }
   }
 };
 </script>

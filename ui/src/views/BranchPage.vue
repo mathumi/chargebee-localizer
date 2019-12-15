@@ -1,6 +1,10 @@
 <template>
   <div v-if="selectedBranchData">
-    <DraftAlert :draft="isBranchInDraftMode" :branchId="selectedBranchData.id" />
+    <DraftAlert
+      :draft="isBranchInDraftMode"
+      :branchId="selectedBranchData.id"
+      @publish="openNewReleaseModal"
+    />
     <section>
       <div>
         <div class="nav-block">
@@ -36,7 +40,7 @@
               type="is-primary"
               outlined
               icon-left="file-document-box-plus-outline"
-              @click="openNewCollectioModal"
+              @click="openNewCollectionModal"
             >Add Collection</b-button>
           </div>
         </div>
@@ -44,10 +48,13 @@
       </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :branches="branches" :selectedBranchData="selectedBranchData" />
+      <new-branch :branches="branches" :selectedBranchData="selectedBranchData" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
-      <NewCollection />
+      <new-collection />
+    </b-modal>
+    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+      <new-release :branchId="selectedBranchData.id" />
     </b-modal>
   </div>
 </template>
@@ -55,6 +62,7 @@
 <script>
 import Collections from "@/components/branch/tabs/Collections";
 import NewBranch from "@/components/modals/NewBranch.vue";
+import NewRelease from "@/components/modals/NewRelease.vue";
 import NewCollection from "@/components/modals/NewCollection.vue";
 import Review from "@/components/modals/Review.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
@@ -63,6 +71,7 @@ export default {
   components: {
     Collections,
     NewBranch,
+    NewRelease,
     NewCollection,
     Review,
     DraftAlert
@@ -73,6 +82,7 @@ export default {
       showTabs: false,
       selectedBranchName: "master",
       isNewBranchModalActive: false,
+      isNewReleaseModalActive: false,
       isNewCollectionModalActive: false,
       isReviewModalActive: false
     };
@@ -124,8 +134,11 @@ export default {
     openNewBranchModal() {
       this.isNewBranchModalActive = true;
     },
-    openNewCollectioModal() {
+    openNewCollectionModal() {
       this.isNewCollectionModalActive = true;
+    },
+    openNewReleaseModal() {
+      this.isNewReleaseModalActive = true;
     }
   }
 };
