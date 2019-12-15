@@ -48,6 +48,15 @@
               @click="openNewBranchModal"
             >New Branch</b-button>
           </div>
+           <div class="float-right">
+            <b-button
+              class="mar--r-mi"
+              type="is-primary"
+              outlined
+              icon-left="file-document-box-plus-outline"
+              @click="openReviewModal"
+              >Merge with master</b-button
+            >
           <b-button
             class="float-right"
             type="is-primary"
@@ -55,6 +64,7 @@
             icon-left="file-document-box-plus-outline"
             @click="openNewCollectioModal"
           >Add Collection</b-button>
+           </div>
         </div>
         <Collections :data="selectedBranchData.collections" />
       </div>
@@ -72,12 +82,14 @@
 import Collections from "@/components/branch/tabs/Collections";
 import NewBranch from "@/components/modals/NewBranch.vue";
 import NewCollection from "@/components/modals/NewCollection.vue";
+import Review from "@/components/modals/Review.vue";
 
 export default {
   components: {
     Collections,
     NewBranch,
-    NewCollection
+    NewCollection,
+    Review
   },
   data() {
     return {
@@ -85,7 +97,8 @@ export default {
       showTabs: false,
       selectedBranchName: "master",
       isNewBranchModalActive: false,
-      isNewCollectionModalActive: false
+      isNewCollectionModalActive: false,
+      isReviewModalActive: false
     };
   },
   computed: {
@@ -117,6 +130,10 @@ export default {
       ) {
         this.selectedBranchName = "master";
       }
+    },
+
+    openReviewModal() {
+      this.isReviewModalActive = true;
     },
 
     updateSelectedBranch(newValue) {

@@ -1,0 +1,34 @@
+<template>
+  <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Diff</p>
+      </header>
+      <section class="modal-card-body">
+        <b-field label="Release Tag">
+          <b-input type="text" placeholder="v1.0.0" required></b-input>
+        </b-field>
+        <b-field label="Release Target">
+          <b-select :value="selectedBranch" icon="source-branch">
+            <option v-for="branch in branches" :value="branch.id" :key="branch.id">{{ branch.name }}</option>
+          </b-select>
+        </b-field>
+
+        <b-field label="Description">
+          <b-input type="textarea" placeholder="Macro Edition"></b-input>
+        </b-field>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-primary">Merge</button>
+      </footer>
+    </div>
+</template>
+
+<script>
+export default {
+  name: "review-modal",
+
+};
+</script>
+
+<style>
+</style>

@@ -16,30 +16,29 @@
       </template>
     </b-navbar>
 
-    <div v-if="loaded">
-      <transition name="fade" mode="out-in">
-        <div class="wrapper" :class="pageClass">
-          <b-navbar class="navbar-secondary navbar-warning" v-if="isEditMode">
-            <template slot="brand">
-              <div style="display:flex;align-items:center;">
-                <p
-                  class="fs-st"
-                  v-if="isEditMode"
-                >You have some unpublished changes which are saved as draft.</p>
-                <!-- <p class="fs-st" v-else>
+    <transition name="fade" mode="out-in">
+      <div class="wrapper" :class="pageClass">
+        <b-navbar class="navbar-secondary navbar-warning" v-if="isEditMode">
+          <template slot="brand">
+            <div style="display:flex;align-items:center;">
+              <p class="fs-st" v-if="isEditMode">
+                You have some unpublished changes which are saved as draft.
+              </p>
+              <!-- <p class="fs-st" v-else>
                 You are in View-only mode. <a>Click here to edit</a>
-                </p>-->
-              </div>
-            </template>
-            <template slot="end" v-if="isEditMode">
-              <b-button type="is-text" class="mar--r-mi">Discard</b-button>
-              <b-button type="is-primary">Publish</b-button>
-            </template>
-          </b-navbar>
-          <router-view />
-        </div>
-      </transition>
-    </div>
+              </p> -->
+            </div>
+          </template>
+          <template slot="end" v-if="isEditMode">
+            <b-button type="is-text" class="mar--r-mi">Discard</b-button>
+            <b-button type="is-primary"
+              >Publish</b-button
+            >
+          </template>
+        </b-navbar>
+        <router-view />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -53,8 +52,13 @@ export default {
 
   data() {
     return {
+<<<<<<< HEAD
+      isEditMode: true,
+      isReviewModalActive: false
+=======
       isEditMode: false,
       loaded: false
+>>>>>>> 8133f1d76964ace1b0d15f8d0cd626dbc5e12508
     }
   },
   mounted() {
