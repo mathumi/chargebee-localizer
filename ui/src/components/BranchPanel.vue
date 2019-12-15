@@ -5,12 +5,14 @@
       <div class="columns container ai-center">
         <div class="column is-one-third">
           <div class="flex ai-center">
-          <b-icon icon="shield-lock" class="mar--r-xs" v-if="icon" />
-          <div><p class="fs-md" v-if="item.name">{{ item.name }}</p>
-            <p class="fs-sm text-light" v-if="item.description">{{ item.description }}</p></div>
+            <b-icon icon="shield-lock" class="mar--r-xs" v-if="icon" />
+            <div>
+              <p class="fs-md" v-if="item.name">{{ item.name }}</p>
+              <p class="fs-sm text-light" v-if="item.description">{{ item.description }}</p>
+            </div>
           </div>
         </div>
-        <div class="column is-half" v-if="item.updated_at">Updated {{ relativeTime(item.updated_at) }}</div>
+        <div class="column is-half" v-if="item.updated_at">Updated {{ $time(item.updated_at) }}</div>
         <div class="column text-right">
           <b-icon icon="delete" @click.native="confirmDelete" class="cursor-pointer" />
         </div>
@@ -20,7 +22,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 export default {
   name: "Panel",
   props: ["data", "title", "icon"],
@@ -37,9 +38,6 @@ export default {
           this.$success("Branch deleted!");
         }
       });
-    },
-     relativeTime(ts) {
-      return moment(ts).fromNow()
     }
   }
 };

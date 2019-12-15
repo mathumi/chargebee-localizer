@@ -60,7 +60,7 @@
       </div>
       <div class="level">
         <div class="level-left" v-if="collectionData.description">{{collectionData.description}}</div>
-        <div class="level-right">{{`Created : ${relativeTime(collectionData.created_at)}`}}</div>
+        <div class="level-right">{{`Created : ${$time(collectionData.created_at)}`}}</div>
       </div>
     </div>
     <!-- Keys-->
@@ -121,7 +121,6 @@
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
-import moment from "moment";
 import { branchService } from "@/service";
 
 export default {
@@ -178,10 +177,6 @@ export default {
     cancelUpdate: function() {
       this.closeEdit();
       this.collectionInput = this.collectionName;
-    },
-
-    relativeTime(ts) {
-      return moment(ts).format("LL");
     },
 
     showEdit: function(key) {

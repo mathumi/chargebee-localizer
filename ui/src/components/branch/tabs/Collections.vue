@@ -15,7 +15,7 @@
           </b-table-column>
           <b-table-column label="Description">{{ props.row.description }}</b-table-column>
           <b-table-column label="No of Keys">{{ props.row.keyCount }}</b-table-column>
-          <b-table-column label="Last updated on" centered>{{ props.row.createdAt }}</b-table-column>
+          <b-table-column label="Last updated on" centered>{{ $time(props.row.updated_at) }}</b-table-column>
         </template>
       </b-table>
       <div v-if="data.length === 0">No collections found.</div>
