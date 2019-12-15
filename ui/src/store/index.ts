@@ -18,7 +18,7 @@ export default new Vuex.Store({
       state.branches = payload;
     },
     setLocales(state, payload = []) {
-      state.branches = payload;
+      state.locales = payload;
     }
   },
   actions: {
@@ -48,8 +48,8 @@ export default new Vuex.Store({
     liveBranches: state => {
       return state.branches.filter(branch => !Boolean(branch.draftVersionId));
     },
-    // branchCollections: state => {
-    //   return (branchId) => state.collections[branchId];
-    // }
+    branchWithName: state => {
+      return (branchName) => state.branches.find(branch => branch.name === branchName);
+    }
   }
 });

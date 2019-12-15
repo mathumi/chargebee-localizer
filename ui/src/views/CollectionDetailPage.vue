@@ -1,54 +1,68 @@
 <template>
   <div class="collection-detail">
     <!-- Collection Heading -->
-    <div class="columns ai-center collection-detail__block">
-      <div class="column ai-center">
-        <h3 class="va-mid">Collections -</h3>
-        <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
-        <div class="va-top collection-name flex" style="padding-left:6px;">
-          <div class="flex flex-grow ai-center">
-            <h3>
-              <a @click="openEdit()" class="popover-trigger">
-                {{
-                collectionName
-                }}
-              </a>
-            </h3>
-            <b-select value="en" class="mar--l-st">
-              <option
-                v-for="(locale, index) in locales"
-                :value="locale.code"
-                :key="locale.code"
-              >{{ locale.name }}</option>
-            </b-select>
-          </div>
-          <b-input class="mar--r-sm collection-detail__input" placeholder="Search Keys" type="text"></b-input>
-          <b-button
-            class="float-right"
-            type="is-primary"
-            outlined
-            icon-left="key-variant"
-            @click="openAddKeyModal"
-          >Add Key</b-button>
-          <transition name="fade">
-            <div class="card popover" v-if="editName">
-              <div class="card-content">
-                <b-input
-                  class="mar--b-mi collection-detail__input"
-                  placeholder="Name of your collection"
-                  v-model="collectionInput"
-                  type="text"
-                ></b-input>
-                <b-button @click="updateCollectionName()" class="button is-twitter mar--r-mi">Update</b-button>
-
-                <b-button @click="cancelUpdate()" class="button" rounded>Cancel</b-button>
-              </div>
+    <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
+    <div class="collection-detail__block">
+      <div class="columns ai-center" v-if="collectionData">
+        <div class="column ai-center">
+          <h3 class="va-mid">Collections -</h3>
+          <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
+          <div class="va-top collection-name flex" style="padding-left:6px;">
+            <div class="flex flex-grow ai-center">
+              <h3>
+                <a @click="openEdit()" class="popover-trigger">
+                  {{
+                  collectionData.name
+                  }}
+                </a>
+              </h3>
+              <b-select value="en" class="mar--l-st">
+                <option
+                  v-for="(locale, index) in locales"
+                  :value="locale.code"
+                  :key="locale.code"
+                >{{ locale.name }}</option>
+              </b-select>
             </div>
-          </transition>
+
+            <b-input
+              class="mar--r-sm collection-detail__input"
+              placeholder="Search Keys"
+              type="text"
+            ></b-input>
+            <b-button
+              class="float-right"
+              type="is-primary"
+              outlined
+              icon-left="key-variant"
+              @click="openAddKeyModal"
+            >Add Key</b-button>
+            <transition name="fade">
+              <div class="card popover" v-if="editName">
+                <div class="card-content">
+                  <b-input
+                    class="mar--b-mi collection-detail__input"
+                    placeholder="Name of your collection"
+                    v-model="collectionInput"
+                    type="text"
+                  ></b-input>
+                  <b-button
+                    @click="updateCollectionName()"
+                    class="button is-twitter mar--r-mi"
+                  >Update</b-button>
+
+                  <b-button @click="cancelUpdate()" class="button" rounded>Cancel</b-button>
+                </div>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
+      <div class="level">
+        <div class="level-left" v-if="collectionData.description">{{collectionData.description}}</div>
+        <div class="level-right">{{`Created : ${relativeTime(collectionData.created_at)}`}}</div>
+      </div>
     </div>
-
     <!-- Keys-->
     <div class="collection-detail__keys mar--t-md">
       <div class="columns">
@@ -107,15 +121,50 @@
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
+import moment from "moment";
+import { branchService } from "@/service";
+
 export default {
   name: "CollectionDetailPage",
   components: {
     NewKey
   },
-  methods: {
-    mounted() {
-      this.collectionInput = this.collectionName;
+  data() {
+    return {
+      collectionInput: "",
+      editName: false,
+      isNewKeyModalActive: false
+    };
+  },
+  computed: {
+    locales() {
+      return this.$store.state.locales;
     },
+    collectionHandle() {
+      return this.$route.params.handle;
+    },
+    branchName() {
+      return this.$route.params.branchName;
+    },
+    branchData() {
+      return this.$store.getters.branchWithName(this.branchName) || {};
+    },
+    collections() {
+      return this.branchData.collections || [];
+    },
+    collectionData() {
+      return this.collections.find(
+        collection => collection.handle === this.collectionHandle
+      );
+    },
+    isBranchInDraftMode() {
+      return this.branchData && Boolean(this.branchData.draft_version);
+    }
+  },
+  mounted() {
+    this.collectionInput = this.collectionName;
+  },
+  methods: {
     openEdit: function() {
       this.editName = true;
     },
@@ -129,6 +178,10 @@ export default {
     cancelUpdate: function() {
       this.closeEdit();
       this.collectionInput = this.collectionName;
+    },
+
+    relativeTime(ts) {
+      return moment(ts).format("LL");
     },
 
     showEdit: function(key) {
@@ -148,34 +201,6 @@ export default {
     },
     openAddKeyModal() {
       this.isNewKeyModalActive = true;
-    }
-  },
-
-  data() {
-    return {
-      collectionName: "API Keys",
-      collectionInput: "",
-      editName: false,
-      isNewKeyModalActive: false,
-      collectionData: [
-        {
-          key: "apikey_heading",
-          version: 0,
-          value: "API Keys Configuration",
-          archived: true
-        },
-        {
-          key: "webhooks",
-          version: 0,
-          value: "Webhooks",
-          archived: false
-        }
-      ]
-    };
-  },
-  computed: {
-    locales() {
-      return this.$store.state.locales;
     }
   }
 };

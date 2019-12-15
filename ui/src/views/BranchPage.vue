@@ -1,10 +1,6 @@
 <template>
   <div v-if="selectedBranchData">
-    <DraftAlert
-      :draft="isBranchInDraftMode"
-      :branchId="selectedBranchData.id"
-      @publish="openNewReleaseModal"
-    />
+    <DraftAlert :draft="isBranchInDraftMode" :branchId="selectedBranchData.id" />
     <section>
       <div>
         <div class="nav-block">
@@ -57,9 +53,6 @@
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
       <new-collection />
     </b-modal>
-    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
-      <new-release :branchId="selectedBranchData.id" />
-    </b-modal>
   </div>
 </template>
 
@@ -86,7 +79,6 @@ export default {
       showTabs: false,
       selectedBranchName: "master",
       isNewBranchModalActive: false,
-      isNewReleaseModalActive: false,
       isNewCollectionModalActive: false,
       isReviewModalActive: false
     };
@@ -140,9 +132,6 @@ export default {
     },
     openNewCollectionModal() {
       this.isNewCollectionModalActive = true;
-    },
-    openNewReleaseModal() {
-      this.isNewReleaseModalActive = true;
     }
   }
 };

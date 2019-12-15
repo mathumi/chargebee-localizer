@@ -27,10 +27,13 @@
             :loading="discardLoader"
             @click="confirmDiscardDraft"
           >Discard</b-button>
-          <b-button type="is-primary" :loading="publishLoader" @click="$emit('publish')">Publish</b-button>
+          <b-button type="is-primary" :loading="publishLoader" @click="openNewReleaseModal">Publish</b-button>
         </template>
       </b-navbar>
     </transition>
+    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+      <new-release :branchId="branchId" />
+    </b-modal>
   </div>
 </template>
 
@@ -41,7 +44,8 @@ export default {
   data() {
     return {
       discardLoader: false,
-      publishLoader: false
+      publishLoader: false,
+      isNewReleaseModalActive: false
     };
   },
   methods: {
@@ -72,6 +76,9 @@ export default {
         .finally(() => {
           this.discardLoader = false;
         });
+    },
+    openNewReleaseModal() {
+      this.isNewReleaseModalActive = true;
     }
   }
 };

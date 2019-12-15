@@ -36,7 +36,7 @@ const routes = [
   },
   {
     name: 'CollectionDetail',
-    path: '/blob/:branch/:handle',
+    path: '/blob/:branchName/:handle',
     component: CollectionDetailPage,
     meta: {
       namespace: 'collection-detail'
