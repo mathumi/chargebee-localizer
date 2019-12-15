@@ -46,7 +46,7 @@
                 placeholder="Search Keys"
                 type="text"
               ></b-input>
-              <add-key
+              <add-or-update-key
                 :isBranchInDraftMode="isBranchInDraftMode"
                 :branchId="branchData.id"
                 :versionId="branchData.draft_version"
@@ -145,7 +145,7 @@
 <script>
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
-import AddKey from "@/components/modals/AddKey.vue";
+import AddOrUpdateKey from "@/components/modals/AddOrUpdateKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
 import UpdateCollection from "@/components/modals/UpdateCollection.vue";
 import { keyService, textService } from "@/services";
@@ -154,7 +154,7 @@ export default {
   name: "CollectionDetailPage",
   components: {
     DraftAlert,
-    AddKey,
+    AddOrUpdateKey,
     UpdateCollection
   },
   data() {
@@ -220,10 +220,6 @@ export default {
       Vue.set(key, "showEdit", !key.showEdit);
       Vue.set(key, "internalValue", key.value);
     },
-    updateKey: function(key) {
-      this.closeUpdate(key);
-      key.value = key.internalValue;
-    },
     cancelUpdateKey: function(key) {
       this.closeUpdate(key);
       key.internalValue = key.value;
@@ -243,6 +239,22 @@ export default {
     },
     openUpdateCollectionModal() {
       this.isUpdateCollectionModalActive = true;
+    },
+    updateKey(key) {
+      this.closeUpdate(key);
+      key.value = key.internalValue;
+      textService
+        .createOrUpdateText({
+          ...key,
+          branchId: this.branchData.id,
+          collectionId: key.collection_id,
+          versionId: this.branchData.draft_version
+        })
+        .then(() => {
+          this.$success("Key updated!");
+          this.fetchKeys();
+        })
+        .catch(this.$error);
     },
     confirmArchive(key) {
       const keysData = this.keys.find(k => k.key === key) || {};
