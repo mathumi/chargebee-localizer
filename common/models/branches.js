@@ -238,6 +238,7 @@ module.exports = function(Branches) {
             description: collection.attributes.description,
             created_at: collection.attributes.created_at,
             updated_at: collection.attributes.updated_at,
+            version: collection.attributes.version,
             keyCount: 0
           };
         });
@@ -520,6 +521,7 @@ module.exports = function(Branches) {
           handle: collection.handle,
           name: collection.name,
           description: collection.description,
+          branch_id: branch.id
         })
 
         const texts = collection.text().map(text => ({
