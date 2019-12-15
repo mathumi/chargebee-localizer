@@ -119,6 +119,7 @@ module.exports = function (Release) {
             handle: collection.attributes.handle,
             name: collection.attributes.name,
             description: collection.attributes.description,
+            created_at: collection.attributes.created_at,
             keyCount: 0
           }
         })
