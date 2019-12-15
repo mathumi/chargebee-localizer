@@ -70,7 +70,8 @@
           "publish": true,
           "createCollection": true,
           "updateCollection": true,
-          "draft": true
+          "draft": true,
+          "discardDraft": true
         }
       }
     }

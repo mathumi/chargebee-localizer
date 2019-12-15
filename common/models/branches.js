@@ -644,6 +644,46 @@ module.exports = function(Branches) {
     }
   }
 
+  Branches.remoteMethod("discardDraft", {
+    accepts: [ { arg: "branchId", type: "number" } ],
+    returns: { arg: "branch", type: "object", root: true },
+    http: { verb: "post", path: "/:branchId/discard_draft", errorStatus: 400 }
+  });
+  Branches.discardDraft = async function (branchId, callback) {
+    const Text = Branches.app.models.BranchText;
+    const Collection = Branches.app.models.BranchedCollection;
+
+    try {
+      let branch = await Branches.findById(branchId) 
+
+      if(!branch.draft_version) throw new Error('Cannot discard branch as there is no draft')
+
+      const filter = {
+        include: {
+          relation: 'collections',
+          scope: {
+            where: { version: branch.draft_version },
+          }
+        }
+      }
+
+      let branchRelation = await Branches.findById(branchId, filter);
+      const collections = branchRelation.collections()
+      
+      for(i in collections) {
+        const collection = collections[i]
+        await Text.destroyAll({ collection_id: collection.id })
+      }
+
+      await Collection.destroyAll({ branch_id: branch.id, version: branch.draft_version })
+      branch = await branch.updateAttribute('draft_version', null)
+      return callback(null, branch)
+    } catch(e) {
+      return callback(e)
+    }
+    
+  }
+
   Branches.observe("before save", async function(ctx) {
     const instance = ctx.instance || ctx.currentInstance;
     if (instance) instance.updated_at = new Date();
