@@ -1,7 +1,7 @@
 <template>
   <div class="collections">
     <div class="collection">
-      <b-table :data="collections">
+      <b-table :data="data">
         <template slot-scope="props">
           <b-table-column label="Collections">
             <!-- <img class="collection__img" src="@/assets/images/folder.png" /> -->
@@ -10,25 +10,23 @@
               <div class="collection__name">{{ props.row.name }}</div>
             </router-link>
           </b-table-column>
-          <b-table-column label="No of Keys">{{ props.row.keysCount }}</b-table-column>
+          <b-table-column label="Description">{{ props.row.description }}</b-table-column>
+          <b-table-column label="No of Keys">{{ props.row.keyCount }}</b-table-column>
           <b-table-column label="Last updated on" centered>{{ props.row.createdAt }}</b-table-column>
         </template>
       </b-table>
+      <div v-if="data.length === 0">No collections found.</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["branchId"],
+  props: ["data"],
   data() {
     return {};
   },
-  computed: {
-    collections() {
-      return this.$store.getters.branchCollections(this.branchId);
-    }
-  }
+  computed: {}
 };
 </script>
 <style lang="scss" scoped>
@@ -39,23 +37,14 @@ export default {
       align-items: center;
     }
     &img {
-      margin-right: $space_ti;
+      margin-right: 4px;
     }
     &name {
-      font-size: $fs_body;
+      font-size: 14px;
     }
     &desc {
-      font-size: $fs_caption;
+      font-size: 12px;
     }
-  }
-}
-</style>
-
-<style lang="scss">
-.collection table {
-  //border: 1px solid#dbdbdb;
-  th {
-    //border-width: 1px !important;
   }
 }
 </style>

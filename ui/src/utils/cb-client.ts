@@ -95,18 +95,18 @@ class CbClient {
   }
 
   public perform(method: string, urlEndPoint: string, queryParams = {}, headers = {}, body = {}) {
-    const that = this;
+    const restClientContext = this.restClient;
     return new Promise((resolve, reject) => {
       window['requestInTransit'] = true;
 
       let fn: any = '';
 
       if (method === 'GET') {
-        fn = that.restClient.get;
+        fn = restClientContext.get.bind(restClientContext);
       } else if (method === 'POST') {
-        fn = that.restClient.post;
+        fn = restClientContext.post.bind(restClientContext);
       } else {
-        fn = that.restClient.put;
+        fn = restClientContext.put.bind(restClientContext);
       }
 
       fn(urlEndPoint, queryParams, body, headers)

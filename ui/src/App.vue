@@ -1,16 +1,12 @@
 <template>
   <div id="app">
-    <b-navbar>
+    <b-navbar class="header">
       <template slot="brand">
         <b-navbar-item class="logo" tag="router-link" :to="{ path: '/' }">
           <img class="logo__img" src="@/assets/images/logo.png" />Localizer
         </b-navbar-item>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          Branches
-        </b-navbar-item>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          Releases
-        </b-navbar-item>
+        <b-navbar-item tag="router-link" to="/branches">Branches</b-navbar-item>
+        <b-navbar-item tag="router-link" to="/releases">Releases</b-navbar-item>
       </template>
       <template slot="end">
         <b-navbar-dropdown label="User" right>
@@ -35,7 +31,7 @@
           </template>
           <template slot="end" v-if="isEditMode">
             <b-button type="is-text" class="mar--r-mi">Discard</b-button>
-            <b-button type="is-primary" @click="openReviewModal()"
+            <b-button type="is-primary"
               >Publish</b-button
             >
           </template>
@@ -56,12 +52,21 @@ export default {
 
   data() {
     return {
+<<<<<<< HEAD
       isEditMode: true,
       isReviewModalActive: false
+=======
+      isEditMode: false,
+      loaded: false
+>>>>>>> 8133f1d76964ace1b0d15f8d0cd626dbc5e12508
     }
   },
   mounted() {
-    this.$store.dispatch('mockInit');
+    this.$store
+    .dispatch('init')
+    .finally(result => {
+      this.loaded = true
+    });
   }
 }
 </script>
@@ -79,5 +84,9 @@ export default {
   &:not(:first-child) {
     padding-left: 20px;
   }
+}
+
+.header {
+  height: 6em;
 }
 </style>

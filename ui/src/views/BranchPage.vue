@@ -1,47 +1,54 @@
 <template>
   <div>
-    <!-- <section class="columns">
-      <div class="column"></div>
-      <div class="column"></div>
-      <b-button
-        type="is-primary"
-        icon-left="source-branch"
-        @click="openNewBranchModal"
-        >New Branch</b-button
+    <transition name="fade" mode="out-in">
+      <b-navbar
+        class="mar--t-sm mar--b-st navbar-secondary"
+        :type="isBranchInDraftMode ? 'is-warning': 'is-info'"
+        v-if="!isBranchInDraftMode"
       >
-      <b-modal :active.sync="isNewBranchModalActive" :width="640">
-        <NewBranch
-          :resourceBranches="resourceBranches"
-          :selectedBranchId="selectedBranchId"
-        />
-      </b-modal>
-    </section>-->
-
+        <template slot="brand">
+          <div style="display:flex;align-items:center;">
+            <p
+              class="fs-st"
+              v-if="isBranchInDraftMode"
+            >You have some unpublished changes which are saved as draft.</p>
+            <p class="fs-st has-text-white" v-else>
+              You are in View-only mode.
+              <a>
+                <strong class="has-text-white">Click here to edit</strong>
+              </a>
+            </p>
+          </div>
+        </template>
+        <template slot="end" v-if="isBranchInDraftMode">
+          <b-button type="is-text" class="mar--r-mi">Discard</b-button>
+          <b-button type="is-primary">Publish</b-button>
+        </template>
+      </b-navbar>
+    </transition>
     <section>
-      <b-tabs v-model="activeTab">
+      <div>
         <div class="nav-block">
           <div class="flex ai-center">
             <b-select
-              :value="selectedBranchId"
-              @input="updateselectedBranchId"
+              :value="selectedBranchName"
+              @input="updateSelectedBranch"
               icon="source-branch"
             >
               <option
-                v-for="filter in resourceBranches"
-                :value="filter.id"
-                :key="filter.id"
-                >{{ filter.name }}</option
-              >
+                v-for="branch in branches"
+                :value="branch.name"
+                :key="branch.id"
+              >{{ branch.name }}</option>
             </b-select>
             <b-button
               type="is-primary"
               class="mar--l-xs"
               icon-left="source-branch"
               @click="openNewBranchModal"
-              >New Branch</b-button
-            >
+            >New Branch</b-button>
           </div>
-          <div class="float-right">
+           <div class="float-right">
             <b-button
               class="mar--r-mi"
               type="is-primary"
@@ -50,37 +57,29 @@
               @click="openReviewModal"
               >Merge with master</b-button
             >
-            <b-button
-              type="is-primary"
-              outlined
-              icon-left="file-document-box-plus-outline"
-              @click="openNewCollectioModal"
-              >Add Collection</b-button
-            >
-          </div>
+          <b-button
+            class="float-right"
+            type="is-primary"
+            outlined
+            icon-left="file-document-box-plus-outline"
+            @click="openNewCollectioModal"
+          >Add Collection</b-button>
+           </div>
         </div>
-        <Collections :branchId="selectedBranchId" />
-      </b-tabs>
+        <Collections :data="selectedBranchData.collections" />
+      </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch
-        :resourceBranches="resourceBranches"
-        :selectedBranchId="selectedBranchId"
-      />
+      <NewBranch :branches="branches" :selectedBranchId="selectedBranchName" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
       <NewCollection />
-    </b-modal>
-    <b-modal :active.sync="isReviewModalActive" :width="640">
-      <Review />
     </b-modal>
   </div>
 </template>
 
 <script>
 import Collections from "@/components/branch/tabs/Collections";
-import Branches from "@/components/branch/tabs/Branches";
-import Releases from "@/components/branch/tabs/Releases";
 import NewBranch from "@/components/modals/NewBranch.vue";
 import NewCollection from "@/components/modals/NewCollection.vue";
 import Review from "@/components/modals/Review.vue";
@@ -88,46 +87,48 @@ import Review from "@/components/modals/Review.vue";
 export default {
   components: {
     Collections,
-    Branches,
-    Releases,
     NewBranch,
     NewCollection,
     Review
   },
   data() {
     return {
-      activeTab: 0,
+      // activeTab: 0,
       showTabs: false,
-      selectedBranchId: 10,
+      selectedBranchName: "master",
       isNewBranchModalActive: false,
       isNewCollectionModalActive: false,
       isReviewModalActive: false
     };
   },
   computed: {
-    resourceBranches() {
-      return this.$store.getters.branches;
+    branches() {
+      return this.$store.state.branches;
     },
     selectedBranchData() {
-      return this.$store.getters.branches.find(
-        branch => branch.id === this.selectedBranchId
+      return this.$store.state.branches.find(
+        branch => branch.name === this.selectedBranchName
       );
+    },
+    isBranchInDraftMode() {
+      return !Boolean(this.selectedBranchData.draft_version);
     }
   },
   mounted() {
     const urlPaths = window.location.href.split("tree");
     if (urlPaths.length === 2) {
-      this.selectedBranchId = urlPaths[1].slice(1);
+      this.selectedBranchName = urlPaths[1].slice(1);
     }
     this.sanityResCheck();
   },
   methods: {
     sanityResCheck() {
       if (
-        this.resourceBranches.findIndex(f => f.id === this.selectedBranchId) ===
-        -1
+        this.branches.findIndex(
+          branch => branch.name === this.selectedBranchName
+        ) === -1
       ) {
-        this.selectedBranchId = 10;
+        this.selectedBranchName = "master";
       }
     },
 
@@ -135,8 +136,9 @@ export default {
       this.isReviewModalActive = true;
     },
 
-    updateselectedBranchId(newValue) {
+    updateSelectedBranch(newValue) {
       if (newValue) {
+        this.selectedBranchName = newValue;
         this.$router.replace(`/tree/${newValue}`);
       }
     },
@@ -166,10 +168,14 @@ export default {
 
 .notification {
   i:before {
-    font-size: $fs_h3 !important;
+    font-size: 24px !important;
   }
-  padding: $space_mi $space_st;
+  padding: 8px 20px;
   width: 100%;
-  font-size: $fs_body;
+  font-size: 14px;
+}
+
+.navbar-secondary {
+  border-radius: 4px;
 }
 </style>

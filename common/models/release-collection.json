@@ -34,7 +34,7 @@
         "nestRemoting": false
       }
     },
-    "released_text": {
+    "text": {
       "type": "hasMany",
       "model": "released_text",
       "foreignKey": "collection_id",

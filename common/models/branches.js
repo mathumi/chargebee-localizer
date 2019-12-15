@@ -1,6 +1,9 @@
 var Promise = require("bluebird");
 const app = require("../../server/server");
 const serialize = require("loopback-jsonapi-model-serializer");
+const path = require("path");
+const multer = require("multer");
+const fs = require("fs");
 
 module.exports = function(Branches) {
   Branches.disableRemoteMethod("create", true);
@@ -13,25 +16,17 @@ module.exports = function(Branches) {
         type: "object",
         http: { source: "body" },
         required: true,
-        description: "name, description"
+        description: "name, description, from_branch (branch id)"
       }
     ],
-    returns: { arg: "release", type: "object", root: true },
-    http: { path: "/", verb: "post", errorStatus: 400 }
+    returns: { arg: "branch", type: "object", root: true },
+    http: { path: "/create", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {
     accepts: [
-      {
-        arg: "branchId",
-        type: "number",
-        required: true
-      },
-      {
-        arg: "versionId",
-        type: "string",
-        required: true
-      }
+      { arg: "branchId", type: "number", required: true },
+      { arg: "versionId", type: "string", required: true }
     ],
     returns: { arg: "collections", type: "array", root: true },
     http: {
@@ -41,22 +36,22 @@ module.exports = function(Branches) {
     }
   });
 
-  Branches.remoteMethod("getKeys", {
+  Branches.remoteMethod("getTextKeys", {
     accepts: [
-      {
-        arg: "versionId",
-        required: true,
-        type: "string"
-      },
       {
         arg: "branchId",
         required: true,
         type: "number"
       },
       {
+        arg: "versionId",
+        required: true,
+        type: "number"
+      },
+      {
         arg: "collectionId",
         required: true,
-        type: "string"
+        type: "number"
       },
       {
         arg: "locale",
@@ -177,55 +172,126 @@ module.exports = function(Branches) {
   };
 
   Branches.getCollections = function(branchId, versionId, cb) {
-    Branches.find(
-      {
-        where: {
-          id: branchId,
-          version: versionId
+    const Collection = Branches.app.models.BranchedCollection;
+    Branches.findById(branchId)
+      .then(branch => {
+        if (!branch) throw new Error("Not found");
+
+        return Collection.find({
+          where: {
+            and: [{ branch_id: branch.id }, { version: versionId }]
+          },
+          include: {
+            relation: "text",
+            scope: {
+              fields: ["key"]
+            }
+          }
+        });
+      })
+      .then(data => {
+        const rawData = serialize(data, Collection);
+        const collectionMap = {};
+        rawData.data.map(collection => {
+          collectionMap[collection.id] = {
+            id: collection.id,
+            handle: collection.attributes.handle,
+            name: collection.attributes.name,
+            description: collection.attributes.description,
+            keyCount: 0
+          };
+        });
+
+        if (rawData.included) {
+          rawData.included.map(key => {
+            const _collection = collectionMap[key.attributes.collection_id];
+            _collection.keyCount = _collection.keyCount + 1;
+          });
         }
-      },
-      function(err, collections) {
-        if (err || !collections) return cb(err);
-        return cb(null, collections);
-      }
-    );
+
+        const formattedData = Object.values(collectionMap);
+
+        cb(null, formattedData);
+      })
+      .catch(err => cb(err));
   };
 
-  Branches.getKeys = function(branchId, versionId, collectionId, cb) {
-    Branchedcollection.find({
-      where: {
-        version: versionId,
-        id: branchId,
-        branch_collection_id: collectionId
-      },
-      function(err, keys) {
-        if (err || !keys) return cb(err);
-        return cb(null, keys);
+  Branches.getTextKeys = function(
+    branchId,
+    versionId,
+    collectionId,
+    locale,
+    cb
+  ) {
+    if (!locale) locale = "en";
+
+    const filter = {
+      include: {
+        relation: "collections",
+        scope: {
+          fields: ["text", "branch_id", "id"],
+          where: {
+            id: collectionId
+          },
+          include: {
+            relation: "text",
+            scope: {
+              where: {
+                locale,
+                archived: false
+              }
+            }
+          }
+        }
       }
+    };
+
+    Branches.findById(branchId, filter, function(err, branch) {
+      if (err || !branch) return cb(err);
+
+      const rawData = serialize(branch, Branches);
+      const texts = rawData.included
+        ? rawData.included
+            .filter(
+              obj => obj.type == "text" && obj.attributes.archived == false
+            )
+            .map(text => ({
+              key: text.id,
+              value: text.attributes.value,
+              locale: text.attributes.locale,
+              collection_id: text.attributes.collection_id
+            }))
+        : [];
+
+      return cb(null, texts);
     });
   };
 
-  function getCollections(branchData) {
+  function getCollectionsJSON(branchData) {
     const result = branchData.included
-      .filter(obj => obj.type == "collections")
-      .map(collection => ({
-        id: collection.id,
-        name: collection.attributes.name,
-        handle: collection.attributes.handle,
-        description: collection.attributes.description
-      }));
+      ? branchData.included
+          .filter(obj => obj.type == "collections")
+          .map(collection => ({
+            id: collection.id,
+            name: collection.attributes.name,
+            handle: collection.attributes.handle,
+            description: collection.attributes.description
+          }))
+      : [];
     return result;
   }
 
-  function getTexts(branchData) {
+  function getTextsJSON(branchData) {
     const result = branchData.included
-      .filter(obj => obj.type == "text")
-      .map(text => ({
-        key: text.id,
-        value: text.attributes.value,
-        locale: text.attributes.locale,
-        collection_id: text.attributes.collection_id
-      }));
+      ? branchData.included
+          .filter(obj => obj.type == "text")
+          .map(text => ({
+            key: text.id,
+            value: text.attributes.value,
+            locale: text.attributes.locale,
+            collection_id: text.attributes.collection_id
+          }))
+      : [];
     return result;
   }
 
@@ -260,8 +326,8 @@ module.exports = function(Branches) {
           description: releaseData.description
         });
 
-        const collections = getCollections(serialize(branch, Branches));
-        const texts = getTexts(serialize(branch, Branches));
+        const collections = getCollectionsJSON(serialize(branch, Branches));
+        const texts = getTextsJSON(serialize(branch, Branches));
 
         for (let i = 0; i < collections.length; i++) {
           const collectionObj = collections[i];
@@ -291,6 +357,134 @@ module.exports = function(Branches) {
     } catch (e) {
       return cb(e);
     }
+  };
+
+  Branches.remoteMethod("createCollection", {
+    accepts: [
+      { arg: "req", type: "object", http: { source: "req" } },
+      { arg: "res", type: "object", http: { source: "res" } },
+      { arg: "branchId", type: "number" },
+      { arg: "versionId", type: "number" }
+    ],
+    returns: { arg: "collection", type: "object", root: true },
+    http: {
+      verb: "post",
+      path: "/:branchId/:versionId/collections",
+      errorStatus: 400
+    }
+  });
+
+  const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      const downloadPath = path.join(__dirname, "../../server/storage");
+      cb(null, downloadPath + "/");
+    },
+    filename: function(req, file, cb) {
+      cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
+    }
+  });
+
+  const isValidLocale = locale => {
+    return !!~["en", "fr", "de", "pt", "es", "it"].indexOf(locale);
+  };
+
+  Branches.createCollection = function(
+    req,
+    res,
+    branchId,
+    versionId,
+    callback
+  ) {
+    let fileData, name, handle, locale, description;
+
+    // Read contents of file
+    new Promise((resolve, reject) => {
+      var upload = multer({
+        storage: storage
+      }).single("file");
+
+      upload(req, res, function(err) {
+        if (err) return reject(err);
+        const data = req.body || {};
+        name = data.name;
+        handle = data.handle;
+        locale = data.locale;
+        description = data.description;
+
+        if (!(name && handle)) return reject(new Error("Missing parameters"));
+
+        if (req.file) {
+          fileData = JSON.parse(
+            fs.readFileSync(req.file.path, { encoding: "utf8" })
+          );
+        }
+        return resolve(fileData);
+      });
+    })
+      .then(data => {
+        // Fetch branch
+        return new Promise((resolve, reject) => {
+          Branches.findOne(
+            {
+              where: {
+                and: [{ id: branchId }, { draft_version: versionId }]
+              }
+            },
+            function(err, branch) {
+              if (err || !branch) return reject(err || new Error("Not found"));
+              return resolve(branch);
+            }
+          );
+        });
+      })
+      .then(branch => {
+        // Create collection
+        return new Promise((resolve, reject) => {
+          const Collection = Branches.app.models.BranchedCollection;
+          Collection.create(
+            {
+              version: versionId,
+              handle: handle,
+              name: name,
+              description: description,
+              branch_id: branch.id
+            },
+            function(err, collection) {
+              if (err) return reject(err);
+              return resolve(collection);
+            }
+          );
+        });
+      })
+      .then(collection => {
+        // Create text for collection
+        return new Promise((resolve, reject) => {
+          const Text = Branches.app.models.BranchText;
+          const locales = locale
+            ? [locale]
+            : Object.keys(fileData).filter(locale => isValidLocale(locale));
+          let textArray = [];
+          locales.map(locale => {
+            let textData = fileData[locale];
+            if (!textData)
+              return reject(new Error("Missing locale data in file"));
+            Object.keys(textData).map(key => {
+              textArray.push({
+                key,
+                value: textData[key],
+                locale,
+                collection_id: collection.id
+              });
+            });
+          });
+          Text.create(textArray, function(err, texts) {
+            if (err) return reject(err);
+            return resolve(collection);
+          });
+        });
+      })
+      .then(collection => callback(null, collection))
+      .catch(err => callback(err));
   };
 
   Branches.observe("before save", async function(ctx) {
