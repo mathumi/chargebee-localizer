@@ -35,7 +35,7 @@ class CbClient {
   private restClient: RestClient;
 
   constructor() {
-    this.restClient = new RestClient('');
+    this.restClient = new RestClient('/api');
   }
 
   public get(urlEndPoint: string, args = {}, headers = {}) {
