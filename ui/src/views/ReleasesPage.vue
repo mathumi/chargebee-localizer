@@ -76,8 +76,4 @@ export default {
     flex-basis: 14%;
   }
 }
-
-.release-wrapper {
-  margin: 80px 0 0 0;
-}
 </style>
