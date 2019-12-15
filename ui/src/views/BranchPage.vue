@@ -37,6 +37,7 @@
               outlined
               icon-left="file-document-box-plus-outline"
               @click="openNewCollectionModal"
+              v-if="isBranchInDraftMode"
             >Add Collection</b-button>
           </div>
         </div>
@@ -99,24 +100,7 @@ export default {
       );
     }
   },
-  mounted() {
-    const urlPaths = window.location.href.split("tree");
-    if (urlPaths.length === 2) {
-      this.selectedBranchName = urlPaths[1].slice(1);
-    }
-    this.sanityResCheck();
-  },
   methods: {
-    sanityResCheck() {
-      if (
-        this.branches.findIndex(
-          branch => branch.name === this.selectedBranchName
-        ) === -1
-      ) {
-        this.selectedBranchName = "master";
-      }
-    },
-
     openReviewModal() {
       this.isReviewModalActive = true;
     },
@@ -132,6 +116,14 @@ export default {
     },
     openNewCollectionModal() {
       this.isNewCollectionModalActive = true;
+    }
+  },
+  watch: {
+    "$route.params": {
+      handler(params) {
+        this.selectedBranchName = params.branchName || "master";
+      },
+      immediate: true
     }
   }
 };

@@ -66,7 +66,7 @@ export default {
   align-items: baseline;
 
   div:first-child {
-    flex-basis: 14%;
+    flex-basis: 16%;
   }
 }
 </style>

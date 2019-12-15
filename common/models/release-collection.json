@@ -14,7 +14,11 @@
   "properties": {
     "handle": {
       "type": "string",
-      "required": true
+      "required": true,
+      "mysql": {
+        "dataType": "VARCHAR",
+        "dataLength": 50
+      }
     },
     "name": {
       "type": "string",

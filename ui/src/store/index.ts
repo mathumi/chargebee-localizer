@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { branchService, releaseService, localeService } from "@/service";
+import { branchService, releaseService, localeService } from "@/services";
 
 Vue.use(Vuex);
 

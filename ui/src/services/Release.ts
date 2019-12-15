@@ -1,4 +1,4 @@
-import { ReleaseApiBase } from '@/service/api';
+import { ReleaseApiBase } from '@/services/api';
 
 class ReleaseService extends ReleaseApiBase { }
 

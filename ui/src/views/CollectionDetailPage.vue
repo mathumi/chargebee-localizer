@@ -123,7 +123,7 @@ import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
 import AddKey from "@/components/collection/AddKey.vue";
-import { keyService } from "@/service";
+import { keyService } from "@/services";
 
 export default {
   name: "CollectionDetailPage",

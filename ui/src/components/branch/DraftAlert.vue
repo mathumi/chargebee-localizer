@@ -11,11 +11,16 @@
               class="fs-st"
               v-if="draft"
             >You have some unpublished changes which are saved as draft.</p>
-            <p class="fs-st has-text-white" v-else>
+            <p class="fs-st has-text-white flex ai-center" v-else>
               You are in View-only mode.
-              <a>
-                <strong class="has-text-white">Click here to edit</strong>
-              </a>
+              <b-button
+                type="is-text"
+                class="mar--r-mi"
+                :loading="editModeLoader"
+                @click="enableEditMode"
+              >
+                <span>Click here to edit</span>
+              </b-button>
             </p>
           </div>
         </template>
@@ -38,6 +43,7 @@
 
 <script>
 import NewRelease from "@/components/modals/NewRelease";
+import { branchService } from "@/services";
 
 export default {
   props: ["draft", "branchId"],
@@ -48,6 +54,7 @@ export default {
     return {
       discardLoader: false,
       publishLoader: false,
+      editModeLoader: false,
       isNewReleaseModalActive: false
     };
   },
@@ -82,6 +89,16 @@ export default {
     },
     openNewReleaseModal() {
       this.isNewReleaseModalActive = true;
+    },
+    enableEditMode() {
+      this.editModeLoader = true;
+      branchService
+        .enableDraftMode(this.branchId)
+        .then(() => this.$store.dispatch("init"))
+        .catch(this.$error)
+        .finally(() => {
+          this.editModeLoader = false;
+        });
     }
   }
 };

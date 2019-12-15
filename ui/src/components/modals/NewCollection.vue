@@ -30,9 +30,16 @@
 </template>
 
 <script>
+import { branchService } from "@/services";
+
 export default {
   name: "NewBranch",
-  props: ["selectedResource", "resourceFilters"]
+  props: ["selectedResource", "resourceFilters"],
+  data() {
+    return {
+      loading: false
+    };
+  }
 };
 </script>
 
