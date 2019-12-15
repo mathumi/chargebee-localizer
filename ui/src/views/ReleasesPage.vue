@@ -1,45 +1,59 @@
 <template>
   <div class="container">
     <div class="release-wrapper">
-      <div class="is-size-3 mar--b-xs">Releases</div>
+      <div class="is-size-3 mar--b-md">Releases</div>
       <div class="timeline" v-if="releases.length > 0">
-        <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
+        <div
+          class="timeline-wrapper"
+          v-for="release in releases"
+          :key="release.id"
+        >
           <div>
             <p class="heading">
-              {{$time(release.created_at)}}
+              {{ $time(release.created_at) }}
               <b-icon icon="tag" size="is-small" />
             </p>
           </div>
           <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-content">
-              <p class="heading">{{release.name}}</p>
-              <p>{{release.description}}</p>
+              <div class="flex ai-center">
+                <div class="timeline-main">
+                  <p class="heading">{{ release.name }}</p>
+                  <p style="max-width:60%;">{{ release.description }}</p>
+                </div>
+                <b-button
+                  type="is-primary "
+                  class="mar--l-mi"
+                  @click="openDeployModal"
+                  >Deploy</b-button
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div v-else>No Releases Found</div>
-      <b-modal :active.sync="isNewReleaseModalActive" :width="640">
-        <NewRelease :branches="branches" :selectedBranch="''" />
+      <b-modal :active.sync="isNewDeployModalActive" :width="640">
+        <DeployModal />
       </b-modal>
     </div>
   </div>
 </template>
 
 <script>
-import NewRelease from "@/components/modals/NewRelease.vue";
+import DeployModal from '@/components/modals/Deploy.vue';
 
 export default {
   name: "Releases",
   props: ["branches"],
   components: {
-    NewRelease
+    DeployModal
   },
   data() {
     return {
       currentPage: 0,
-      isNewReleaseModalActive: false
+      isNewDeployModalActive: false
     };
   },
   computed: {
@@ -48,8 +62,8 @@ export default {
     }
   },
   methods: {
-    openNewReleaseModal() {
-      this.isNewReleaseModalActive = true;
+    openDeployModal(){
+      this.isNewDeployModalActive = true
     }
   }
 };
@@ -64,9 +78,19 @@ export default {
 .timeline-wrapper {
   display: flex;
   align-items: baseline;
-
-  div:first-child {
-    flex-basis: 16%;
+  .timeline {
+    &- {
+      &item {
+        flex: 1;
+      }
+      &content {
+         flex: 1;
+      }
+      &main {
+        flex: 1;
+        flex-basis: 80%;
+      }
+    }
   }
 }
 </style>

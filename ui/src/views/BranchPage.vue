@@ -28,7 +28,7 @@
               class="mar--r-mi"
               type="is-primary"
               outlined
-              icon-left="file-document-box-plus-outline"
+              icon-left="source-merge"
               @click="openReviewModal"
             >Merge with master</b-button>
             <b-button
