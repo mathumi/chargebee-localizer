@@ -39,7 +39,7 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" :loading="loading" @click="updateCollection">Update</button>
+      <b-button type="is-primary" @click="updateCollection" :loading="loading">Update</b-button>
     </footer>
   </div>
 </template>

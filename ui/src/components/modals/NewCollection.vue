@@ -36,7 +36,7 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" :loading="loading" @click="createCollection">Create</button>
+      <b-button type="is-primary" @click="createCollection" :loading="loading">Create</b-button>
     </footer>
   </div>
 </template>
@@ -66,6 +66,7 @@ export default {
   },
   methods: {
     createCollection() {
+      this.loading = true;
       collectionService
         .createCollection(
           this.selectedBranchData.id,

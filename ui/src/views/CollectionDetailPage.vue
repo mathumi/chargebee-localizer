@@ -13,6 +13,9 @@
               >{{ locale.name }}</option
             >
           </b-select>
+          <!-- <p class="fs-sm">
+            <b>Branch:</b> Master
+          </p>-->
           <div class="level-right" v-if="isBranchInDraftMode">
             <b-button
               class="float-right"
@@ -41,7 +44,13 @@
                 placeholder="Search Keys"
                 type="text"
               ></b-input>
-              <add-key />
+              <add-or-update-key
+                :isBranchInDraftMode="isBranchInDraftMode"
+                :branchId="branchData.id"
+                :versionId="branchData.draft_version"
+                :collectionId="collectionData.id"
+                @reset="fetchKeys"
+              />
               <transition name="fade">
                 <div class="card popover" v-if="editName">
                   <div class="card-content">
@@ -117,7 +126,7 @@
                       >
                     </template>
                   </b-table-column>
-                  <b-table-column class="text-right">
+                  <b-table-column class="text-right cursor-pointer" @click.native="confirmArchive(props.row.key)">
                     <b-icon v-if="!props.row.archived" icon="delete"></b-icon>
                     <span v-else class="text-light">Archived</span>
                   </b-table-column>
@@ -140,17 +149,16 @@
 <script>
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
-import NewKey from "@/components/modals/NewKey.vue";
+import AddOrUpdateKey from "@/components/modals/AddOrUpdateKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
-import AddKey from "@/components/collection/AddKey.vue";
 import UpdateCollection from "@/components/modals/UpdateCollection.vue";
-import { keyService } from "@/services";
+import { keyService, textService } from "@/services";
 
 export default {
   name: "CollectionDetailPage",
   components: {
     DraftAlert,
-    AddKey,
+    AddOrUpdateKey,
     UpdateCollection
   },
   data() {
@@ -216,10 +224,6 @@ export default {
       Vue.set(key, "showEdit", !key.showEdit);
       Vue.set(key, "internalValue", key.value);
     },
-    updateKey: function(key) {
-      this.closeUpdate(key);
-      key.value = key.internalValue;
-    },
     cancelUpdateKey: function(key) {
       this.closeUpdate(key);
       key.internalValue = key.value;
@@ -239,11 +243,62 @@ export default {
     },
     openUpdateCollectionModal() {
       this.isUpdateCollectionModalActive = true;
+    },
+    updateKey(key) {
+      this.closeUpdate(key);
+      key.value = key.internalValue;
+      textService
+        .createOrUpdateText({
+          ...key,
+          branchId: this.branchData.id,
+          collectionId: key.collection_id,
+          versionId: this.branchData.draft_version
+        })
+        .then(() => {
+          this.$success("Key updated!");
+          this.fetchKeys();
+        })
+        .catch(this.$error);
+    },
+    confirmArchive(key) {
+      const keysData = this.keys.find(k => k.key === key) || {};
+      this.$buefy.dialog.confirm({
+        title: "Archiving Key",
+        message:
+          "Are you sure you want to <b>archive</b> key? This action cannot be undone.",
+        confirmText: "Archive",
+        type: "is-danger",
+        hasIcon: true,
+        onConfirm: () => {
+          textService
+            .createOrUpdateText({
+              key,
+              ...keysData,
+              branchId: this.branchData.id,
+              collectionId: keysData.collection_id,
+              versionId: this.branchData.draft_version,
+              archived: true
+            })
+            .then(() => {
+              this.$success("Key Archived!");
+              this.fetchKeys();
+              this.$store.dispatch("init");
+            })
+            .catch(this.$error);
+        }
+      });
     }
   },
   watch: {
     collectionData: {
       immediate: true,
+      handler(newValue) {
+        if (newValue) {
+          this.fetchKeys();
+        }
+      }
+    },
+    selectedLocale: {
       handler(newValue) {
         if (newValue) {
           this.fetchKeys();

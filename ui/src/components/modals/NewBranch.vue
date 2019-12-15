@@ -30,7 +30,7 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" loading @click="createBranch">Create</button>
+      <b-button type="is-primary" @click="createBranch" :loading="loading">Create</b-button>
     </footer>
   </div>
 </template>
