@@ -30,7 +30,7 @@
             @click="openNewCollectioModal"
           >Add Collection</b-button>
         </div>
-        <Collections :branchId="selectedBranchName" />
+        <Collections :data="selectedBranchData.collections" />
       </b-tabs>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">

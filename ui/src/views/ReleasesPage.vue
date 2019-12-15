@@ -6,7 +6,7 @@
         <div class="timeline-wrapper" v-for="release in releases" :key="release.id">
           <div>
             <p class="heading">
-              {{release.created_at}}
+              {{relativeTime(release.created_at)}}
               <b-icon icon="tag" size="is-small" />
             </p>
           </div>
@@ -29,6 +29,7 @@
 
 <script>
 import NewRelease from "@/components/modals/NewRelease.vue";
+import moment from "moment";
 
 export default {
   name: "Releases",
@@ -50,6 +51,12 @@ export default {
   methods: {
     openNewReleaseModal() {
       this.isNewReleaseModalActive = true;
+    },
+
+    relativeTime(ts) {
+      return moment(ts)
+        .utc()
+        .format("LL");
     }
   }
 };
@@ -66,7 +73,7 @@ export default {
   align-items: baseline;
 
   div:first-child {
-    flex-basis: 11%;
+    flex-basis: 14%;
   }
 }
 

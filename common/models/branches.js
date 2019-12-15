@@ -413,9 +413,11 @@ module.exports = function(Branches) {
 
         if (!(name && handle)) return reject(new Error("Missing parameters"));
 
-        fileData = JSON.parse(
-          fs.readFileSync(req.file.path, { encoding: "utf8" })
-        );
+        if (req.file) {
+          fileData = JSON.parse(
+            fs.readFileSync(req.file.path, { encoding: "utf8" })
+          );
+        }
         return resolve(fileData);
       });
     })

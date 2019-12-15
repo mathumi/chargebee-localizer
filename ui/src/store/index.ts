@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     branches: [],
     releases: [],
-    collections: {}
   },
   mutations: {
     setReleases(state, payload = []) {
@@ -18,26 +17,15 @@ export default new Vuex.Store({
     setBranches(state, payload = []) {
       state.branches = payload;
     },
-    setCollections(state, { branchId, payload }) {
-      Vue.set(state.collections, branchId, payload);
-    }
+    // setCollections(state, { branchId, payload }) {
+    //   Vue.set(state.collections, branchId, payload);
+    // }
   },
   actions: {
     async init({ commit }) {
-      await branchService.getBranchesWithCollections();
-      const [branches, releases] = await Promise.all([branchService.getBranches(), releaseService.getReleases()]);
+      const [branches, releases] = await Promise.all([branchService.getBranchesWithCollections(), releaseService.getReleases()]);
       commit('setBranches', branches);
       commit('setReleases', releases);
-    },
-
-    async mockInit({ commit }) {
-      await new Promise(resolve => {
-        commit('setCollections', {
-          branchId: 10,
-          payload: collections
-        });
-        resolve();
-      });
     }
   },
   getters: {
@@ -47,8 +35,8 @@ export default new Vuex.Store({
     liveBranches: state => {
       return state.branches.filter(branch => !Boolean(branch.draftVersionId));
     },
-    branchCollections: state => {
-      return (branchId) => state.collections[branchId];
-    }
+    // branchCollections: state => {
+    //   return (branchId) => state.collections[branchId];
+    // }
   }
 });
