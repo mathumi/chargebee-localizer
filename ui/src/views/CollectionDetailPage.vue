@@ -43,7 +43,12 @@
                 placeholder="Search Keys"
                 type="text"
               ></b-input>
-              <add-key :isBranchInDraftMode="isBranchInDraftMode" />
+              <add-key
+                :isBranchInDraftMode="isBranchInDraftMode"
+                :branchId="branchData.id"
+                :versionId="branchData.draft_version"
+                :collectionId="collectionData.id"
+              />
               <transition name="fade">
                 <div class="card popover" v-if="editName">
                   <div class="card-content">
@@ -133,9 +138,8 @@
 <script>
 import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
-import NewKey from "@/components/modals/NewKey.vue";
+import AddKey from "@/components/modals/AddKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
-import AddKey from "@/components/collection/AddKey.vue";
 import UpdateCollection from "@/components/modals/UpdateCollection.vue";
 import { keyService } from "@/services";
 
