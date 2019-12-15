@@ -18,7 +18,7 @@ const routes = [
   },
   {
     name: 'BranchPageTree',
-    path: '/tree/*',
+    path: '/tree/:branchName',
     component: BranchPage,
     meta: {
       namespace: 'branch'

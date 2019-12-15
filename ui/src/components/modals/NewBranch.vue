@@ -69,6 +69,7 @@ export default {
         .then(() => {
           this.$success("Branch created");
           this.$parent.close();
+          this.$router.push(`tree/${newBranch.name}`)
         })
         .catch(this.$error)
         .finally(() => {
