@@ -43,7 +43,7 @@
                 placeholder="Search Keys"
                 type="text"
               ></b-input>
-              <add-key />
+              <add-key :isBranchInDraftMode="isBranchInDraftMode" />
               <transition name="fade">
                 <div class="card popover" v-if="editName">
                   <div class="card-content">

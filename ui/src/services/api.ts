@@ -55,6 +55,62 @@ export interface FetchArgs {
 /**
  * 
  * @export
+ * @interface AddKeyInput
+ */
+export interface AddKeyInput {
+  /**
+   * 
+   * @type {string}
+   * @memberof AddKeyInput
+   */
+  'key'?: string;
+  /**
+   * 
+   * @type {number}
+   * @memberof AddKeyInput
+   */
+  'branchId'?: number;
+  /**
+   * 
+   * @type {number}
+   * @memberof AddKeyInput
+   */
+  'collectionId'?: number;
+  /**
+   * 
+   * @type {number}
+   * @memberof AddKeyInput
+   */
+  'versionId'?: number;
+  /**
+   * 
+   * @type {string}
+   * @memberof AddKeyInput
+   */
+  'locale'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof AddKeyInput
+   */
+  'description'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof AddKeyInput
+   */
+  'value'?: string;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof AddKeyInput
+   */
+  'archived'?: boolean;
+}
+
+/**
+ * 
+ * @export
  * @interface Branch
  */
 export interface Branch {
@@ -1173,6 +1229,32 @@ const TextApiFetchParamCreator = function () {
   return {
     /**
       * 
+      * @summary to create or update a text
+      * @param {AddKeyInput} [addKeyInput] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    createOrUpdateText(addKeyInput?: AddKeyInput, options: any = {}): FetchArgs {
+      const localVarPath = `/text`;
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      output['body'] = addKeyInput
+      return output;
+    },
+    /**
+      * 
       * @summary get all texts
       * @param {string} locale 
       * @param {string} [release] 
@@ -1248,6 +1330,18 @@ const TextApiFetchParamCreator = function () {
  * @class TextApi
  */
 export class TextApiBase {
+  /**
+    * 
+    * @summary to create or update a text
+    * @param {AddKeyInput} [addKeyInput] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof TextApi
+    */
+  public createOrUpdateText(addKeyInput?: AddKeyInput, options?: any): Promise<{}> {
+    const localVarFetchArgs = TextApiFetchParamCreator().createOrUpdateText(addKeyInput, options);
+    return <Promise<{}>>CBClient.perform("PUT", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
   /**
     * 
     * @summary get all texts

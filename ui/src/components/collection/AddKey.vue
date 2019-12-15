@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-button
+      v-if="isBranchInDraftMode"
       class="float-right"
       type="is-primary"
       outlined
@@ -18,6 +19,7 @@ import NewKey from "@/components/modals/NewKey.vue";
 
 export default {
   name: "AddKey",
+  props: ["isBranchInDraftMode"],
   components: {
     NewKey
   },
