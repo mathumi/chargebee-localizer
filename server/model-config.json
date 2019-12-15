@@ -92,8 +92,8 @@
     "options": {
       "remoting": {
         "sharedMethods": {
-          "publish": true,
-          "getTexts": true
+          "getTexts": true,
+          "upsertText": true
         }
       }
     }
