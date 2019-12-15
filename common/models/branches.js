@@ -541,6 +541,10 @@ module.exports = function (Branches) {
       await collection.updateAttribute('description', data.description)
     }
 
+    if(data.name) {
+      await collection.updateAttribute('name', data.name) 
+    }
+
     if (data.fileContents) {
       const localesInFile = Object.keys(data.fileContents).filter(locale => isValidLocale(locale))
       const allText = await Text.find({
