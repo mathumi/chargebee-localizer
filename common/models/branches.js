@@ -346,11 +346,15 @@ module.exports = function(Branches) {
         if (!branchId && releaseData.name && releaseData.description)
           throw new Error("Missing parameters");
 
-        // Fetch all collections with texts
+        // Fetch all draft collections with texts
+        let branch = await Branches.findById(branchId);
+        if(!branch.draft_version) throw new Error('Cannot release a publised branch')
+
         const filter = {
           include: {
             relation: "collections",
             scope: {
+              where: { version: branch.draft_version },
               include: {
                 relation: "text",
                 scope: { where: { archived: false } }
@@ -358,7 +362,7 @@ module.exports = function(Branches) {
             }
           }
         };
-        const branch = await Branches.findById(branchId, filter);
+        branch = await Branches.findById(branchId, filter)
         // Update branch published version
         await branch.updateAttributes({
           published_version: branch.draft_version,
