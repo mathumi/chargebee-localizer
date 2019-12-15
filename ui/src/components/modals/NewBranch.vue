@@ -57,6 +57,7 @@ export default {
   },
   methods: {
     createBranch() {
+      this.loading = true;
       const newBranch = {
         name: this.branchId,
         fromBranch: this.selectedBranchData.id,

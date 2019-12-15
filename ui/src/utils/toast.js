@@ -15,7 +15,7 @@ export default {
       Toast.open({
         message,
         position: "is-bottom-left",
-        type: "is-success"
+        type: "is-danger"
       });
     };
   }

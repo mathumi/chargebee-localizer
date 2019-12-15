@@ -29,6 +29,14 @@ export default new Vuex.Store({
     async createBranch({ dispatch }, payload) {
       await branchService.createBranch(payload);
       await dispatch('init');
+    },
+    async publishDraftBranch({ dispatch }, { id, payload }) {
+      await branchService.publishDraft(id, payload);
+      await dispatch('init');
+    },
+    async discardDraftBranch({ dispatch }, branchId) {
+      await branchService.discardDraft(branchId);
+      await dispatch('init');
     }
   },
   getters: {
