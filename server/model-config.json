@@ -44,7 +44,8 @@
           "createRelease": true,
           "getReleases": true,
           "getCollections": true,
-          "getTextKeys": true
+          "getTextKeys": true,
+          "getTextByCollections": true
         }
       }
     }
