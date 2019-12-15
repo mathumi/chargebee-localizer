@@ -7,6 +7,7 @@
 <script>
 import CollectionDetail from "@/components/branch/CollectionDetail.vue";
 export default {
+  name: "CollectionDetailPage",
   components: {
     CollectionDetail
   },

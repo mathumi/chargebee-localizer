@@ -44,7 +44,11 @@
             >Add Collection</b-button>
           </div>
         </div>
-        <Collections v-if="selectedBranchData" :data="selectedBranchData.collections" />
+        <Collections
+          v-if="selectedBranchData"
+          :branchName="selectedBranchName"
+          :data="selectedBranchData.collections"
+        />
       </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
