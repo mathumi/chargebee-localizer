@@ -43,6 +43,10 @@
       "mysql": {
         "default": "now"
       }
+    },
+    "branch_id": {
+      "type": "number",
+      "required": true
     }
   },
   "validations": [],
