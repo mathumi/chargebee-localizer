@@ -12,6 +12,9 @@
               :key="locale.code"
             >{{ locale.name }}</option>
           </b-select>
+          <!-- <p class="fs-sm">
+            <b>Branch:</b> Master
+          </p>-->
           <div class="level-right" v-if="isBranchInDraftMode">
             <b-button
               class="float-right"
@@ -24,7 +27,7 @@
         <div class="columns ai-center" v-if="collectionData">
           <div class="column ai-center">
             <h3 class="va-mid">Collections -</h3>
-            <!-- <p class="fs-sm"><b>Branch:</b> Master</p> -->
+
             <div class="va-top collection-name flex" style="padding-left:6px;">
               <div class="flex flex-grow ai-center">
                 <h3>
@@ -244,6 +247,14 @@ export default {
       immediate: true,
       handler(newValue) {
         if (newValue) {
+          this.fetchKeys();
+        }
+      }
+    },
+    selectedLocale: {
+      handler(newValue) {
+        if (newValue) {
+          debugger
           this.fetchKeys();
         }
       }
