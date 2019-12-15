@@ -5,10 +5,10 @@
         <b-navbar-item class="logo" tag="router-link" :to="{ path: '/' }">
           <img class="logo__img" src="@/assets/images/logo.png" />Localizer
         </b-navbar-item>
-         <b-navbar-item  tag="router-link" :to="{ path: '/' }">
-         Branches
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          Branches
         </b-navbar-item>
-         <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">
           Releases
         </b-navbar-item>
       </template>
@@ -22,9 +22,7 @@
 
     <transition name="fade" mode="out-in">
       <div class="wrapper" :class="pageClass">
-        <b-navbar
-          class="navbar-secondary navbar-warning" v-if="isEditMode"
-        >
+        <b-navbar class="navbar-secondary navbar-warning" v-if="isEditMode">
           <template slot="brand">
             <div style="display:flex;align-items:center;">
               <p class="fs-st" v-if="isEditMode">
@@ -37,7 +35,9 @@
           </template>
           <template slot="end" v-if="isEditMode">
             <b-button type="is-text" class="mar--r-mi">Discard</b-button>
-            <b-button type="is-primary">Publish</b-button>
+            <b-button type="is-primary" @click="openReviewModal()"
+              >Publish</b-button
+            >
           </template>
         </b-navbar>
         <router-view />
@@ -56,7 +56,8 @@ export default {
 
   data() {
     return {
-      isEditMode: false
+      isEditMode: true,
+      isReviewModalActive: false
     }
   },
   mounted() {
@@ -73,9 +74,9 @@ export default {
   height: 100vh;
   overflow: hidden;
 }
-.navbar-item{
-  padding-left:0;
-  &:not(:first-child){
+.navbar-item {
+  padding-left: 0;
+  &:not(:first-child) {
     padding-left: 20px;
   }
 }
