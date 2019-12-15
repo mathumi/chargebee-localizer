@@ -94,14 +94,14 @@ module.exports = function (Release) {
     http: { verb: 'get', path: '/:releaseId/collections', errorStatus: 400 }
   })
 
-  Release.getCollections = function(releaseId, cb) {
+  Release.getCollections = function (releaseId, cb) {
     const Collection = Release.app.models.ReleaseCollection
     Release.findById(releaseId)
       .then(release => {
-        if(!release) throw new Error('Not found')
+        if (!release) throw new Error('Not found')
 
         return Collection.find({
-          where: {release_id: releaseId},
+          where: { release_id: releaseId },
           include: {
             relation: 'text',
             scope: {
@@ -124,7 +124,7 @@ module.exports = function (Release) {
           }
         })
 
-        if(rawData.included) {
+        if (rawData.included) {
           rawData.included.map(key => {
             const _collection = collectionMap[key.attributes.collection_id]
             _collection.keyCount = _collection.keyCount + 1
@@ -132,7 +132,7 @@ module.exports = function (Release) {
         }
 
         const formattedData = Object.values(collectionMap)
-        
+
         cb(null, formattedData)
       })
       .catch(err => cb(err))
@@ -166,7 +166,7 @@ module.exports = function (Release) {
   });
 
   Release.getTextKeys = function (releaseId, collectionId, locale, cb) {
-    if(!locale) locale = 'en'
+    if (!locale) locale = 'en'
     const filter = {
       include: {
         relation: 'collections',
@@ -181,22 +181,74 @@ module.exports = function (Release) {
         }
       }
     };
-    Release.findById(releaseId, filter, function(err, release) {
+    Release.findById(releaseId, filter, function (err, release) {
       if (err || !release) return cb(err);
       const rawData = serialize(release, Release)
       const texts = rawData.included ?
         rawData.included.filter(obj => obj.type == 'released_texts')
-        .map(text => ({
-          key: text.id,
-          value: text.attributes.value,
-          locale: text.attributes.locale,
-          collection_id: text.attributes.collection_id,
-        })) : []
+          .map(text => ({
+            key: text.id,
+            value: text.attributes.value,
+            locale: text.attributes.locale,
+            collection_id: text.attributes.collection_id,
+          })) : []
 
       return cb(null, texts);
     }
-  );
-};
+    );
+  };
+
+  Release.remoteMethod('getTextByCollections', {
+    accepts: [
+      { arg: 'releaseName', required: true, type: 'string' },
+      { arg: 'collections', required: false, type: 'string', http: { source: 'query' } },
+      { arg: 'locale', required: true, type: 'string', http: { source: 'query' } },
+    ],
+    description: 'Get all text by release name and collection names',
+    returns: { arg: 'localeTextObj', type: 'object', root: true },
+    http: { verb: 'get', path: '/:releaseId', errorStatus: 400 }
+  })
+
+  Release.getTextByCollections = async function (releaseName, collectionsStr, locale) {
+    let collectionHandles = []
+    if (collectionsStr) collectionHandles = decodeURIComponent(collectionsStr).split(',')
+    let release = await Release.findOne({ where: { name: releaseName } });
+    if (!release) throw new Error('Release not found')
+
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          where: { and: [{ release_id: release.id }] },
+          include: {
+            relation: 'text',
+            scope: {
+              where: { locale }
+            }
+          }
+        }
+      }
+    }
+
+    if (collectionHandles.length) {
+      filter.include.scope.where.and.push({
+        handle: { inq: collectionHandles }
+      })
+    }
+
+    release = await Release.findById(release.id, filter)
+    const collections = release.collections()
+    const output = {
+      [locale]: {}
+    }
+    collections.map(collection => {
+      const texts = collection.text()
+      texts.map(text => {
+        output[locale][`${collection.handle}.${text.key}`] = text.value
+      })
+    })
+    return output
+  }
 
   Release.observe('before save', async function (ctx) {
     ctx.instance.updated_at = new Date()
