@@ -12,7 +12,7 @@
         <b-navbar-item tag="router-link" to="/releases">Releases</b-navbar-item>
               </template>
       <template slot="end">
-        <b-navbar-dropdown label="User" right>
+        <b-navbar-dropdown class="nav-dropdown" label="User" right>
           <b-navbar-item href="/my_account">My Account</b-navbar-item>
           <b-navbar-item href="/logout">Logout</b-navbar-item>
         </b-navbar-dropdown>

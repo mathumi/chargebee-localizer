@@ -39,6 +39,20 @@
   }
 }
 
+.nav-dropdown {
+  .navbar-link{
+    &:after {
+      border-color: $light;
+      border-width: 2px;
+    }
+    &:hover {
+      &:after {
+        border-color: $primary;
+      } 
+    }
+  }
+}
+
 .navbar-menu{
   margin-left: 50px;
 }
