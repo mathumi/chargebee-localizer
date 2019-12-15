@@ -68,12 +68,19 @@ export default {
         })
         .then(() => {
           this.$emit("reset");
+          this.reset();
           this.isNewKeyModalActive = false;
         })
         .catch(this.$error)
         .finally(() => {
           this.loading = false;
         });
+    },
+    reset() {
+      this.key = "";
+      this.value = "";
+      this.locale = "";
+      this.description = "";
     }
   }
 };

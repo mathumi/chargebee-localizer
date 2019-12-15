@@ -48,6 +48,7 @@
                 :branchId="branchData.id"
                 :versionId="branchData.draft_version"
                 :collectionId="collectionData.id"
+                @reset="fetchKeys"
               />
               <transition name="fade">
                 <div class="card popover" v-if="editName">
