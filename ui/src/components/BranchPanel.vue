@@ -7,7 +7,9 @@
           <div class="flex ai-center">
             <b-icon icon="shield-lock" class="mar--r-xs" v-if="icon" />
             <div>
-              <p class="fs-md" v-if="item.name">{{ item.name }}</p>
+              <p class="fs-md" v-if="item.name">
+                <router-link :to="`/tree/${item.name}`">{{ item.name }}</router-link>
+              </p>
               <p class="fs-sm text-light" v-if="item.description">{{ item.description }}</p>
             </div>
           </div>

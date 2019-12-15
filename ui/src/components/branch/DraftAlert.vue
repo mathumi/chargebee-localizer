@@ -2,7 +2,7 @@
   <div>
     <transition name="fade" mode="out-in">
       <b-navbar
-        class="mar--t-sm mar--b-st navbar-secondary"
+        class="mar--t-sm mar--b-md navbar-secondary"
         :type="draft ? 'is-warning': 'is-info'"
         v-if="draft"
       >
