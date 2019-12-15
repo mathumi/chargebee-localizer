@@ -1,7 +1,33 @@
 <template>
   <div>
+    <transition name="fade" mode="out-in">
+      <b-navbar
+        class="mar--t-sm mar--b-st navbar-secondary"
+        :type="isBranchInDraftMode ? 'is-warning': 'is-info'"
+        v-if="!isBranchInDraftMode"
+      >
+        <template slot="brand">
+          <div style="display:flex;align-items:center;">
+            <p
+              class="fs-st"
+              v-if="isBranchInDraftMode"
+            >You have some unpublished changes which are saved as draft.</p>
+            <p class="fs-st has-text-white" v-else>
+              You are in View-only mode.
+              <a>
+                <strong class="has-text-white">Click here to edit</strong>
+              </a>
+            </p>
+          </div>
+        </template>
+        <template slot="end" v-if="isBranchInDraftMode">
+          <b-button type="is-text" class="mar--r-mi">Discard</b-button>
+          <b-button type="is-primary">Publish</b-button>
+        </template>
+      </b-navbar>
+    </transition>
     <section>
-      <b-tabs v-model="activeTab">
+      <div>
         <div class="nav-block">
           <div class="flex ai-center">
             <b-select
@@ -31,7 +57,7 @@
           >Add Collection</b-button>
         </div>
         <Collections :data="selectedBranchData.collections" />
-      </b-tabs>
+      </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
       <NewBranch :branches="branches" :selectedBranchId="selectedBranchName" />
@@ -55,7 +81,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 0,
+      // activeTab: 0,
       showTabs: false,
       selectedBranchName: "master",
       isNewBranchModalActive: false,
@@ -70,6 +96,9 @@ export default {
       return this.$store.state.branches.find(
         branch => branch.name === this.selectedBranchName
       );
+    },
+    isBranchInDraftMode() {
+      return !Boolean(this.selectedBranchData.draft_version);
     }
   },
   mounted() {
@@ -127,5 +156,9 @@ export default {
   padding: 8px 20px;
   width: 100%;
   font-size: 14px;
+}
+
+.navbar-secondary {
+  border-radius: 4px;
 }
 </style>
