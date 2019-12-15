@@ -8,6 +8,7 @@
   "properties": {
     "locale": {
       "type": "string",
+      "id": 1,
       "required": true
     },
     "key": {
@@ -18,11 +19,6 @@
     "value": {
       "type": "string",
       "required": true
-    },
-    "archived": {
-      "type": "boolean",
-      "required": true,
-      "default": false
     },
     "collection_id": {
       "type": "number",
