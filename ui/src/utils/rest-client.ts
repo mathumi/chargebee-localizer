@@ -85,7 +85,7 @@ export default class RestClient {
     }
     headers['cb-csrf-token'] = headers['_csrf_token'] = csrfToken;
     const config = {
-      method: 'post',
+      method: 'put',
       params,
       withCredentials: getCors(),
       data,
@@ -100,6 +100,8 @@ export default class RestClient {
         headers
       )
     };
+
+    return config;
   }
 
 
@@ -113,7 +115,7 @@ export default class RestClient {
     }
     headers['cb-csrf-token'] = headers['_csrf_token'] = csrfToken;
     const config = {
-      method: 'put',
+      method: 'post',
       params,
       withCredentials: getCors(),
       data,

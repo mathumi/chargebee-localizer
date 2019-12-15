@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import ApiService from "@/service";
-import { branches, releases, collections } from './stub';
+import { branchService, releaseService } from "@/service";
 
 Vue.use(Vuex);
 
@@ -9,7 +8,6 @@ export default new Vuex.Store({
   state: {
     branches: [],
     releases: [],
-    collections: {}
   },
   mutations: {
     setReleases(state, payload = []) {
@@ -18,39 +16,38 @@ export default new Vuex.Store({
     setBranches(state, payload = []) {
       state.branches = payload;
     },
-    setCollections(state, { branchId, payload }) {
-      Vue.set(state.collections, branchId, payload);
-    }
+    // setCollections(state, { branchId, payload }) {
+    //   Vue.set(state.collections, branchId, payload);
+    // }
   },
   actions: {
     async init({ commit }) {
-      return Promise.all([]);
+      const [branches, releases] = await Promise.all([branchService.getBranchesWithCollections(), releaseService.getReleases()]);
+      commit('setBranches', branches);
+      commit('setReleases', releases);
     },
-
-    async mockInit({ commit }) {
-      await new Promise(resolve => {
-        commit('setBranches', branches);
-        commit('setReleases', releases);
-        commit('setCollections', {
-          branchId: 10,
-          payload: collections
-        });
-        resolve();
-      });
+    async createBranch({ dispatch }, payload) {
+      await branchService.createBranch(payload);
+      await dispatch('init');
+    },
+    async publishDraftBranch({ dispatch }, { id, payload }) {
+      await branchService.publishDraft(id, payload);
+      await dispatch('init');
+    },
+    async discardDraftBranch({ dispatch }, branchId) {
+      await branchService.discardDraft(branchId);
+      await dispatch('init');
     }
   },
   getters: {
-    branches: state => {
-      return state.branches;
-    },
     draftBranches: state => {
       return state.branches.filter(branch => Boolean(branch.draftVersionId));
     },
     liveBranches: state => {
       return state.branches.filter(branch => !Boolean(branch.draftVersionId));
     },
-    branchCollections: state => {
-      return (branchId) => state.collections[branchId];
-    }
+    // branchCollections: state => {
+    //   return (branchId) => state.collections[branchId];
+    // }
   }
 });

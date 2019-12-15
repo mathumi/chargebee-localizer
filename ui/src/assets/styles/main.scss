@@ -10,9 +10,19 @@ body {
   font-size: $fs_lead;
 }
 
-a,
-a:hover {
-  color: $primary !important;
+.navbar-dropdown {
+  .navbar-item {
+    padding: 1em !important;
+  }
+}
+
+table {
+  a {
+    color: $primary !important;
+    &:hover {
+      color: #1746ab !important;
+    }
+  }
 }
 
 .navbar {
@@ -25,15 +35,16 @@ a:hover {
   padding: 0 150px;
   overflow: auto;
 }
-.collection-detail-body{
+.collection-detail-body {
   .navbar-secondary {
     position: sticky !important;
-    top:0;
+    top: 0;
   }
 }
 .logo {
   font-size: $fs_h4;
   font-weight: 600;
+  color: #4a4a4a !important;
   &__ {
     &img {
       margin-right: $space_sm;
@@ -42,9 +53,13 @@ a:hover {
 }
 
 .upload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &-draggable {
+    width: 100%;
+  }
 }
 
 .collection {
@@ -77,4 +92,19 @@ a:hover {
 
 .modal .animation-content .modal-card {
   margin: 0 auto;
+}
+
+.router-link-active {
+  color: #1746ab;
+}
+
+.button.is-danger {
+  background-color: #ff3860;
+  border-color: transparent;
+  color: #fff;
+
+  &:focus,
+  .is-focused {
+    color: #fff !important;
+  }
 }
