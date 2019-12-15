@@ -52,7 +52,7 @@
       <new-branch :branches="branches" :selectedBranchData="selectedBranchData" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
-      <new-collection />
+      <new-collection :selectedBranchData="selectedBranchData" />
     </b-modal>
   </div>
 </template>
