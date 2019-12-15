@@ -16,8 +16,8 @@
       "type": "string",
       "required": true,
       "mysql": {
-        "dataType":"VARCHAR",
-        "dataLength":50
+        "dataType": "VARCHAR",
+        "dataLength": 50
       }
     },
     "description": {
@@ -25,10 +25,10 @@
       "required": true
     },
     "publised_version": {
-      "type": "string"
+      "type": "number"
     },
     "draft_version": {
-      "type": "string"
+      "type": "number"
     },
     "created_at": {
       "type": "date",

@@ -42,7 +42,9 @@
       "remoting": {
         "sharedMethods": {
           "createRelease": true,
-          "getReleases": true
+          "getReleases": true,
+          "getCollections": true,
+          "getTextKeys": true
         }
       }
     }
@@ -64,8 +66,9 @@
           "createBranch": true,
           "listBranches": true,
           "getCollections": true,
-          "getKeys": true,
-          "publish": true
+          "getTextKeys": true,
+          "publish": true,
+          "createCollection": true
         }
       }
     }
