@@ -186,6 +186,12 @@ export interface CreateCollectionInput {
   'handle'?: string;
   /**
    * 
+   * @type {string}
+   * @memberof CreateCollectionInput
+   */
+  'description'?: string;
+  /**
+   * 
    * @type {any}
    * @memberof CreateCollectionInput
    */
@@ -334,6 +340,44 @@ export interface Release {
    * @memberof Release
    */
   'createdAt'?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface UpdateCollectionInput
+ */
+export interface UpdateCollectionInput {
+  /**
+   * 
+   * @type {string}
+   * @memberof UpdateCollectionInput
+   */
+  'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof UpdateCollectionInput
+   */
+  'description'?: string;
+  /**
+   * 
+   * @type {any}
+   * @memberof UpdateCollectionInput
+   */
+  'file'?: any;
+  /**
+   * 
+   * @type {string}
+   * @memberof UpdateCollectionInput
+   */
+  'locale'?: string;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof UpdateCollectionInput
+   */
+  'overwrite'?: boolean;
 }
 
 /**
@@ -673,6 +717,50 @@ const CollectionApiFetchParamCreator = function () {
       };
       return output;
     },
+    /**
+      * 
+      * @summary to update collection
+      * @param {number} branchId 
+      * @param {string} versionId 
+      * @param {string} collectionId 
+      * @param {UpdateCollectionInput} [updateCollectionInput] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
+    updateCollection(branchId: number, versionId: string, collectionId: string, updateCollectionInput?: UpdateCollectionInput, options: any = {}): FetchArgs {
+      // verify required parameter 'branchId' is not null or undefined
+      if (branchId === null || branchId === undefined) {
+        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling updateCollection.');
+      }
+      // verify required parameter 'versionId' is not null or undefined
+      if (versionId === null || versionId === undefined) {
+        throw new RequiredError('versionId', 'Required parameter versionId was null or undefined when calling updateCollection.');
+      }
+      // verify required parameter 'collectionId' is not null or undefined
+      if (collectionId === null || collectionId === undefined) {
+        throw new RequiredError('collectionId', 'Required parameter collectionId was null or undefined when calling updateCollection.');
+      }
+      const localVarPath = `/branches/{branchId}/{versionId}/collections/{collectionId}`
+        .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)))
+        .replace(`{${"versionId"}}`, encodeURIComponent(String(versionId)))
+        .replace(`{${"collectionId"}}`, encodeURIComponent(String(collectionId)));
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      if (options.urlencoded) {
+        localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
+      }
+
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      output['body'] = updateCollectionInput
+      return output;
+    },
   }
 };
 
@@ -708,6 +796,21 @@ export class CollectionApiBase {
   public getCollections(branchId: number, versionId: string, options?: any): Promise<Array<Collection>> {
     const localVarFetchArgs = CollectionApiFetchParamCreator().getCollections(branchId, versionId, options);
     return <Promise<Array<Collection>>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+  /**
+    * 
+    * @summary to update collection
+    * @param {number} branchId 
+    * @param {string} versionId 
+    * @param {string} collectionId 
+    * @param {UpdateCollectionInput} [updateCollectionInput] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof CollectionApi
+    */
+  public updateCollection(branchId: number, versionId: string, collectionId: string, updateCollectionInput?: UpdateCollectionInput, options?: any): Promise<{}> {
+    const localVarFetchArgs = CollectionApiFetchParamCreator().updateCollection(branchId, versionId, collectionId, updateCollectionInput, options);
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
 }
 

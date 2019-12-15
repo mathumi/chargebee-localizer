@@ -4,13 +4,23 @@
       <!-- Collection Heading -->
       <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
       <div class="collection-detail__block">
-        <b-select v-model="selectedLocale" class="mar--b-st">
-          <option
-            v-for="(locale, index) in locales"
-            :value="locale.code"
-            :key="locale.code"
-          >{{ locale.name }}</option>
-        </b-select>
+        <div class="level">
+          <b-select v-model="selectedLocale" class="mar--b-st level-left">
+            <option
+              v-for="(locale, index) in locales"
+              :value="locale.code"
+              :key="locale.code"
+            >{{ locale.name }}</option>
+          </b-select>
+          <div class="level-right" v-if="isBranchInDraftMode">
+            <b-button
+              class="float-right"
+              type="is-primary"
+              icon-left="upload"
+              @click="openUpdateCollectionModal"
+            >Update Collection</b-button>
+          </div>
+        </div>
         <div class="columns ai-center" v-if="collectionData">
           <div class="column ai-center">
             <h3 class="va-mid">Collections -</h3>
@@ -114,6 +124,9 @@
         </div>
       </div>
     </template>
+    <b-modal :active.sync="isUpdateCollectionModalActive" :width="640">
+      <update-collection :collectionData="collectionData" :selectedBranchData="branchData" />
+    </b-modal>
   </div>
 </template>
 
@@ -123,13 +136,15 @@ import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
 import AddKey from "@/components/collection/AddKey.vue";
+import UpdateCollection from "@/components/modals/UpdateCollection.vue";
 import { keyService } from "@/services";
 
 export default {
   name: "CollectionDetailPage",
   components: {
     DraftAlert,
-    AddKey
+    AddKey,
+    UpdateCollection
   },
   data() {
     return {
@@ -137,7 +152,8 @@ export default {
       searchValue: "",
       keys: [],
       collectionInput: "",
-      editName: false
+      editName: false,
+      isUpdateCollectionModalActive: false
     };
   },
   computed: {
@@ -213,6 +229,9 @@ export default {
         this.collectionData.id,
         this.selectedLocale
       );
+    },
+    openUpdateCollectionModal() {
+      this.isUpdateCollectionModalActive = true;
     }
   },
   watch: {

@@ -1,14 +1,14 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">New Collection</p>
+      <p class="modal-card-title">Update Collection</p>
     </header>
     <section class="modal-card-body">
       <b-field label="Collection Name">
         <b-input type="text" v-model="collectionName" placeholder="Snap" required></b-input>
       </b-field>
       <b-field label="Collection Handle">
-        <b-input type="text" :value="collectionHandle" placeholder="snap" readonly></b-input>
+        <b-input type="text" :value="collectionData.handle" placeholder="snap" readonly></b-input>
       </b-field>
       <b-field label="Description">
         <b-input type="textarea" v-model="description" placeholder="Super snappingly scalable"></b-input>
@@ -16,6 +16,9 @@
       <b-field label="Locale Name">
         <b-input type="text" v-model="localeName" placeholder="en" required></b-input>
       </b-field>
+      <div class="field">
+        <b-checkbox v-model="overwrite">Overwrite matching existing keys</b-checkbox>
+      </div>
       <b-field label="Collections">
         <b-upload drag-drop v-model="collectionFile">
           <section class="section">
@@ -36,7 +39,7 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" :loading="loading" @click="createCollection">Create</button>
+      <button class="button is-primary" :loading="loading" @click="updateCollection">Update</button>
     </footer>
   </div>
 </template>
@@ -45,34 +48,29 @@
 import { collectionService } from "@/services";
 
 export default {
-  name: "NewCollection",
-  props: ["selectedBranchData"],
+  name: "UpdateCollection",
+  props: ["collectionData", "selectedBranchData"],
   data() {
     return {
       loading: false,
-      description: "",
-      collectionName: "",
+      description: this.collectionData.description,
+      collectionName: this.collectionData.name,
       localeName: "",
+      overwrite: false,
       collectionFile: null
     };
   },
-  computed: {
-    collectionHandle() {
-      return this.collectionName
-        .replace(/[^a-zA-Z0-9_ ]/g, "")
-        .toLowerCase()
-        .replace(/ /g, "_");
-    }
-  },
+  computed: {},
   methods: {
-    createCollection() {
+    updateCollection() {
       collectionService
-        .createCollection(
+        .updateCollection(
           this.selectedBranchData.id,
           this.selectedBranchData.draft_version,
+          this.collectionData.id,
           {
             name: this.collectionName,
-            handle: this.collectionHandle,
+            overwrite: this.overwrite,
             description: this.description,
             file: this.collectionFile,
             locale: this.localeName
@@ -80,7 +78,7 @@ export default {
           { "Content-Type": "multipart/form-data" }
         )
         .then(() => {
-          this.$success("Collection created");
+          this.$success("Collection updated");
           this.$store.dispatch("init");
           this.$parent.close();
           // TODO

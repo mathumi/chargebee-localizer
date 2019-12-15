@@ -50,7 +50,7 @@ export default {
   computed: {
     branchId() {
       return this.branchName
-        .replace(/[^a-zA-Z ]/g, "")
+        .replace(/[^a-zA-Z_ ]/g, "")
         .toLowerCase()
         .replace(/ /g, "_");
     }
@@ -69,7 +69,7 @@ export default {
         .then(() => {
           this.$success("Branch created");
           this.$parent.close();
-          this.$router.push(`tree/${newBranch.name}`)
+          this.$router.push(`/tree/${newBranch.name}`);
         })
         .catch(this.$error)
         .finally(() => {
