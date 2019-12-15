@@ -4,7 +4,7 @@
       <b-navbar
         class="mar--t-sm mar--b-st navbar-secondary"
         :type="isBranchInDraftMode ? 'is-warning': 'is-info'"
-        v-if="!isBranchInDraftMode"
+        v-if="isBranchInDraftMode"
       >
         <template slot="brand">
           <div style="display:flex;align-items:center;">
@@ -60,7 +60,7 @@
       </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :branches="branches" :selectedBranchId="selectedBranchName" />
+      <NewBranch :branches="branches" :selectedBranchData="selectedBranchData" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
       <NewCollection />
@@ -98,7 +98,7 @@ export default {
       );
     },
     isBranchInDraftMode() {
-      return !Boolean(this.selectedBranchData.draft_version);
+      return Boolean(this.selectedBranchData.draft_version);
     }
   },
   mounted() {

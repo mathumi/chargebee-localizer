@@ -3,8 +3,11 @@ import App from './App.vue';
 import router from './router';
 import store from '@/store/index';
 import Buefy from 'buefy';
+import Toast from '@/utils/toast';
 
 Vue.use(Buefy);
+
+Vue.use(Toast);
 
 Vue.config.productionTip = false;
 

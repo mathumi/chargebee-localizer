@@ -20,7 +20,7 @@ module.exports = function(Branches) {
       }
     ],
     returns: { arg: "branch", type: "object", root: true },
-    http: { path: "/create", verb: "post", errorStatus: 400 }
+    http: { path: "/", verb: "post", errorStatus: 400 }
   });
 
   Branches.remoteMethod("getCollections", {

@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { branchService, releaseService } from "@/service";
-import { collections } from './stub';
 
 Vue.use(Vuex);
 
@@ -26,6 +25,10 @@ export default new Vuex.Store({
       const [branches, releases] = await Promise.all([branchService.getBranchesWithCollections(), releaseService.getReleases()]);
       commit('setBranches', branches);
       commit('setReleases', releases);
+    },
+    async createBranch({ dispatch }, payload) {
+      await branchService.createBranch(payload);
+      await dispatch('init');
     }
   },
   getters: {
