@@ -48,25 +48,24 @@
               @click="openNewBranchModal"
             >New Branch</b-button>
           </div>
-           <div class="float-right">
+          <div class="float-right">
             <b-button
               class="mar--r-mi"
               type="is-primary"
               outlined
               icon-left="file-document-box-plus-outline"
               @click="openReviewModal"
-              >Merge with master</b-button
-            >
-          <b-button
-            class="float-right"
-            type="is-primary"
-            outlined
-            icon-left="file-document-box-plus-outline"
-            @click="openNewCollectioModal"
-          >Add Collection</b-button>
-           </div>
+            >Merge with master</b-button>
+            <b-button
+              class="float-right"
+              type="is-primary"
+              outlined
+              icon-left="file-document-box-plus-outline"
+              @click="openNewCollectioModal"
+            >Add Collection</b-button>
+          </div>
         </div>
-        <Collections :data="selectedBranchData.collections" />
+        <Collections v-if="selectedBranchData" :data="selectedBranchData.collections" />
       </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
@@ -111,7 +110,10 @@ export default {
       );
     },
     isBranchInDraftMode() {
-      return Boolean(this.selectedBranchData.draft_version);
+      return (
+        this.selectedBranchData &&
+        Boolean(this.selectedBranchData.draft_version)
+      );
     }
   },
   mounted() {

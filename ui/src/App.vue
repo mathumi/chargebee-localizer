@@ -16,8 +16,6 @@
       </template>
     </b-navbar>
 
-    <router-view />
-
     <transition name="fade" mode="out-in">
       <div class="wrapper" :class="pageClass">
         <router-view />
