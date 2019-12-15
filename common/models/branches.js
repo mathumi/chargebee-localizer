@@ -95,6 +95,19 @@ module.exports = function(Branches) {
     http: { path: "/:branchId/publish", verb: "post", errorStatus: 400 }
   });
 
+  async function getNewDraftVersion() {
+    const branchPublished = await Branches.findOne({
+      order: "published_version DESC",
+      limit: 1
+    })
+    const branchDrafted = await Branches.findOne({
+      order: "draft_version DESC",
+      limit: 1
+    })
+    const newDraftVersion = (Math.max(branchPublished.published_version, branchDrafted.draft_version) || 999) + 1
+    return newDraftVersion
+  }
+
   Branches.createBranch = async function(data, callback) {
     const { name, description, from_branch } = data;
     let draft_version;
@@ -103,14 +116,8 @@ module.exports = function(Branches) {
       return callback(new Error("Missing parameters"));
     }
 
-    const newBranch = await Branches.find({
-      order: "publised_version DESC",
-      limit: 1
-    }).then(data => {
-      draft_version =
-        parseInt((data && data[0] && data[0]["publised_version"]) || 999) + 1;
-      return Branches.create({ name, description, draft_version });
-    });
+    const newDraftVersion = await getNewDraftVersion()
+    const newBranch = Branches.create({ name, description, draft_version: newDraftVersion });
 
     if (from_branch) {
       await duplicateCollectionsAndText(from_branch, newBranch);
@@ -321,7 +328,10 @@ module.exports = function(Branches) {
         };
         const branch = await Branches.findById(branchId, filter);
         // Update branch published version
-        await branch.updateAttribute("publised_version", branch.draft_version);
+        await branch.updateAttributes({
+          published_version: branch.draft_version,
+          draft_version: null,
+        });
         // Create a release
         const release = await Release.create({
           name: releaseData.name,
@@ -488,6 +498,71 @@ module.exports = function(Branches) {
       .then(collection => callback(null, collection))
       .catch(err => callback(err));
   };
+
+  Branches.remoteMethod("draft", {
+    accepts: [
+      { arg: "branchId", type: "number" }
+    ],
+    returns: { arg: "branch", type: "object", root: true },
+    http: {
+      verb: "post",
+      path: "/:branchId/draft",
+      errorStatus: 400
+    }
+  });
+  Branches.draft = async function(branchId, callback) {
+    const Collection = Branches.app.models.BranchedCollection;
+    const Text = Branches.app.models.BranchText
+
+    try {
+      const branch = await Branches.findById(branchId, {
+        include: {
+          relation: 'collections',
+          scope: {
+            include: {
+              relation: 'text',
+              scope: { where: { archived: false } }
+            }
+          }
+        }
+      })
+      if(branch.draft_version) {
+        throw new Error('Draft already exists')
+      }
+
+      const publishedCollections = branch.collections()
+        .filter(collection => collection.version == branch.published_version)
+      
+      const newDraftVersion = await getNewDraftVersion();
+      await branch.updateAttribute('draft_version', newDraftVersion)
+
+      for(let i in publishedCollections) {
+        const collection = publishedCollections[i]
+
+        const newCollection = await Collection.create({
+          version: newDraftVersion,
+          handle: collection.handle,
+          name: collection.name,
+          description: collection.description,
+        })
+
+        const texts = collection.text().map(text => ({
+          key: text.key,
+          value: text.value,
+          locale: text.locale,
+          archived: false,
+          collection_id: newCollection.id
+        }))
+
+        await Text.create(texts)
+      }
+
+      const _branch = await Branches.findById(branchId)
+      return callback(null, _branch)
+    } catch(e) {
+      return callback(e)
+    }
+  }
 
   Branches.observe("before save", async function(ctx) {
     const instance = ctx.instance || ctx.currentInstance;
