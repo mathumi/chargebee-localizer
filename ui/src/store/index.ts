@@ -24,6 +24,7 @@ export default new Vuex.Store({
   },
   actions: {
     async init({ commit }) {
+      await branchService.getBranchesWithCollections();
       const [branches, releases] = await Promise.all([branchService.getBranches(), releaseService.getReleases()]);
       commit('setBranches', branches);
       commit('setReleases', releases);

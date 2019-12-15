@@ -10,6 +10,12 @@ body {
   font-size: $fs_lead;
 }
 
+.navbar-dropdown {
+  .navbar-item {
+    padding: 1em !important;
+  }
+}
+
 table {
   a {
     color: $primary !important;

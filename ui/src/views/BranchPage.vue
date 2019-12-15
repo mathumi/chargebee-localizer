@@ -1,36 +1,19 @@
 <template>
   <div>
-    <!-- <section class="columns">
-      <div class="column"></div>
-      <div class="column"></div>
-      <b-button
-        type="is-primary"
-        icon-left="source-branch"
-        @click="openNewBranchModal"
-        >New Branch</b-button
-      >
-      <b-modal :active.sync="isNewBranchModalActive" :width="640">
-        <NewBranch
-          :resourceBranches="resourceBranches"
-          :selectedBranchId="selectedBranchId"
-        />
-      </b-modal>
-    </section>-->
-
     <section>
       <b-tabs v-model="activeTab">
         <div class="nav-block">
           <div class="flex ai-center">
             <b-select
-              :value="selectedBranchId"
-              @input="updateselectedBranchId"
+              :value="selectedBranchName"
+              @input="updateSelectedBranch"
               icon="source-branch"
             >
               <option
-                v-for="filter in resourceBranches"
-                :value="filter.id"
-                :key="filter.id"
-              >{{ filter.name }}</option>
+                v-for="branch in branches"
+                :value="branch.name"
+                :key="branch.id"
+              >{{ branch.name }}</option>
             </b-select>
             <b-button
               type="is-primary"
@@ -47,11 +30,11 @@
             @click="openNewCollectioModal"
           >Add Collection</b-button>
         </div>
-        <Collections :branchId="selectedBranchId" />
+        <Collections :branchId="selectedBranchName" />
       </b-tabs>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :resourceBranches="resourceBranches" :selectedBranchId="selectedBranchId" />
+      <NewBranch :branches="branches" :selectedBranchId="selectedBranchName" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
       <NewCollection />
@@ -74,40 +57,42 @@ export default {
     return {
       activeTab: 0,
       showTabs: false,
-      selectedBranchId: 10,
+      selectedBranchName: "master",
       isNewBranchModalActive: false,
       isNewCollectionModalActive: false
     };
   },
   computed: {
-    resourceBranches() {
+    branches() {
       return this.$store.state.branches;
     },
     selectedBranchData() {
       return this.$store.state.branches.find(
-        branch => branch.id === this.selectedBranchId
+        branch => branch.name === this.selectedBranchName
       );
     }
   },
   mounted() {
     const urlPaths = window.location.href.split("tree");
     if (urlPaths.length === 2) {
-      this.selectedBranchId = urlPaths[1].slice(1);
+      this.selectedBranchName = urlPaths[1].slice(1);
     }
     this.sanityResCheck();
   },
   methods: {
     sanityResCheck() {
       if (
-        this.resourceBranches.findIndex(f => f.id === this.selectedBranchId) ===
-        -1
+        this.branches.findIndex(
+          branch => branch.name === this.selectedBranchName
+        ) === -1
       ) {
-        this.selectedBranchId = 10;
+        this.selectedBranchName = "master";
       }
     },
 
-    updateselectedBranchId(newValue) {
+    updateSelectedBranch(newValue) {
       if (newValue) {
+        this.selectedBranchName = newValue;
         this.$router.replace(`/tree/${newValue}`);
       }
     },
