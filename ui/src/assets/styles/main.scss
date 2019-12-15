@@ -21,6 +21,32 @@
   height: 60px;
 }
 
+.button.is-danger{
+  background-color: $danger !important;
+}
+
+.modal {
+  .modal-card-head, .modal-card-foot {
+    background: #fff;
+  }
+}
+
+.dialog {
+  .media-left {
+    margin-right: 12px;
+  }
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    i {
+      &:before {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
 .navbar-dropdown {
   .navbar-item {
     padding: 1em !important;
@@ -99,8 +125,21 @@ table {
   .navbar-secondary {
     position: sticky !important;
     top: 0;
+    box-shadow: none !important;
   }
 }
+.navbar-secondary  {
+  color: $black !important; 
+  box-shadow: none !important;
+  &.is-warning {
+    border: 1px solid #eae6c3;
+  }
+  &.is-info {
+    background-color: #f1f8ff;
+    border: 1px solid #c8e1ff;
+  }
+}
+
 .logo {
   font-size: $fs_h4;
   font-weight: 600;

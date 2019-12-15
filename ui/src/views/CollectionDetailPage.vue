@@ -4,8 +4,8 @@
       <!-- Collection Heading -->
       <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
       <div class="collection-detail__block">
-        <div class="level">
-          <b-select v-model="selectedLocale" class="mar--b-st level-left">
+        <div class="level pad--b-st">
+          <b-select v-model="selectedLocale" class="level-left">
             <option
               v-for="(locale, index) in locales"
               :value="locale.code"
@@ -55,18 +55,18 @@
                 <div class="card popover" v-if="editName">
                   <div class="card-content">
                     <b-input
-                      class="mar--b-mi collection-detail__input"
+                      class="mar--b-xs collection-detail__input"
                       placeholder="Name of your collection"
                       v-model="collectionInput"
                       type="text"
                     ></b-input>
                     <b-button
                       @click="updateCollectionName()"
-                      class="button is-twitter mar--r-mi"
+                      class="button is-primary mar--r-mi"
                       >Update</b-button
                     >
 
-                    <b-button @click="cancelUpdate()" class="button" rounded
+                    <b-button @click="cancelUpdate()" class="button"
                       >Cancel</b-button
                     >
                   </div>
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div><b>Branch:</b> Master</div>
-         <div><b>Total Keys:</b> {{ keys.length }}</div>
+        <div><b>Total Keys:</b> {{ keys.length }}</div>
         <div v-if="collectionData.description">
           {{ collectionData.description }}
         </div>
@@ -114,19 +114,20 @@
                     <template v-if="props.row.showEdit">
                       <b-button
                         @click="updateKey(props.row)"
-                        class="button is-twitter mar--r-mi"
-                        rounded
+                        class="button is-primary mar--r-mi"
                         >Update</b-button
                       >
                       <b-button
                         @click="cancelUpdateKey(props.row)"
                         class="button"
-                        rounded
                         >Cancel</b-button
                       >
                     </template>
                   </b-table-column>
-                  <b-table-column class="text-right cursor-pointer" @click.native="confirmArchive(props.row.key)">
+                  <b-table-column
+                    class="text-right cursor-pointer"
+                    @click.native="confirmArchive(props.row.key)"
+                  >
                     <b-icon v-if="!props.row.archived" icon="delete"></b-icon>
                     <span v-else class="text-light">Archived</span>
                   </b-table-column>
@@ -204,11 +205,13 @@ export default {
   mounted() {
     this.collectionInput = this.collectionName;
   },
+
   methods: {
     openEdit: function() {
       this.editName = true;
     },
     closeEdit: function() {
+      console.log("gdgd")
       this.editName = false;
     },
     updateCollectionName: function() {
@@ -312,8 +315,12 @@ export default {
 <style lang="scss">
 .popover {
   position: absolute;
-  top: 30px;
+  top: 40px;
   left: 0;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 .collection-name {
   padding-left: 6px;
@@ -374,5 +381,8 @@ export default {
 .navbar-info {
   background-color: #f1f8ff !important;
   border-bottom: 1px solid #c8e1ff;
+}
+.level{
+  border-bottom: 1px solid #dbdbdb;
 }
 </style>
