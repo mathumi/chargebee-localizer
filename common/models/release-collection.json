@@ -32,6 +32,10 @@
       "mysql": {
         "default": "now"
       }
+    },
+    "release_id": {
+      "type": "number",
+      "required":true
     }
   },
   "validations": [],

@@ -69,6 +69,7 @@
           "getTextKeys": true,
           "publish": true,
           "createCollection": true,
+          "updateCollection": true,
           "draft": true
         }
       }

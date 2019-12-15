@@ -5,6 +5,37 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    const downloadPath = path.join(__dirname, "../../server/storage");
+    cb(null, downloadPath + "/");
+  },
+  filename: function(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
+  }
+});
+
+async function getMultipartData(req, res) {
+  var upload = multer({ storage }).single("file");
+  return new Promise((resolve, reject) => {
+    upload(req, res, function(err) {
+      if (err) return reject(err);
+      const data = req.body || {};
+      if (req.file) {
+        try {
+          data.fileContents = JSON.parse(
+            fs.readFileSync(req.file.path, { encoding: "utf8" })
+          );
+        } catch(e) {
+          return reject(e);
+        }
+      }
+      return resolve(data);
+    });
+  })
+}
+
+
 module.exports = function(Branches) {
   Branches.disableRemoteMethod("create", true);
 
@@ -386,117 +417,62 @@ module.exports = function(Branches) {
     }
   });
 
-  const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      const downloadPath = path.join(__dirname, "../../server/storage");
-      cb(null, downloadPath + "/");
-    },
-    filename: function(req, file, cb) {
-      cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
-    }
-  });
-
   const isValidLocale = locale => {
     return !!~["en", "fr", "de", "pt", "es", "it"].indexOf(locale);
   };
 
-  Branches.createCollection = function(
-    req,
-    res,
-    branchId,
-    versionId,
-    callback
-  ) {
-    let fileData, name, handle, locale, description;
+  Branches.createCollection = async function( req, res, branchId, versionId, callback) {
+    const Collection = Branches.app.models.BranchedCollection;
+    const Text = Branches.app.models.BranchText;
 
-    // Read contents of file
-    new Promise((resolve, reject) => {
-      var upload = multer({
-        storage: storage
-      }).single("file");
+    try {
+      let name, handle, locale, description;
+      const data = await getMultipartData(req, res)
+      name = data.name;
+      handle = data.handle;
+      locale = data.locale;
+      description = data.description;
 
-      upload(req, res, function(err) {
-        if (err) return reject(err);
-        const data = req.body || {};
-        name = data.name;
-        handle = data.handle;
-        locale = data.locale;
-        description = data.description;
+      if (!(name && handle)) throw new Error("Missing parameters");
+      if(!data.fileContents) throw new Error("Missing file")
 
-        if (!(name && handle)) return reject(new Error("Missing parameters"));
-
-        if (req.file) {
-          fileData = JSON.parse(
-            fs.readFileSync(req.file.path, { encoding: "utf8" })
-          );
+      const branch = await Branches.findOne({
+        where: {
+          and: [{ id: branchId }, { draft_version: versionId }]
         }
-        return resolve(fileData);
       });
-    })
-      .then(data => {
-        // Fetch branch
-        return new Promise((resolve, reject) => {
-          Branches.findOne(
-            {
-              where: {
-                and: [{ id: branchId }, { draft_version: versionId }]
-              }
-            },
-            function(err, branch) {
-              if (err || !branch) return reject(err || new Error("Not found"));
-              return resolve(branch);
-            }
-          );
-        });
-      })
-      .then(branch => {
-        // Create collection
-        return new Promise((resolve, reject) => {
-          const Collection = Branches.app.models.BranchedCollection;
-          Collection.create(
-            {
-              version: versionId,
-              handle: handle,
-              name: name,
-              description: description,
-              branch_id: branch.id
-            },
-            function(err, collection) {
-              if (err) return reject(err);
-              return resolve(collection);
-            }
-          );
-        });
-      })
-      .then(collection => {
-        // Create text for collection
-        return new Promise((resolve, reject) => {
-          const Text = Branches.app.models.BranchText;
-          const locales = locale
-            ? [locale]
-            : Object.keys(fileData).filter(locale => isValidLocale(locale));
-          let textArray = [];
-          locales.map(locale => {
-            let textData = fileData[locale];
-            if (!textData)
-              return reject(new Error("Missing locale data in file"));
-            Object.keys(textData).map(key => {
-              textArray.push({
-                key,
-                value: textData[key],
-                locale,
-                collection_id: collection.id
-              });
-            });
-          });
-          Text.create(textArray, function(err, texts) {
-            if (err) return reject(err);
-            return resolve(collection);
+  
+      if(!branch) throw new Error('Branch not found')
+      const collection = await Collection.create({
+        version: versionId,
+        handle: handle,
+        name: name,
+        description: description,
+        branch_id: branch.id
+      });
+
+      const locales = locale ? [locale]
+        : Object.keys(data.fileContents).filter(locale => isValidLocale(locale));
+      let textArray = [];
+      locales.map(locale => {
+        let textData = data.fileContents[locale];
+        if (!textData) throw new Error("Missing locale data in file");
+
+        Object.keys(textData).map(key => {
+          textArray.push({
+            key,
+            value: textData[key],
+            locale,
+            collection_id: collection.id
           });
         });
-      })
-      .then(collection => callback(null, collection))
-      .catch(err => callback(err));
+      });
+
+      await Text.create(textArray);
+      return callback(null, collection)
+    } catch(e) {
+      return callback(e)
+    };
   };
 
   Branches.remoteMethod("draft", {
@@ -560,6 +536,104 @@ module.exports = function(Branches) {
       const _branch = await Branches.findById(branchId)
       return callback(null, _branch)
     } catch(e) {
+      return callback(e)
+    }
+  }
+
+  Branches.remoteMethod("updateCollection", {
+    accepts: [
+      { arg: "req", type: "object", http: { source: "req" } },
+      { arg: "res", type: "object", http: { source: "res" } },
+      { arg: "branchId", type: "number" },
+      { arg: "versionId", type: "number" },
+      { arg: "collectionId", type: "number" }
+    ],
+    returns: { arg: "collection", type: "object", root: true },
+    http: {
+      verb: "post",
+      path: "/:branchId/:versionId/collections/:collectionId",
+      errorStatus: 400
+    }
+  });
+
+  Branches.updateCollection = async function( req, res, branchId, versionId, collectionId, callback) {
+    const Collection = Branches.app.models.BranchedCollection;
+    const Text = Branches.app.models.BranchText
+    let overwrite = false;
+
+    try {
+      const branch = await Branches.findById(branchId)
+      if(!branch) throw new Error('Branch not found')
+      if(branch.draft_version !== versionId) throw new Error('Cannot update branch version')
+      if(branch.published_version == versionId) throw new Error('Cannot update published branch')
+
+      const collection = await Collection.findOne({
+        where: { id: collectionId, branch_id: branch.id }
+      })
+      if(!collection) throw new Error('Collection not found')
+
+      const data = await getMultipartData(req, res)
+      overwrite = data.overwrite || overwrite;
+
+      if(data.description) {
+        await collection.updateAttribute('description', data.description)
+      }
+
+      if(data.fileContents) {
+        const localesInFile = Object.keys(data.fileContents).filter(locale => isValidLocale(locale))
+        const allText = await Text.find({
+          where: { collection_id: collection.id, archived: false }
+        })
+
+        const existingLocales = Array.from(new Set(allText.map(text => text.locale)))
+        let existingTextMap = {}
+        existingLocales.map(locale => {
+          existingTextMap[locale] = {}
+        })
+        allText.map(text => {
+          existingTextMap[text.locale][text.key] = text
+        })
+        
+        let newTextToBeAdded = []
+        for(i in localesInFile) {
+          const locale = localesInFile[i]
+          const textMap = data.fileContents[locale]
+          const textKeys = Object.keys(textMap)
+          for(j in textKeys)  {
+            const key = textKeys[j]
+            const existingText = existingTextMap[locale] && existingTextMap[locale][key]
+
+            if(existingText && overwrite) {
+              const textInstance = await Text.findOne({ 
+                where: {
+                  and: [
+                    {key: existingText.key},
+                    {locale},
+                    {collection_id: collection.id},
+                    {archived: false},
+                  ]
+                }
+              })
+              await textInstance.updateAttribute('value', textMap[key])
+            } else if(!existingText) {
+              newTextToBeAdded.push({
+                key,
+                value: textMap[key],
+                locale,
+                archived: false,
+                collection_id: collection.id
+              })
+            }
+          }
+        }
+        if(newTextToBeAdded.length) {
+          await Text.create(newTextToBeAdded)
+        }
+      }
+      console.log('return callback called');
+      return callback(null, collection)
+    } catch(e) {
+      console.log('error callback triggered ', e);
       return callback(e)
     }
   }
