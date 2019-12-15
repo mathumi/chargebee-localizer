@@ -36,18 +36,22 @@
               type="is-primary"
               outlined
               icon-left="file-document-box-plus-outline"
-              @click="openNewCollectioModal"
+              @click="openNewCollectionModal"
             >Add Collection</b-button>
           </div>
         </div>
-        <Collections v-if="selectedBranchData" :data="selectedBranchData.collections" />
+        <Collections
+          v-if="selectedBranchData"
+          :branchName="selectedBranchName"
+          :data="selectedBranchData.collections"
+        />
       </div>
     </section>
     <b-modal :active.sync="isNewBranchModalActive" :width="640">
-      <NewBranch :branches="branches" :selectedBranchData="selectedBranchData" />
+      <new-branch :branches="branches" :selectedBranchData="selectedBranchData" />
     </b-modal>
     <b-modal :active.sync="isNewCollectionModalActive" :width="640">
-      <NewCollection />
+      <new-collection />
     </b-modal>
   </div>
 </template>
@@ -55,6 +59,7 @@
 <script>
 import Collections from "@/components/branch/tabs/Collections";
 import NewBranch from "@/components/modals/NewBranch.vue";
+import NewRelease from "@/components/modals/NewRelease.vue";
 import NewCollection from "@/components/modals/NewCollection.vue";
 import Review from "@/components/modals/Review.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
@@ -63,6 +68,7 @@ export default {
   components: {
     Collections,
     NewBranch,
+    NewRelease,
     NewCollection,
     Review,
     DraftAlert
@@ -124,7 +130,7 @@ export default {
     openNewBranchModal() {
       this.isNewBranchModalActive = true;
     },
-    openNewCollectioModal() {
+    openNewCollectionModal() {
       this.isNewCollectionModalActive = true;
     }
   }

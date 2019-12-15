@@ -1,21 +1,19 @@
 <template>
   <div class="container">
-    <div class="mar--t-lg">
+    <div class="brach-nav">
       <b-tabs type="is-toggle">
-        <b-tab-item label="All">
-          <br />
+        <b-tab-item label="All" class="mar--t-md">
           <BranchPanel :data="defaultBranch" title="Default Branch" :icon="true" />
-          <br />
-          <BranchPanel :data="otherBranches" title="Other Branches" />
+          <BranchPanel class="mar--t-lg" :data="otherBranches" title="Other Branches" />
         </b-tab-item>
         <b-tab-item label="Published">
           <br />
-          <BranchPanel v-if="publishedBranches.length" :data="publishedBranches" title="Branches" />
+          <BranchPanel v-if="publishedBranches.length" :data="publishedBranches" title="Published Branches" />
           <div v-else>No Published Found</div>
         </b-tab-item>
         <b-tab-item label="In Draft">
           <br />
-          <BranchPanel :data="draftBranches" title="Branches" />
+          <BranchPanel :data="draftBranches" title="In Draft Branches" />
         </b-tab-item>
       </b-tabs>
     </div>
@@ -35,10 +33,10 @@ export default {
   },
   computed: {
     defaultBranch() {
-      return this.allBranches.filter(branch => branch.name === "master");
+      return this.allBranches.filter(branch => branch.name.toLowerCase() == "master");
     },
     otherBranches() {
-      return this.allBranches.filter(branch => branch.name !== "master");
+      return this.allBranches.filter(branch => branch.name.toLowerCase() != "master");
     },
     allBranches() {
       return this.$store.state.branches || [];
@@ -55,8 +53,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.panel-heading {
-  font-weight: 500;
-  font-size: 16px;
-}
+
 </style>

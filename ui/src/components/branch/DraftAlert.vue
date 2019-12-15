@@ -2,9 +2,8 @@
   <div>
     <transition name="fade" mode="out-in">
       <b-navbar
-        class="mar--t-sm mar--b-st navbar-secondary"
+        class="mar--t-sm mar--b-md navbar-secondary"
         :type="draft ? 'is-warning': 'is-info'"
-        v-if="draft"
       >
         <template slot="brand">
           <div style="display:flex;align-items:center;">
@@ -27,21 +26,29 @@
             :loading="discardLoader"
             @click="confirmDiscardDraft"
           >Discard</b-button>
-          <b-button type="is-primary" :loading="publishLoader">Publish</b-button>
+          <b-button type="is-primary" :loading="publishLoader" @click="openNewReleaseModal">Publish</b-button>
         </template>
       </b-navbar>
     </transition>
+    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+      <new-release :branchId="branchId" />
+    </b-modal>
   </div>
 </template>
 
 <script>
+import NewRelease from "@/components/modals/NewRelease";
+
 export default {
   props: ["draft", "branchId"],
-  components: {},
+  components: {
+    NewRelease
+  },
   data() {
     return {
       discardLoader: false,
-      publishLoader: false
+      publishLoader: false,
+      isNewReleaseModalActive: false
     };
   },
   methods: {
@@ -73,7 +80,9 @@ export default {
           this.discardLoader = false;
         });
     },
-    publish() {}
+    openNewReleaseModal() {
+      this.isNewReleaseModalActive = true;
+    }
   }
 };
 </script>

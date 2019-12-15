@@ -166,8 +166,17 @@ h4 {
   font-size: $fs_body;
 }
 
+.fs-md{
+  font-size: $fs_lead;
+}
 
-
+.cursor {
+  &-{
+    &pointer {
+      cursor: pointer;
+    }
+  }
+}
 .table {
   td, th {
     padding: $space_xs 0;

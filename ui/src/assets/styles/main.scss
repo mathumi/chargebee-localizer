@@ -2,12 +2,23 @@
 @import "./utilities";
 @import "~bulma-timeline";
 
-body {
-  font-size: $fs_body;
+:root, body {
+  font-size: $fs_body !important;
 }
 
 .th-wrap {
   font-size: $fs_lead;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header {
+  height: 60px;
 }
 
 .navbar-dropdown {
@@ -15,6 +26,53 @@ body {
     padding: 1em !important;
   }
 }
+
+.navbar-item { 
+  &:not(.logo) {
+    color: $light;
+  }
+  &:hover {
+    color: $black !important;
+  }
+  &:not(:first-child) {
+    padding-left: 20px;
+  }
+}
+
+.nav-dropdown {
+  .navbar-link{
+    &:after {
+      border-color: $light;
+      border-width: 2px;
+    }
+    &:hover {
+      &:after {
+        border-color: $primary;
+      } 
+    }
+  }
+}
+
+.navbar-menu{
+  margin-left: 50px;
+}
+
+.router-link-active, .router-link-active:hover{
+  color: $light !important;
+}
+.router-link-exact-active, .router-link-exact-active:hover{
+  color: $black !important;
+  background-color: #f8f8fb;
+}
+
+.navbar-brand{
+  .navbar-item {
+    padding-left: 0;
+    background: none !important;
+    color: $black !important;
+  }
+}
+
 
 table {
   a {
@@ -25,14 +83,16 @@ table {
   }
 }
 
+
+
 .navbar {
   padding: 0 150px;
-  box-shadow: 0 1px 0 #d2d2d3;
+  box-shadow: 0 4px 12px 0 rgba(0,0,0,.05)!important;
   z-index: 2 !important;
 }
 
 .wrapper {
-  padding: 0 150px;
+  padding: $space_xxl 230px;
   overflow: auto;
 }
 .collection-detail-body {
@@ -106,5 +166,39 @@ table {
   &:focus,
   .is-focused {
     color: #fff !important;
+  }
+}
+
+.panel {
+  box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+  &-{
+    &block, &heading{
+     border: 0 !important;
+    }
+  }
+}
+
+.brach-nav {
+  .panel-heading {
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .tab-content {
+    padding-left:0;
+  }
+}
+.brach-nav{
+  li a {
+    padding: $space_ti $space_sm;
+    font-size: $fs_body;
+  }
+  .panel-block {
+    cursor: auto;
+    &:not(:last-child) {
+      border-bottom: 1px solid #dbdbdb !important;
+    }
+    &:hover {
+      background: none !important;
+    }
   }
 }
