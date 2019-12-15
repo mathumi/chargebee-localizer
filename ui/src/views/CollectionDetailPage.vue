@@ -28,16 +28,11 @@
 
               <b-input
                 class="mar--r-sm collection-detail__input"
+                v-model="searchValue"
                 placeholder="Search Keys"
                 type="text"
               ></b-input>
-              <b-button
-                class="float-right"
-                type="is-primary"
-                outlined
-                icon-left="key-variant"
-                @click="openAddKeyModal"
-              >Add Key</b-button>
+              <add-key />
               <transition name="fade">
                 <div class="card popover" v-if="editName">
                   <div class="card-content">
@@ -70,14 +65,14 @@
           <div class="column">
             <div class="collection-detail__cards">
               <!-- <KeyCard :key="`key_${index}`" class="mar--b-md"/> -->
-              <b-table :data="collectionData">
+              <div v-if="visibleKeys.length === 0">No keys found.</div>
+              <b-table :data="visibleKeys" v-else>
                 <template slot-scope="props">
                   <b-table-column class="col_key">
                     <b>{{ props.row.key }}:</b>
-                    <p class="fs-sm text-light mar--t-ti">
-                      Heading of the API Keys page Heading of the API Keys page
-                      Heading of the API Keys page
-                    </p>
+                    <p
+                      class="fs-sm text-light mar--t-ti"
+                    >{{ props.row.description || 'This is a sample description' }}</p>
                   </b-table-column>
                   <b-table-column class="col_val">
                     <a v-if="!props.row.showEdit" @click="showEdit(props.row)">
@@ -117,9 +112,6 @@
           </div>
         </div>
       </div>
-      <b-modal :active.sync="isNewKeyModalActive" :width="640">
-        <NewKey />
-      </b-modal>
     </template>
   </div>
 </template>
@@ -129,23 +121,30 @@ import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
 import DraftAlert from "@/components/branch/DraftAlert.vue";
+import AddKey from "@/components/collection/AddKey.vue";
 import { keyService } from "@/service";
 
 export default {
   name: "CollectionDetailPage",
   components: {
-    NewKey,
-    DraftAlert
+    DraftAlert,
+    AddKey
   },
   data() {
     return {
       selectedLocale: "en",
+      searchValue: "",
+      keys: [],
       collectionInput: "",
-      editName: false,
-      isNewKeyModalActive: false
+      editName: false
     };
   },
   computed: {
+    visibleKeys() {
+      return this.searchValue
+        ? this.keys.filter(key => key.value.includes(this.searchValue))
+        : this.keys;
+    },
     locales() {
       return this.$store.state.locales;
     },
@@ -204,8 +203,15 @@ export default {
     closeUpdate: function(key) {
       key.showEdit = false;
     },
-    openAddKeyModal() {
-      this.isNewKeyModalActive = true;
+    async fetchKeys() {
+      const version =
+        this.branchData.draft_version || this.branchData.published_version;
+      this.keys = await keyService.getKeys(
+        this.branchData.id,
+        version,
+        this.collectionData.id,
+        this.selectedLocale
+      );
     }
   },
   watch: {
@@ -213,7 +219,7 @@ export default {
       immediate: true,
       handler(newValue) {
         if (newValue) {
-          
+          this.fetchKeys();
         }
       }
     }
