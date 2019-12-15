@@ -1,4 +1,4 @@
-import { KeysApiBase } from '@/service/api';
+import { KeysApiBase } from '@/services/api';
 
 class KeyService extends KeysApiBase { }
 

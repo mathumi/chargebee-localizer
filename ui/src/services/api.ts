@@ -295,13 +295,13 @@ export interface PublishBranchInput {
    * @type {string}
    * @memberof PublishBranchInput
    */
-  'releaseName'?: string;
+  'name'?: string;
   /**
    * 
    * @type {string}
    * @memberof PublishBranchInput
    */
-  'releaseDesc'?: string;
+  'description'?: string;
 }
 
 /**
@@ -390,17 +390,17 @@ const BranchApiFetchParamCreator = function () {
     },
     /**
       * 
-      * @summary to create a draft version for the published branch
+      * @summary to discard a branch changes
       * @param {number} branchId 
       * @param {*} [options] Override http request option.
       * @throws {RequiredError}
       */
-    createDraft(branchId: number, options: any = {}): FetchArgs {
+    discardDraft(branchId: number, options: any = {}): FetchArgs {
       // verify required parameter 'branchId' is not null or undefined
       if (branchId === null || branchId === undefined) {
-        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling createDraft.');
+        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling discardDraft.');
       }
-      const localVarPath = `/branches/{branchId}/draft`
+      const localVarPath = `/branches/{branchId}/discard_draft`
         .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)));
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
@@ -414,17 +414,17 @@ const BranchApiFetchParamCreator = function () {
     },
     /**
       * 
-      * @summary to discard a branch changes
+      * @summary to enable draft mode for a branch
       * @param {number} branchId 
       * @param {*} [options] Override http request option.
       * @throws {RequiredError}
       */
-    discardDraft(branchId: number, options: any = {}): FetchArgs {
+    enableDraftMode(branchId: number, options: any = {}): FetchArgs {
       // verify required parameter 'branchId' is not null or undefined
       if (branchId === null || branchId === undefined) {
-        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling discardDraft.');
+        throw new RequiredError('branchId', 'Required parameter branchId was null or undefined when calling enableDraftMode.');
       }
-      const localVarPath = `/branches/{branchId}/discard_draft`
+      const localVarPath = `/branches/{branchId}/draft`
         .replace(`{${"branchId"}}`, encodeURIComponent(String(branchId)));
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
@@ -539,18 +539,6 @@ export class BranchApiBase {
   }
   /**
     * 
-    * @summary to create a draft version for the published branch
-    * @param {number} branchId 
-    * @param {*} [options] Override http request option.
-    * @throws {RequiredError}
-    * @memberof BranchApi
-    */
-  public createDraft(branchId: number, options?: any): Promise<Array<Branch>> {
-    const localVarFetchArgs = BranchApiFetchParamCreator().createDraft(branchId, options);
-    return <Promise<Array<Branch>>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
-  }
-  /**
-    * 
     * @summary to discard a branch changes
     * @param {number} branchId 
     * @param {*} [options] Override http request option.
@@ -559,6 +547,18 @@ export class BranchApiBase {
     */
   public discardDraft(branchId: number, options?: any): Promise<{}> {
     const localVarFetchArgs = BranchApiFetchParamCreator().discardDraft(branchId, options);
+    return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
+  /**
+    * 
+    * @summary to enable draft mode for a branch
+    * @param {number} branchId 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof BranchApi
+    */
+  public enableDraftMode(branchId: number, options?: any): Promise<{}> {
+    const localVarFetchArgs = BranchApiFetchParamCreator().enableDraftMode(branchId, options);
     return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
@@ -1077,6 +1077,40 @@ const TextApiFetchParamCreator = function () {
       * @param {*} [options] Override http request option.
       * @throws {RequiredError}
       */
+    getReleaseTexts(locale: string, release?: string, collections?: string, options: any = {}): FetchArgs {
+      // verify required parameter 'locale' is not null or undefined
+      if (locale === null || locale === undefined) {
+        throw new RequiredError('locale', 'Required parameter locale was null or undefined when calling getReleaseTexts.');
+      }
+      const localVarPath = `/releases/texts`;
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      if (locale !== undefined) {
+        localVarQueryParameter['locale'] = locale;
+      }
+      if (release !== undefined) {
+        localVarQueryParameter['release'] = release;
+      }
+      if (collections !== undefined) {
+        localVarQueryParameter['collections'] = collections;
+      }
+
+      let output = {
+        url: localVarPath,
+        headers: Object.assign(localVarHeaderParameter, options),
+        queryParams: localVarQueryParameter,
+      };
+      return output;
+    },
+    /**
+      * 
+      * @summary get all texts
+      * @param {string} locale 
+      * @param {string} [release] 
+      * @param {string} [collections] 
+      * @param {*} [options] Override http request option.
+      * @throws {RequiredError}
+      */
     getTexts(locale: string, release?: string, collections?: string, options: any = {}): FetchArgs {
       // verify required parameter 'locale' is not null or undefined
       if (locale === null || locale === undefined) {
@@ -1111,6 +1145,20 @@ const TextApiFetchParamCreator = function () {
  * @class TextApi
  */
 export class TextApiBase {
+  /**
+    * 
+    * @summary get all texts
+    * @param {string} locale 
+    * @param {string} [release] 
+    * @param {string} [collections] 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof TextApi
+    */
+  public getReleaseTexts(locale: string, release?: string, collections?: string, options?: any): Promise<{ [key: string]: string; }> {
+    const localVarFetchArgs = TextApiFetchParamCreator().getReleaseTexts(locale, release, collections, options);
+    return <Promise<{ [key: string]: string; }>>CBClient.perform("GET", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
+  }
   /**
     * 
     * @summary get all texts

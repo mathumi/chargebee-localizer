@@ -1,4 +1,4 @@
-import { LocaleApiBase } from '@/service/api';
+import { LocaleApiBase } from '@/services/api';
 
 class LocaleService extends LocaleApiBase { }
 

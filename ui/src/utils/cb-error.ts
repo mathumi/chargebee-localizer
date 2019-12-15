@@ -41,8 +41,8 @@ export default class CbError {
   }
 
   showCbPageError() {
-    if (this.source.errors) {
-      this.message = this.source.errors[0].message;
+    if (this.source.error) {
+      this.message = this.source.error.message;
     } else {
       this.message = this.source.message;
     }

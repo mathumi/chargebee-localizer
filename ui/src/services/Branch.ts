@@ -1,4 +1,4 @@
-import { BranchApiBase } from '@/service/api';
+import { BranchApiBase } from '@/services/api';
 
 class BranchService extends BranchApiBase {
   async getBranchesWithCollections() {
