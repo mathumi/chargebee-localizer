@@ -5,7 +5,10 @@
         <template slot-scope="props">
           <b-table-column label="Collections">
             <!-- <img class="collection__img" src="@/assets/images/folder.png" /> -->
-            <router-link to="/master/collection" class="collection__profile">
+            <router-link
+              :to="`/blob/${branchName}/${props.row.handle}`"
+              class="collection__profile"
+            >
               <b-icon class="collection__img" icon="file-document-box"></b-icon>
               <div class="collection__name">{{ props.row.name }}</div>
             </router-link>
@@ -22,7 +25,7 @@
 
 <script>
 export default {
-  props: ["data"],
+  props: ["data", "branchName"],
   data() {
     return {};
   },

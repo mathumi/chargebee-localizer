@@ -34,7 +34,7 @@ export default {
         type: "is-danger",
         hasIcon: true,
         onConfirm: () => {
-          this.$buefy.toast.open("Branch deleted!");
+          this.$success("Branch deleted!");
         }
       });
     },

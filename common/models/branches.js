@@ -198,6 +198,8 @@ module.exports = function(Branches) {
             handle: collection.attributes.handle,
             name: collection.attributes.name,
             description: collection.attributes.description,
+            created_at: collection.attributes.created_at,
+            updated_at: collection.attributes.updated_at,
             keyCount: 0
           };
         });

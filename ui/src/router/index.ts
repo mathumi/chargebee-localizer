@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import BranchPage from '@/views/BranchPage.vue';
 import BranchesPage from '@/views/BranchesPage.vue';
 import ReleasesPage from '@/views/ReleasesPage.vue';
-import CollectionDetail from '@/views/CollectionDetail.vue';
+import CollectionDetailPage from '@/views/CollectionDetailPage.vue';
 
 Vue.use(VueRouter);
 
@@ -35,9 +35,9 @@ const routes = [
     component: ReleasesPage
   },
   {
-    path: '/:branch/collection/',
     name: 'CollectionDetail',
-    component: CollectionDetail,
+    path: '/blob/:branch/:handle',
+    component: CollectionDetailPage,
     meta: {
       namespace: 'collection-detail'
     }

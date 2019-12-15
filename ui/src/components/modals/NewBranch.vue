@@ -12,7 +12,11 @@
       </b-field>
       <b-field label="Fork From">
         <b-select v-model="fromBranch" icon="source-branch">
-          <option v-for="branch in branches" :value="branch.name" :key="branch.id">{{ branch.name }}</option>
+          <option
+            v-for="branch in (branches ||[])"
+            :value="branch.name"
+            :key="branch.id"
+          >{{ branch.name }}</option>
         </b-select>
       </b-field>
 
@@ -53,6 +57,7 @@ export default {
   },
   methods: {
     createBranch() {
+      this.loading = true;
       const newBranch = {
         name: this.branchId,
         fromBranch: this.selectedBranchData.id,
@@ -65,9 +70,7 @@ export default {
           this.$success("Branch created");
           this.$parent.close();
         })
-        .catch(err => {
-          debugger;
-        })
+        .catch(this.$error)
         .finally(() => {
           this.loading = false;
         });

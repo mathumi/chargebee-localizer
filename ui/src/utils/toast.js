@@ -9,5 +9,14 @@ export default {
         type: "is-success"
       });
     };
+    Vue.prototype.$error = error => {
+      const message =
+        typeof error === "string" ? error : error && error.message;
+      Toast.open({
+        message,
+        position: "is-bottom-left",
+        type: "is-danger"
+      });
+    };
   }
 };

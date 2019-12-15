@@ -108,6 +108,7 @@ import KeyCard from "@/components/branch/KeyCard.vue";
 import { Vue } from "vue-property-decorator";
 import NewKey from "@/components/modals/NewKey.vue";
 export default {
+  name: "CollectionDetailPage",
   components: {
     NewKey
   },
@@ -156,16 +157,6 @@ export default {
       collectionInput: "",
       editName: false,
       isNewKeyModalActive: false,
-      locales: [
-        {
-          name: "en",
-          code: "en"
-        },
-        {
-          name: "fr",
-          code: "fr"
-        }
-      ],
       collectionData: [
         {
           key: "apikey_heading",
@@ -181,6 +172,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    locales() {
+      return this.$store.state.locales;
+    }
   }
 };
 </script>
@@ -252,3 +248,4 @@ export default {
   border-bottom: 1px solid #c8e1ff;
 }
 </style>
+

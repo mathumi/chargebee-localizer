@@ -1,4 +1,4 @@
 export * from './Branch';
-export * from './Collection';
+export * from './Locale';
 export * from './Key';
 export * from './Release';
