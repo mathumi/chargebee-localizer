@@ -63,7 +63,7 @@ module.exports = function (Release) {
           include: {
             relation: 'collections',
             scope: {
-              fields: ['id', 'name', 'description', 'publised_texts_version'],
+              fields: ['id', 'name', 'description', 'published_texts_version'],
               include: {
                 relation: 'text',
                 scope: {

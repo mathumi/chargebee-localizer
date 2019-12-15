@@ -11,6 +11,7 @@
     "dev": "nodemon .",
     "autoupdate": "node server/scripts/autoupdate.js",
     "automigrate": "node server/scripts/automigrate.js",
+    "mockdata": "node server/scripts/mock-data.js",
     "posttest": "npm run lint && npm audit"
   },
   "dependencies": {

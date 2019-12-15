@@ -24,7 +24,7 @@
       "type": "string",
       "required": true
     },
-    "publised_version": {
+    "published_version": {
       "type": "number"
     },
     "draft_version": {
