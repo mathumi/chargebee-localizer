@@ -12,8 +12,11 @@
       </b-field>
       <b-input type="textarea" v-model="collectionName" placeholder="Leave your commnets here."></b-input>
       <div>
-        <new-rule />
-        <b-button type="is-primary">Add rule</b-button>
+        <div>
+          <p>Rules</p>
+          <b-button type="is-primary" @click="addNewRule">Add rule</b-button>
+        </div>
+        <new-rule v-for="(rule,index) in rules" :key="rule.id+index" />
       </div>
       <!-- <b-field label="Release Target">
         <b-select v-model="selectedEnv">
@@ -48,10 +51,21 @@ export default {
     return {
       name: "app.copy.version",
       value: "",
-      rules: []
+      rules: [
+        {
+          id: 1,
+          attribute: "environment",
+          value: "predev",
+          operator: "is"
+        }
+      ]
     };
   },
-  methods: {}
+  methods: {
+    addNewRule() {
+      this.rules.push(this.rules[0])
+    }
+  }
 };
 </script>
 

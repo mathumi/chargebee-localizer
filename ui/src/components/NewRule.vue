@@ -1,22 +1,14 @@
 <template>
   <div class="flex">
     <b-field>
-      <b-select placeholder="Operator">
-        <option
-          v-for="option in data"
-          :value="option.id"
-          :key="option.id"
-        >{{ option.user.first_name }}</option>
+      <b-select placeholder="Attributes" v-model="attribute">
+        <option v-for="attr in attributes" :value="attr.id" :key="attr.id">{{ attr.name }}</option>
       </b-select>
     </b-field>
 
     <b-field>
-      <b-select placeholder="Operand">
-        <option
-          v-for="option in data"
-          :value="option.id"
-          :key="option.id"
-        >{{ option.user.first_name }}</option>
+      <b-select placeholder="Condition" v-model="condition">
+        <option v-for="cond in operators" :value="cond.id" :key="cond.id">{{ cond.name }}</option>
       </b-select>
     </b-field>
 
@@ -32,14 +24,30 @@ export default {
   data() {
     return {
       value: "",
+      condition: "",
+      attribute: "",
       operators: [
-        { name: "Is", id: "is" },
-        { name: "Contains", id: "contains" }
+        {
+          name: "Is",
+          id: "is"
+        },
+        {
+          name: "Contains",
+          id: "contains"
+        }
       ],
-      operands: [
+      attributes: [
         {
           id: "environment",
           name: "Environment"
+        },
+        {
+          id: "ui_version",
+          name: "UI Version"
+        },
+        {
+          id: "domain",
+          name: "Domain"
         }
       ]
     };
