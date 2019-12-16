@@ -87,12 +87,12 @@
           <div>{{ `Created on ${$time(collectionData.created_at)}` }}</div>
         </div>
         <!-- Keys-->
-        <div class="collection-detail__keys mar--t-md">
+        <div class="collection-detail__keys">
           <div class="columns">
             <div class="column">
               <div class="collection-detail__cards">
                 <!-- <KeyCard :key="`key_${index}`" class="mar--b-md"/> -->
-                <div v-if="visibleKeys.length === 0">No keys found.</div>
+                <div class="mar--t-md" v-if="visibleKeys.length === 0">No keys found.</div>
                 <b-table :data="visibleKeys" v-else>
                   <template slot-scope="props">
                     <b-table-column class="col_key">
@@ -363,9 +363,8 @@ export default {
       }
     }
     &block {
-      border-bottom: 1px solid #dbdbdb;
+      border-bottom: 3px solid #dbdbdb;
       padding-bottom: 10px;
-      margin-bottom: 30px;
     }
   }
 }
