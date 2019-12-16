@@ -1,7 +1,6 @@
 <template>
   <div>
     <b-button
-      v-if="isBranchInDraftMode"
       class="float-right"
       type="is-primary"
       outlined
@@ -40,7 +39,7 @@ import { textService } from "@/services";
 
 export default {
   name: "AddKey",
-  props: ["isBranchInDraftMode", "versionId", "collectionId", "branchId"],
+  props: ["versionId", "collectionId", "branchId"],
   components: {},
   data() {
     return {

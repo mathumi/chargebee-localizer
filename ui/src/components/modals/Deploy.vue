@@ -6,29 +6,24 @@
     <section class="modal-card-body">
       <b-field label="Release Target">
         <b-select v-model="selectedEnv">
-          <option v-for="env in environments" value="dev" key="dev">{{
+          <option v-for="env in environments" value="dev" key="dev">
+            {{
             env
-          }}</option>
+            }}
+          </option>
         </b-select>
       </b-field>
 
       <b-field label="Domains">
-        <b-input
-          type="text"
-          :value="domain"
-          placeholder="Domain name"
-        ></b-input>
+        <b-input type="text" :value="domain" placeholder="Domain name"></b-input>
       </b-field>
 
       <b-field label="Comment">
         <b-input type="textarea" v-model="comment" placeholder="Comment"></b-input>
       </b-field>
-
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary" loading @click="createBranch">
-        Deploy
-      </button>
+      <button class="button is-primary">Deploy</button>
     </footer>
   </div>
 </template>
