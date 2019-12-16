@@ -139,15 +139,15 @@ module.exports = function (Branches) {
   }
 
   Branches.createBranch = async function (data) {
-    const { name, description, from_branch } = data;
+    const { name, description, fromBranch } = data;
     if (!name || !description) throw new Error("Missing parameters");
 
     const newDraftVersion = await getNewDraftVersion()
     const newBranch = await Branches
       .create({ name, description, draft_version: newDraftVersion });
 
-    if (from_branch) {
-      await duplicateCollectionsAndText(from_branch, newBranch);
+    if (fromBranch) {
+      await duplicateCollectionsAndText(fromBranch, newBranch);
     }
 
     return newBranch;
@@ -198,7 +198,7 @@ module.exports = function (Branches) {
           collection_id: newCollectionInstance.id
         })
       })
-      await Branches.app.models.BranchText.create(newTextArr);
+      await Branches.app.models.BranchText.create(newTexts);
     }
   };
 
