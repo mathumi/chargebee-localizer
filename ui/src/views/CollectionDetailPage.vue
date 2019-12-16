@@ -81,7 +81,7 @@
           <div>{{ `Created on ${$time(collectionData.created_at)}` }}</div>
         </div>
         <!-- Keys-->
-        <div class="collection-detail__keys">
+        <div class="collection-detail__keys"  :class="{'view-only':!isBranchInDraftMode}">
           <div class="columns">
             <div class="column">
               <div class="collection-detail__cards">
@@ -376,5 +376,11 @@ export default {
 }
 .level {
   border-bottom: 1px solid #dbdbdb;
+}
+.view-only {
+  .col_val{
+    color:#4a4a4a !important;
+    pointer-events: none;
+  }
 }
 </style>
