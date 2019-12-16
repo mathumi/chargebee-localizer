@@ -1,144 +1,158 @@
 <template>
-  <div class="collection-detail">
-    <template v-if="collectionData">
-      <!-- Collection Heading -->
-      <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
-      <div class="collection-detail__block">
-        <div class="level">
-          <b-select v-model="selectedLocale" class="mar--b-st level-left">
-            <option
-              v-for="(locale, index) in locales"
-              :value="locale.code"
-              :key="locale.code"
-            >{{ locale.name }}</option>
-          </b-select>
-          <!-- <p class="fs-sm">
+  <div>
+    <!-- Collection Heading -->
+    <DraftAlert :draft="isBranchInDraftMode" :branchId="branchData.id" />
+    <div class="collection-detail">
+      <template v-if="collectionData">
+        <div class="collection-detail__block">
+          <div class="level pad--b-st">
+            <b-select v-model="selectedLocale" class="level-left">
+              <option
+                v-for="(locale, index) in locales"
+                :value="locale.code"
+                :key="locale.code"
+                >{{ locale.name }}</option
+              >
+            </b-select>
+            <!-- <p class="fs-sm">
             <b>Branch:</b> Master
           </p>-->
-          <div class="level-right" v-if="isBranchInDraftMode">
-            <b-button
-              class="float-right"
-              type="is-primary"
-              icon-left="upload"
-              @click="openUpdateCollectionModal"
-            >Update Collection</b-button>
-          </div>
-        </div>
-        <div class="columns ai-center" v-if="collectionData">
-          <div class="column ai-center">
-            <h3 class="va-mid">Collections -</h3>
-
-            <div class="va-top collection-name flex" style="padding-left:6px;">
-              <div class="flex flex-grow ai-center">
-                <h3>
-                  <a @click="openEdit()" class="popover-trigger">
-                    {{
-                    collectionData.name
-                    }}
-                  </a>
-                </h3>
-                <div class="mar--l-xs">( Total Keys : {{ keys.length }} )</div>
-              </div>
-
-              <b-input
-                class="mar--r-sm collection-detail__input"
-                v-model="searchValue"
-                placeholder="Search Keys"
-                type="text"
-              ></b-input>
-              <add-or-update-key
-                :isBranchInDraftMode="isBranchInDraftMode"
-                :branchId="branchData.id"
-                :versionId="branchData.draft_version"
-                :collectionId="collectionData.id"
-                @reset="fetchKeys"
-              />
-              <transition name="fade">
-                <div class="card popover" v-if="editName">
-                  <div class="card-content">
-                    <b-input
-                      class="mar--b-mi collection-detail__input"
-                      placeholder="Name of your collection"
-                      v-model="collectionInput"
-                      type="text"
-                    ></b-input>
-                    <b-button
-                      @click="updateCollectionName()"
-                      class="button is-twitter mar--r-mi"
-                    >Update</b-button>
-
-                    <b-button @click="cancelUpdate()" class="button" rounded>Cancel</b-button>
-                  </div>
-                </div>
-              </transition>
+            <div class="level-right" v-if="isBranchInDraftMode">
+              <b-button
+                class="float-right"
+                type="is-primary"
+                icon-left="upload"
+                @click="openUpdateCollectionModal"
+                >Update Collection</b-button
+              >
             </div>
           </div>
-        </div>
-        <div class="level">
-          <div class="level-left" v-if="collectionData.description">{{collectionData.description}}</div>
-          <div class="level-right">{{`Created on ${$time(collectionData.created_at)}`}}</div>
-        </div>
-      </div>
-      <!-- Keys-->
-      <div class="collection-detail__keys mar--t-md">
-        <div class="columns">
-          <div class="column">
-            <div class="collection-detail__cards">
-              <!-- <KeyCard :key="`key_${index}`" class="mar--b-md"/> -->
-              <div v-if="visibleKeys.length === 0">No keys found.</div>
-              <b-table :data="visibleKeys" v-else>
-                <template slot-scope="props">
-                  <b-table-column class="col_key">
-                    <b>{{ props.row.key }}:</b>
-                    <p
-                      class="fs-sm text-light mar--t-ti"
-                    >{{ props.row.description || 'This is a sample description' }}</p>
-                  </b-table-column>
-                  <b-table-column class="col_val">
-                    <a v-if="!props.row.showEdit" @click="showEdit(props.row)">
-                      {{
-                      props.row.value
-                      }}
+          <div class="columns ai-center" v-if="collectionData">
+            <div class="column ai-center">
+              <h3 class="va-mid">Collections -</h3>
+              <div
+                class="va-top collection-name flex"
+                style="padding-left:6px;"
+              >
+                <div class="flex flex-grow ai-center">
+                  <h3>
+                    <a @click="openEdit()" class="popover-trigger">
+                      {{ collectionData.name }}
                     </a>
-                    <b-input
-                      v-else
-                      class="mar--b-xs pad-0 collection-detail__input column"
-                      :placeholder="`Enter text for ${props.row.key}`"
-                      v-model="props.row.internalValue"
-                      rows="1"
-                      type="textarea"
-                    ></b-input>
-                    <template v-if="props.row.showEdit">
+                  </h3>
+                </div>
+
+                <b-input
+                  class="mar--r-sm collection-detail__input"
+                  v-model="searchValue"
+                  placeholder="Search Keys"
+                  type="text"
+                ></b-input>
+                <add-or-update-key
+                  :isBranchInDraftMode="isBranchInDraftMode"
+                  :branchId="branchData.id"
+                  :versionId="branchData.draft_version"
+                  :collectionId="collectionData.id"
+                  @reset="fetchKeys"
+                />
+                <transition name="fade">
+                  <div class="card popover" v-if="editName">
+                    <div class="card-content">
+                      <b-input
+                        class="mar--b-xs collection-detail__input"
+                        placeholder="Name of your collection"
+                        v-model="collectionInput"
+                        type="text"
+                      ></b-input>
                       <b-button
-                        @click="updateKey(props.row)"
-                        class="button is-twitter mar--r-mi"
-                        rounded
-                      >Update</b-button>
-                      <b-button @click="cancelUpdateKey(props.row)" class="button" rounded>Cancel</b-button>
-                    </template>
-                  </b-table-column>
-                  <b-table-column
-                    class="text-right cursor-pointer"
-                    @click.native="confirmArchive(props.row.key)"
-                  >
-                    <b-icon
-                      v-if="!props.row.archived"
-                      type="is-danger"
-                      size="is-small"
-                      icon="delete"
-                    ></b-icon>
-                    <span v-else class="text-danger">Archived</span>
-                  </b-table-column>
-                </template>
-              </b-table>
+                        @click="updateCollectionName()"
+                        class="button is-primary mar--r-mi"
+                        >Update</b-button
+                      >
+
+                      <b-button @click="cancelUpdate()" class="button"
+                        >Cancel</b-button
+                      >
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+          </div>
+          <div><b>Branch:</b> Master</div>
+          <div><b>Total Keys:</b> {{ keys.length }}</div>
+          <div v-if="collectionData.description">
+            {{ collectionData.description }}
+          </div>
+          <div>{{ `Created on ${$time(collectionData.created_at)}` }}</div>
+        </div>
+        <!-- Keys-->
+        <div class="collection-detail__keys mar--t-md">
+          <div class="columns">
+            <div class="column">
+              <div class="collection-detail__cards">
+                <!-- <KeyCard :key="`key_${index}`" class="mar--b-md"/> -->
+                <div v-if="visibleKeys.length === 0">No keys found.</div>
+                <b-table :data="visibleKeys" v-else>
+                  <template slot-scope="props">
+                    <b-table-column class="col_key">
+                      <b>{{ props.row.key }}:</b>
+                      <p class="fs-sm text-light mar--t-ti">
+                        {{
+                          props.row.description ||
+                            "This is a sample description"
+                        }}
+                      </p>
+                    </b-table-column>
+                    <b-table-column class="col_val">
+                      <a
+                        v-if="!props.row.showEdit"
+                        @click="showEdit(props.row)"
+                      >
+                        {{ props.row.value }}
+                      </a>
+                      <b-input
+                        v-else
+                        class="mar--b-xs pad-0 collection-detail__input column"
+                        :placeholder="`Enter text for ${props.row.key}`"
+                        v-model="props.row.internalValue"
+                        rows="1"
+                        type="textarea"
+                      ></b-input>
+                      <template v-if="props.row.showEdit">
+                        <b-button
+                          @click="updateKey(props.row)"
+                          class="button is-primary mar--r-mi"
+                          >Update</b-button
+                        >
+                        <b-button
+                          @click="cancelUpdateKey(props.row)"
+                          class="button"
+                          >Cancel</b-button
+                        >
+                      </template>
+                    </b-table-column>
+                    <b-table-column
+                      class="text-right cursor-pointer"
+                      @click.native="confirmArchive(props.row.key)"
+                    >
+                      <b-icon v-if="!props.row.archived" icon="delete"></b-icon>
+                      <span v-else class="text-light">Archived</span>
+                    </b-table-column>
+                  </template>
+                </b-table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </template>
-    <b-modal :active.sync="isUpdateCollectionModalActive" :width="640">
-      <update-collection :collectionData="collectionData" :selectedBranchData="branchData" />
-    </b-modal>
+      </template>
+      <b-modal :active.sync="isUpdateCollectionModalActive" :width="640">
+        <update-collection
+          :collectionData="collectionData"
+          :selectedBranchData="branchData"
+        />
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -200,11 +214,13 @@ export default {
   mounted() {
     this.collectionInput = this.collectionName;
   },
+
   methods: {
     openEdit: function() {
       this.editName = true;
     },
     closeEdit: function() {
+      console.log("gdgd");
       this.editName = false;
     },
     updateCollectionName: function() {
@@ -308,8 +324,12 @@ export default {
 <style lang="scss">
 .popover {
   position: absolute;
-  top: 30px;
+  top: 40px;
   left: 0;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
 }
 .collection-name {
   padding-left: 6px;
@@ -371,5 +391,7 @@ export default {
   background-color: #f1f8ff !important;
   border-bottom: 1px solid #c8e1ff;
 }
+.level {
+  border-bottom: 1px solid #dbdbdb;
+}
 </style>
-

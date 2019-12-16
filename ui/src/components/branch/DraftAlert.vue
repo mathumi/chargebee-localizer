@@ -1,5 +1,4 @@
 <template>
-  <div>
     <transition name="fade" mode="out-in">
       <b-navbar
         class="mar--t-sm mar--b-md navbar-secondary"
@@ -32,13 +31,12 @@
             @click="confirmDiscardDraft"
           >Discard</b-button>
           <b-button type="is-primary" :loading="publishLoader" @click="openNewReleaseModal">Publish</b-button>
+            <b-modal :active.sync="isNewReleaseModalActive" :width="640">
+      <new-release :branchId="branchId" />
+    </b-modal>
         </template>
       </b-navbar>
     </transition>
-    <b-modal :active.sync="isNewReleaseModalActive" :width="640">
-      <new-release :branchId="branchId" />
-    </b-modal>
-  </div>
 </template>
 
 <script>
