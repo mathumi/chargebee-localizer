@@ -4,7 +4,7 @@
       <template slot="brand">
         <div style="display:flex;align-items:center;">
           <p class="fs-st" v-if="draft">You have some unpublished changes which are saved as draft.</p>
-          <p class="fs-st has-text-white flex ai-center" v-else>
+          <p class="fs-st flex ai-center" v-else>
             You are in View-only mode.
             <b-button
               type="is-text"
