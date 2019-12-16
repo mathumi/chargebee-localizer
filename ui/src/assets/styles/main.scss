@@ -2,7 +2,8 @@
 @import "./utilities";
 @import "~bulma-timeline";
 
-:root, body {
+:root,
+body {
   font-size: $fs_body !important;
 }
 
@@ -21,12 +22,13 @@
   height: 60px;
 }
 
-.button.is-danger{
+.button.is-danger {
   background-color: $danger !important;
 }
 
 .modal {
-  .modal-card-head, .modal-card-foot {
+  .modal-card-head,
+  .modal-card-foot {
     background: #fff;
   }
 }
@@ -53,7 +55,7 @@
   }
 }
 
-.navbar-item { 
+.navbar-item {
   &:not(.logo) {
     color: $light;
   }
@@ -66,7 +68,7 @@
 }
 
 .nav-dropdown {
-  .navbar-link{
+  .navbar-link {
     &:after {
       border-color: $light;
       border-width: 2px;
@@ -74,31 +76,32 @@
     &:hover {
       &:after {
         border-color: $primary;
-      } 
+      }
     }
   }
 }
 
-.navbar-menu{
+.navbar-menu {
   margin-left: 50px;
 }
 
-.router-link-active, .router-link-active:hover{
+.router-link-active,
+.router-link-active:hover {
   color: $light !important;
 }
-.router-link-exact-active, .router-link-exact-active:hover{
+.router-link-exact-active,
+.router-link-exact-active:hover {
   color: $black !important;
   background-color: #f8f8fb;
 }
 
-.navbar-brand{
+.navbar-brand {
   .navbar-item {
     padding-left: 0;
     background: none !important;
     color: $black !important;
   }
 }
-
 
 table {
   a {
@@ -109,12 +112,10 @@ table {
   }
 }
 
-
-
 .navbar {
   padding: 0 150px;
-  box-shadow: 0 4px 12px 0 rgba(0,0,0,.05)!important;
-  z-index: 2 !important;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05) !important;
+  // z-index: 2 !important;
 }
 
 .wrapper {
@@ -128,8 +129,8 @@ table {
     box-shadow: none !important;
   }
 }
-.navbar-secondary  {
-  color: $black !important; 
+.navbar-secondary {
+  color: $black !important;
   box-shadow: none !important;
   &.is-warning {
     border: 1px solid #eae6c3;
@@ -209,10 +210,12 @@ table {
 }
 
 .panel {
-  box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
-  &-{
-    &block, &heading{
-     border: 0 !important;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
+  &- {
+    &block,
+    &heading {
+      border: 0 !important;
     }
   }
 }
@@ -223,10 +226,10 @@ table {
     font-size: 16px;
   }
   .tab-content {
-    padding-left:0;
+    padding-left: 0;
   }
 }
-.brach-nav{
+.brach-nav {
   li a {
     padding: $space_ti $space_sm;
     font-size: $fs_body;

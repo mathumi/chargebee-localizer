@@ -72,7 +72,9 @@
           "createCollection": true,
           "updateCollection": true,
           "draft": true,
-          "discardDraft": true
+          "discardDraft": true,
+          "deleteBranch": true,
+          "getLatest": true
         }
       }
     }

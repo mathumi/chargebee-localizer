@@ -24,6 +24,9 @@
       "type": "string",
       "required": true
     },
+    "version": {
+      "type": "number"
+    },
     "created_at": {
       "type": "date",
       "mysql": {
