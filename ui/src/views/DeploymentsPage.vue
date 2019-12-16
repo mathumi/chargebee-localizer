@@ -20,7 +20,9 @@
             v-for="(rule, index) in data.rules"
             class="mar--b-xs deploy-tags"
           >
-            <span class="tag is-light tag-attribute ">{{ rule.attribute }}</span>
+            <span class="tag is-light tag-attribute ">{{
+              rule.attribute
+            }}</span>
             <span class="tag is-light tag-operator">{{ rule.operator }}</span>
             <span class="tag is-light tag-value">{{ rule.value }}</span>
             <span v-if="index !== data.rules.length - 1"><b>AND</b></span>
@@ -29,6 +31,15 @@
         <div class="flex-grow">
           <div><b>Version:</b> {{ data.value }}</div>
           <div><b>Priority:</b> {{ data.priority }}</div>
+        </div>
+        <div class="text-right">
+          <b-button
+            type="is-primary deploy-button"
+            class="mar--l-mi"
+            outlined
+            @click="openDeployModal"
+            >Update Deployment</b-button
+          >
         </div>
       </div>
     </div>
@@ -148,14 +159,14 @@ export default {
     background-color: #f9f6f6 !important;
     font-size: 14px;
     margin-right: 12px;
-    &-{
+    &- {
       &attribute {
         color: #336911 !important;
       }
-       &operator {
+      &operator {
         color: #0c1369 !important;
       }
-       &value {
+      &value {
         color: #3367d6 !important;
       }
     }
