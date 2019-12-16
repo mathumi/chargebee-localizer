@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex ai-center mar--b-xs">
     <b-field>
       <b-select placeholder="Attributes" v-model="detail.attribute">
         <option v-for="attr in attributes" :value="attr.id" :key="attr.id">{{ attr.name }}</option>
@@ -15,7 +15,8 @@
     <b-field>
       <b-input v-model="detail.value" placeholder="Value"></b-input>
     </b-field>
-    <!-- <b-icon class="cursor-pointer" @click.native="$emit('remove')" icon="delete"></b-icon> -->
+    <!-- <b-icon class="cursor-pointer" @click="$emit('remove')" icon="delete"></b-icon> -->
+    <slot name="newRule"></slot>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card deploy-modal">
     <header class="modal-card-head">
       <p class="modal-card-title">Deploy</p>
     </header>
@@ -14,10 +14,9 @@
         <b-input type="number" v-model="priority" placeholder="2" required></b-input>
       </b-field>
       <b-input type="textarea" v-model="comment" placeholder="Leave your comments here."></b-input>
-      <div>
-        <div class="mar--t-sm">
-          <p>Rules</p>
-          <b-button type="is-primary" @click="addRule">Add rule</b-button>
+      <div class="deploy-rules">
+        <div class="mar--t-sm mar--b-sm">
+          <b>Rules</b>
         </div>
         <new-rule
           v-for="(rule,index) in rules"
@@ -25,7 +24,9 @@
           :index="index"
           @remove="removeRule(index)"
           @data="updateRuleData"
-        />
+        >
+          <b-button slot="newRule" class="mar--l-mi"  v-if="index===rules.length-1" type="is-primary" @click="addRule">Add rule</b-button>
+        </new-rule>
       </div>
     </section>
     <footer class="modal-card-foot">
@@ -63,4 +64,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.deploy-rules{
+  .field {
+  &:not(:last-child){
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+}
+}
+</style>
