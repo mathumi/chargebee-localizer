@@ -254,8 +254,8 @@ table {
   }
   &.is-success {
     color: white;
-    background: rgba(0, 192, 136, 1) !important;
-    border: 1px solid rgba(0, 192, 136, 1) !important;
+    background: #128e6a !important;
+    border: 1px solid #128e6a !important;
   }
 }
 
@@ -285,5 +285,14 @@ table {
 .modal:not(.dialog) {
   .modal-card-foot {
         box-shadow: 0px 2px 0px #888, 9px 0px 6px #888;
+  }
+}
+
+
+.field {
+  .label, .control-label {
+    font-weight: normal;
+    color: $light;
+    font-size: $fs_caption;
   }
 }
