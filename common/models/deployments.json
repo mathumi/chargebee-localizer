@@ -18,7 +18,15 @@
       "required": true,
       "mysql": {
         "dataType": "VARCHAR",
-        "dataLength": 50
+        "dataLength": 100
+      }
+    },
+    "key": {
+      "type": "string",
+      "required": true,
+      "mysql": {
+        "dataType": "VARCHAR",
+        "dataLength": 100
       }
     },
     "value": {
@@ -32,7 +40,7 @@
     "enabled": {
       "type": "boolean",
       "required": true,
-      "default": false
+      "default": true
     },
     "raw_condition": {
       "type": "string",

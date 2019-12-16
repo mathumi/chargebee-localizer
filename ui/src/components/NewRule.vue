@@ -7,8 +7,8 @@
     </b-field>
 
     <b-field>
-      <b-select placeholder="Condition" v-model="detail.condition">
-        <option v-for="cond in operators" :value="cond.id" :key="cond.id">{{ cond.name }}</option>
+      <b-select placeholder="Condition" v-model="detail.operator">
+        <option v-for="opr in operators" :value="opr.id" :key="opr.id">{{ opr.name }}</option>
       </b-select>
     </b-field>
 
@@ -28,7 +28,7 @@ export default {
     return {
       detail: {
         value: "",
-        condition: "is",
+        operator: "is",
         attribute: "environment"
       },
       operators: [

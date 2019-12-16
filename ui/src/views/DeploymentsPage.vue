@@ -44,7 +44,7 @@
       </div>
     </div>
     <b-modal :active.sync="isNewDeployModalActive" :width="640">
-      <deploy-modal />
+      <deploy-modal @reset="fetchDeployments" />
     </b-modal>
   </div>
 </template>
@@ -117,20 +117,23 @@ export default {
   methods: {
     openDeployModal() {
       this.isNewDeployModalActive = true;
+    },
+    fetchDeployments() {
+      deploymentService
+        .getDeployments()
+        .then(result => {
+          this.deployments = result.map(deploy => {
+            return {
+              ...deploy,
+              rules: JSON.parse(deploy.raw_condition || [])
+            };
+          });
+        })
+        .catch(this.$error);
     }
   },
   mounted() {
-    deploymentService
-      .getDeployments()
-      .then(result => {
-        this.deployments = result.map(deploy => {
-          return {
-            ...deploy,
-            rules: JSON.parse(deploy.rawCondition || {})
-          };
-        });
-      })
-      .catch(this.$error);
+    this.fetchDeployments();
   }
 };
 </script>
