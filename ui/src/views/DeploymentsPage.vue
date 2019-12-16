@@ -39,11 +39,12 @@
           </div>
         </div>
         <div class="text-right">
+          <!-- <b-icon class="cursor-pointer" icon="delete" @click="deleteDeployment"></b-icon> -->
           <b-button
             type="is-primary deploy-button"
             class="mar--l-mi"
             outlined
-            @click="openDeployModal"
+            @click="updateDeployments"
           >Update Deployment</b-button>
         </div>
       </div>
@@ -85,7 +86,8 @@ export default {
           });
         })
         .catch(this.$error);
-    }
+    },
+    deleteDeployment() {}
   },
   mounted() {
     this.fetchDeployments();
