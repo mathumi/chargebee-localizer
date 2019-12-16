@@ -122,7 +122,8 @@
         "sharedMethods": {
           "createDeployment": true,
           "find": true,
-          "deleteDeployment": true
+          "deleteDeployment": true,
+          "match": true
         }
       }
     }

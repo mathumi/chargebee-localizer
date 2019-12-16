@@ -1,7 +1,7 @@
 "use strict";
 const operators = {
-  is: (a, b) => `(${JSON.stringify(b)}==\`\${${a}\}\`)`,
-  contains: (a, b) => `(${JSON.stringify(b)}.includes(\`\${${a}\}\`))`
+  is: (a, b) => `(${JSON.stringify(b)}==\`\${data.${a}\}\`)`,
+  contains: (a, b) => `(${JSON.stringify(b)}.includes(\`\${data.${a}\}\`))`
 };
 
 module.exports = function(Deployments) {
@@ -22,14 +22,18 @@ module.exports = function(Deployments) {
     http: { path: "/", verb: "post", errorStatus: 400 }
   });
   Deployments.createDeployment = async function(data) {
-    const { id, name, value, priority, rules, comment } = data;
+    const { id, name, key, value, priority, rules, comment } = data;
     let deployment;
-    let evalCondition = rules
-      .map(rule => {
-        const { attribute, value, operator } = rule;
-        return operators[operator](attribute, value);
-      })
-      .join(" && ");
+    let evalCondition;
+
+    evalCondition = rules.length
+      ? rules
+          .map(rule => {
+            const { attribute, value, operator } = rule;
+            return operators[operator](attribute, value);
+          })
+          .join(" && ")
+      : "true";
 
     const rawRules = JSON.stringify(rules);
     if (id) {
@@ -45,6 +49,7 @@ module.exports = function(Deployments) {
     } else {
       deployment = await Deployments.create({
         name,
+        key,
         value,
         priority,
         enabled: true,
@@ -76,6 +81,48 @@ module.exports = function(Deployments) {
 
     await deployment.destroy();
     return { success: true };
+  };
+
+  function match(data, deployment) {
+    try {
+      return eval(deployment.condition);
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  Deployments.remoteMethod("match", {
+    description: "Match deployment rules",
+    accepts: [
+      {
+        arg: "payload",
+        type: "object",
+        required: true,
+        description: "payload",
+        http: { source: "body" }
+      }
+    ],
+    returns: { arg: "value", type: "object", root: true },
+    http: { path: "/match", verb: "post", errorStatus: 400 }
+  });
+  Deployments.match = async function(data) {
+    const key = "app.copy.version";
+    const deployments = await Deployments.find({
+      where: {
+        and: [{ key }, { enabled: true }]
+      },
+      order: "priority DESC"
+    });
+
+    for (let i in deployments) {
+      const deployment = deployments[i];
+      if (match(data, deployment)) {
+        return { value: deployment.value };
+      }
+    }
+
+    throw new Error("No deployment matches found");
   };
 
   Deployments.observe("before save", async function(ctx) {
