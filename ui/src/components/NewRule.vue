@@ -22,11 +22,14 @@
 <script>
 export default {
   name: "NewRule",
+  props: ["index"],
   data() {
     return {
-      value: "",
-      condition: "",
-      attribute: "",
+      detail: {
+        value: "",
+        condition: "is",
+        attribute: "environment"
+      },
       operators: [
         {
           name: "Is",
@@ -52,6 +55,16 @@ export default {
         }
       ]
     };
+  },
+  watch: {
+    detail: {
+      handler(data = {}) {
+        this.$emit("data", {
+          ...data,
+          index: this.index
+        });
+      }
+    }
   }
 };
 </script>

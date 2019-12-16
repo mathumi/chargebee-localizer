@@ -19,7 +19,13 @@
           <p>Rules</p>
           <b-button type="is-primary" @click="addRule">Add rule</b-button>
         </div>
-        <new-rule v-for="(rule,index) in rules" :key="index" @remove="removeRule(index)" />
+        <new-rule
+          v-for="(rule,index) in rules"
+          :key="index"
+          :index="index"
+          @remove="removeRule(index)"
+          @data="updateRuleData"
+        />
       </div>
     </section>
     <footer class="modal-card-foot">
