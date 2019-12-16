@@ -121,7 +121,8 @@
       "remoting": {
         "sharedMethods": {
           "createDeployment": true,
-          "find": true
+          "find": true,
+          "deleteDeployment": true
         }
       }
     }
