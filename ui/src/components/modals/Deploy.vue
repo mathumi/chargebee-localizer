@@ -13,7 +13,6 @@
       <b-field label="Priority">
         <b-input type="number" v-model="priority" placeholder="2" required></b-input>
       </b-field>
-      <b-input type="textarea" v-model="comment" placeholder="Leave your comments here."></b-input>
       <div class="deploy-rules">
         <div class="mar--t-sm mar--b-sm">
           <b>Rules</b>
@@ -34,15 +33,18 @@
           >Add rule</b-button>
         </new-rule>
       </div>
+      <b-input type="textarea" v-model="comment" placeholder="Leave your comments here."></b-input>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-primary">Deploy</button>
+      <button class="button is-primary" @click="createDeployment">Deploy</button>
     </footer>
   </div>
 </template>
 
 <script>
 import NewRule from "@/components/NewRule.vue";
+import { deploymentService } from "@/services";
+
 export default {
   name: "NewDeploy",
   components: { NewRule },
@@ -65,6 +67,19 @@ export default {
     },
     updateRuleData(data) {
       this.rules[data.index] = data;
+    },
+
+    createDeployment() {
+      deploymentService
+        .createDeployment({
+          ...this.$data
+        })
+        .then(result => {
+          this.$success("Successfully deployed");
+          this.$parent.close();
+          this.$emit('reset')
+        })
+        .catch(this.$error);
     }
   }
 };

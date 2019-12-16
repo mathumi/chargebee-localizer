@@ -263,29 +263,27 @@ export interface CreateCollectionInput {
 /**
  * 
  * @export
- * @interface CreateDeploymentInput
- */
-export interface CreateDeploymentInput {
-  /**
-   * 
-   * @type {string}
-   * @memberof CreateDeploymentInput
-   */
-  'value'?: string;
-}
-
-/**
- * 
- * @export
  * @interface Deployment
  */
 export interface Deployment {
+  /**
+   * 
+   * @type {number}
+   * @memberof Deployment
+   */
+  'id'?: number;
   /**
    * 
    * @type {string}
    * @memberof Deployment
    */
   'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
+  'key'?: string;
   /**
    * 
    * @type {string}
@@ -298,12 +296,6 @@ export interface Deployment {
    * @memberof Deployment
    */
   'priority'?: number;
-  /**
-   * 
-   * @type {boolean}
-   * @memberof Deployment
-   */
-  'enabled'?: boolean;
   /**
    * 
    * @type {string}
@@ -328,6 +320,12 @@ export interface Deployment {
    * @memberof Deployment
    */
   'updateAt'?: string;
+  /**
+   * 
+   * @type {any}
+   * @memberof Deployment
+   */
+  'rules'?: any;
 }
 
 /**
@@ -920,18 +918,12 @@ const DeploymentApiFetchParamCreator = function () {
     /**
       * 
       * @summary to deploy a release
-      * @param {number} releaseId 
-      * @param {CreateDeploymentInput} [createDeploymentInput] 
+      * @param {Deployment} [deployment] 
       * @param {*} [options] Override http request option.
       * @throws {RequiredError}
       */
-    createDeployment(releaseId: number, createDeploymentInput?: CreateDeploymentInput, options: any = {}): FetchArgs {
-      // verify required parameter 'releaseId' is not null or undefined
-      if (releaseId === null || releaseId === undefined) {
-        throw new RequiredError('releaseId', 'Required parameter releaseId was null or undefined when calling createDeployment.');
-      }
-      const localVarPath = `/releases/{releaseId}/deploy`
-        .replace(`{${"releaseId"}}`, encodeURIComponent(String(releaseId)));
+    createDeployment(deployment?: Deployment, options: any = {}): FetchArgs {
+      const localVarPath = `/deployments`;
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
       localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -946,7 +938,7 @@ const DeploymentApiFetchParamCreator = function () {
         headers: Object.assign(localVarHeaderParameter, options),
         queryParams: localVarQueryParameter,
       };
-      output['body'] = createDeploymentInput
+      output['body'] = deployment
       return output;
     },
     /**
@@ -979,14 +971,13 @@ export class DeploymentApiBase {
   /**
     * 
     * @summary to deploy a release
-    * @param {number} releaseId 
-    * @param {CreateDeploymentInput} [createDeploymentInput] 
+    * @param {Deployment} [deployment] 
     * @param {*} [options] Override http request option.
     * @throws {RequiredError}
     * @memberof DeploymentApi
     */
-  public createDeployment(releaseId: number, createDeploymentInput?: CreateDeploymentInput, options?: any): Promise<{}> {
-    const localVarFetchArgs = DeploymentApiFetchParamCreator().createDeployment(releaseId, createDeploymentInput, options);
+  public createDeployment(deployment?: Deployment, options?: any): Promise<{}> {
+    const localVarFetchArgs = DeploymentApiFetchParamCreator().createDeployment(deployment, options);
     return <Promise<{}>>CBClient.perform("POST", localVarFetchArgs.url, localVarFetchArgs.queryParams, localVarFetchArgs.headers, localVarFetchArgs.body)
   }
   /**
