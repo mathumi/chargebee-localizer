@@ -4,37 +4,23 @@
       <p class="modal-card-title">Deploy</p>
     </header>
     <section class="modal-card-body">
+      <b-field label="Name">
+        <b-input type="text" v-model="displayName" placeholder="Dev deployment" required></b-input>
+      </b-field>
       <b-field label="Version">
-        <b-input type="text" v-model="collectionName" placeholder="cb-vue-1.0.0" required></b-input>
+        <b-input type="text" v-model="value" placeholder="cb-vue-1.0.0" required></b-input>
       </b-field>
       <b-field label="Priority">
-        <b-input type="text" v-model="collectionName" placeholder="2" required></b-input>
+        <b-input type="text" v-model="priority" placeholder="2" required></b-input>
       </b-field>
-      <b-input type="textarea" v-model="collectionName" placeholder="Leave your commnets here."></b-input>
+      <b-input type="textarea" v-model="comment" placeholder="Leave your comments here."></b-input>
       <div>
-        <div>
+        <div class="mar--t-sm">
           <p>Rules</p>
-          <b-button type="is-primary" @click="addNewRule">Add rule</b-button>
+          <b-button type="is-primary" @click="addRule">Add rule</b-button>
         </div>
-        <new-rule v-for="(rule,index) in rules" :key="rule.id+index" />
+        <new-rule v-for="(rule,index) in rules" :key="index" @remove="removeRule(index)" />
       </div>
-      <!-- <b-field label="Release Target">
-        <b-select v-model="selectedEnv">
-          <option v-for="env in environments" value="dev" key="dev">
-            {{
-            env
-            }}
-          </option>
-        </b-select>
-      </b-field>-->
-
-      <!-- <b-field label="Domains">
-        <b-input type="text" :value="domain" placeholder="Domain name"></b-input>
-      </b-field>
-
-      <b-field label="Comment">
-        <b-input type="textarea" v-model="comment" placeholder="Comment"></b-input>
-      </b-field>-->
     </section>
     <footer class="modal-card-foot">
       <button class="button is-primary">Deploy</button>
@@ -50,10 +36,12 @@ export default {
   data() {
     return {
       name: "app.copy.version",
+      displayName: "",
       value: "",
+      priority: 0,
+      comment: "",
       rules: [
         {
-          id: 1,
           attribute: "environment",
           value: "predev",
           operator: "is"
@@ -62,8 +50,13 @@ export default {
     };
   },
   methods: {
-    addNewRule() {
-      this.rules.push(this.rules[0])
+    addRule() {
+      this.rules.push({
+        ...this.rules[0]
+      });
+    },
+    removeRule(index) {
+      this.rules = this.rules.splice(index, 1);
     }
   }
 };

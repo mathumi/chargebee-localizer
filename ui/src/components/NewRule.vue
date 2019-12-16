@@ -13,8 +13,9 @@
     </b-field>
 
     <b-field>
-      <b-input v-model="name" placeholder="Value"></b-input>
+      <b-input v-model="value" placeholder="Value"></b-input>
     </b-field>
+    <b-icon class="cursor-pointer" @click="$emit('remove')" icon="delete"></b-icon>
   </div>
 </template>
 
