@@ -11,7 +11,7 @@
       >
     </div>
     <div class="deploy-item" v-for="data in deploySchema" :key="data.value">
-      <h3>{{ data.displayName }}</h3>
+      <h3>{{ data.name }}</h3>
       <div>{{ data.comment }}</div>
 
       <div class="flex mar--t-st">
@@ -41,13 +41,15 @@
 <script>
 import DeployModal from "@/components/modals/Deploy.vue";
 
+import { deploymentService } from "@/services";
+
 export default {
   data() {
     return {
       deploySchema: [
         {
-          displayName: "deploy",
-          name: "app.copy.version",
+          name: "deploy",
+          key: "app.copy.version",
           value: "copy-1.0.0",
           priority: 2,
           comment: "hello",
@@ -94,7 +96,8 @@ export default {
           ]
         }
       ],
-      isNewDeployModalActive: false
+      isNewDeployModalActive: false,
+      deployments: []
     };
   },
   components: {
@@ -104,6 +107,19 @@ export default {
     openDeployModal() {
       this.isNewDeployModalActive = true;
     }
+  },
+  mounted() {
+    deploymentService
+      .getDeployments()
+      .then(result => {
+        this.deployments = result.map(deploy => {
+          return {
+            ...deploy,
+            rules: JSON.parse(deploy.rawCondition || {})
+          };
+        });
+      })
+      .catch(this.$error);
   }
 };
 </script>

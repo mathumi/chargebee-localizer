@@ -4,3 +4,4 @@ export * from './Key';
 export * from './Release';
 export * from './Collection';
 export * from './Text';
+export * from './Deploy';

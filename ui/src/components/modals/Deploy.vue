@@ -5,7 +5,7 @@
     </header>
     <section class="modal-card-body">
       <b-field label="Name">
-        <b-input type="text" v-model="displayName" placeholder="Dev deployment" required></b-input>
+        <b-input type="text" v-model="name" placeholder="Dev deployment" required></b-input>
       </b-field>
       <b-field label="Version">
         <b-input type="text" v-model="value" placeholder="cb-vue-1.0.0" required></b-input>
@@ -25,7 +25,13 @@
           @remove="removeRule(index)"
           @data="updateRuleData"
         >
-          <b-button slot="newRule" class="mar--l-mi"  v-if="index===rules.length-1" type="is-primary" @click="addRule">Add rule</b-button>
+          <b-button
+            slot="newRule"
+            class="mar--l-mi"
+            v-if="index===rules.length-1"
+            type="is-primary"
+            @click="addRule"
+          >Add rule</b-button>
         </new-rule>
       </div>
     </section>
@@ -42,12 +48,12 @@ export default {
   components: { NewRule },
   data() {
     return {
-      name: "app.copy.version",
-      displayName: "",
+      key: "app.copy.version",
+      name: "",
       value: "",
       priority: 0,
       comment: "",
-      rules: []
+      rules: [{}]
     };
   },
   methods: {
@@ -55,7 +61,7 @@ export default {
       this.rules.push({});
     },
     removeRule(index) {
-      this.rules.splice(this.rules[data.index], 1);
+      this.rules = this.rules.filter((rule, i) => i !== index);
     },
     updateRuleData(data) {
       this.rules[data.index] = data;
@@ -65,12 +71,12 @@ export default {
 </script>
 
 <style lang="scss">
-.deploy-rules{
+.deploy-rules {
   .field {
-  &:not(:last-child){
-    margin-right: 8px;
-    margin-bottom: 0;
+    &:not(:last-child) {
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
   }
-}
 }
 </style>

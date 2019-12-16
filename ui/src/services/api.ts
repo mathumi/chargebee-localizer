@@ -285,7 +285,49 @@ export interface Deployment {
    * @type {string}
    * @memberof Deployment
    */
+  'name'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
   'value'?: string;
+  /**
+   * 
+   * @type {number}
+   * @memberof Deployment
+   */
+  'priority'?: number;
+  /**
+   * 
+   * @type {boolean}
+   * @memberof Deployment
+   */
+  'enabled'?: boolean;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
+  'rawCondition'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
+  'comment'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
+  'createdAt'?: string;
+  /**
+   * 
+   * @type {string}
+   * @memberof Deployment
+   */
+  'updateAt'?: string;
 }
 
 /**
