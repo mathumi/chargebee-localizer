@@ -54,7 +54,7 @@ export default {
       this.rules.push({});
     },
     removeRule(index) {
-      this.rules.splice(this.rules[data.index], 1);
+      this.rules = this.rules.filter((rule, i) => i !== index);
     },
     updateRuleData(data) {
       this.rules[data.index] = data;

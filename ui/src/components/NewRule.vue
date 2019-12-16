@@ -15,7 +15,7 @@
     <b-field>
       <b-input v-model="detail.value" placeholder="Value"></b-input>
     </b-field>
-    <b-icon class="cursor-pointer" @click="$emit('remove')" icon="delete"></b-icon>
+    <!-- <b-icon class="cursor-pointer" @click.native="$emit('remove')" icon="delete"></b-icon> -->
   </div>
 </template>
 
