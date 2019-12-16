@@ -378,7 +378,7 @@ export default {
   border-bottom: 1px solid #dbdbdb;
 }
 .view-only {
-  .col_val{
+  .col_val a{
     color:#4a4a4a !important;
     pointer-events: none;
   }
