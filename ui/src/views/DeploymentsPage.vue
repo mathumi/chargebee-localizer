@@ -7,26 +7,30 @@
         icon-left="plus"
         class="mar--l-mi"
         @click="openDeployModal"
-      >Create Deployment</b-button>
+        >Create Deployment</b-button
+      >
     </div>
-    <div class="deploy-item" v-for="data in deployments" :key="data.value">
-      <h3>{{data.name}}</h3>
-      <div>
-        <b>Version:</b>
-        {{ data.value }}
-      </div>
-      <div>
-        <b>Priority:</b>
-        {{ data.priority }}
-      </div>
+    <div class="deploy-item" v-for="data in deploySchema" :key="data.value">
+      <h3>{{ data.name }}</h3>
       <div>{{ data.comment }}</div>
-      <b-table :data="data.rules">
-        <template slot-scope="props">
-          <b-table-column label="Attribute">{{ props.row.attribute }}</b-table-column>
-          <b-table-column label="Operator">{{ props.row.operator }}</b-table-column>
-          <b-table-column label="Value">{{ props.row.value}}</b-table-column>
-        </template>
-      </b-table>
+
+      <div class="flex mar--t-st">
+        <div class="flex-grow">
+          <div
+            v-for="(rule, index) in data.rules"
+            class="mar--b-xs deploy-tags"
+          >
+            <span class="tag is-light tag-attribute ">{{ rule.attribute }}</span>
+            <span class="tag is-light tag-operator">{{ rule.operator }}</span>
+            <span class="tag is-light tag-value">{{ rule.value }}</span>
+            <span v-if="index !== data.rules.length - 1"><b>AND</b></span>
+          </div>
+        </div>
+        <div class="flex-grow">
+          <div><b>Version:</b> {{ data.value }}</div>
+          <div><b>Priority:</b> {{ data.priority }}</div>
+        </div>
+      </div>
     </div>
     <b-modal :active.sync="isNewDeployModalActive" :width="640">
       <deploy-modal @reset="fetchDeployments" />
@@ -126,7 +130,7 @@ export default {
 <style lang="scss">
 .deploy-item {
   padding-bottom: 30px;
-  margin-top: 15px;
+  margin-top: 30px;
   padding-left: 0;
   padding-right: 0;
   &:not(:last-child) {
@@ -141,5 +145,23 @@ export default {
 .deploy-button {
   min-width: 110px;
   height: 36px;
+}
+.deploy-tags {
+  .tag {
+    background-color: #f9f6f6 !important;
+    font-size: 14px;
+    margin-right: 12px;
+    &-{
+      &attribute {
+        color: #336911 !important;
+      }
+       &operator {
+        color: #0c1369 !important;
+      }
+       &value {
+        color: #3367d6 !important;
+      }
+    }
+  }
 }
 </style>
