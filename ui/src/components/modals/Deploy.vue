@@ -4,7 +4,17 @@
       <p class="modal-card-title">Deploy</p>
     </header>
     <section class="modal-card-body">
-      hello
+      <b-field label="Version">
+        <b-input type="text" v-model="collectionName" placeholder="cb-vue-1.0.0" required></b-input>
+      </b-field>
+      <b-field label="Priority">
+        <b-input type="text" v-model="collectionName" placeholder="2" required></b-input>
+      </b-field>
+      <b-input type="textarea" v-model="collectionName" placeholder="Leave your commnets here."></b-input>
+      <div>
+        <new-rule />
+        <b-button type="is-primary">Add rule</b-button>
+      </div>
       <!-- <b-field label="Release Target">
         <b-select v-model="selectedEnv">
           <option v-for="env in environments" value="dev" key="dev">
@@ -30,15 +40,15 @@
 </template>
 
 <script>
-// import NewRule from '@/'
+import NewRule from "@/components/NewRule.vue";
 export default {
   name: "NewBranch",
+  components: { NewRule },
   data() {
     return {
-      selectedEnv: "dev",
-      comment: "",
-      domain: "",
-      environments: ["dev", "staging", "prod"]
+      name: "app.copy.version",
+      value: "",
+      rules: []
     };
   },
   methods: {}

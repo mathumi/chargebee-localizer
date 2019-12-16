@@ -23,7 +23,7 @@
     <b-field>
       <b-input v-model="name" placeholder="Value"></b-input>
     </b-field>
-  </div>s
+  </div>
 </template>
 
 <script>
