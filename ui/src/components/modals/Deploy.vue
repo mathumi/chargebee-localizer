@@ -11,7 +11,7 @@
         <b-input type="text" v-model="value" placeholder="cb-vue-1.0.0" required></b-input>
       </b-field>
       <b-field label="Priority">
-        <b-input type="text" v-model="priority" placeholder="2" required></b-input>
+        <b-input type="number" v-model="priority" placeholder="2" required></b-input>
       </b-field>
       <b-input type="textarea" v-model="comment" placeholder="Leave your comments here."></b-input>
       <div class="deploy-rules">
@@ -38,7 +38,7 @@
 <script>
 import NewRule from "@/components/NewRule.vue";
 export default {
-  name: "NewBranch",
+  name: "NewDeploy",
   components: { NewRule },
   data() {
     return {
@@ -47,23 +47,18 @@ export default {
       value: "",
       priority: 0,
       comment: "",
-      rules: [
-        {
-          attribute: "environment",
-          value: "predev",
-          operator: "is"
-        }
-      ]
+      rules: []
     };
   },
   methods: {
     addRule() {
-      this.rules.push({
-        ...this.rules[0]
-      });
+      this.rules.push({});
     },
     removeRule(index) {
-      this.rules = this.rules.splice(index, 1);
+      this.rules.splice(this.rules[data.index], 1);
+    },
+    updateRuleData(data) {
+      this.rules[data.index] = data;
     }
   }
 };
