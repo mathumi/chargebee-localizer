@@ -3,7 +3,7 @@
     <b-navbar class="header">
       <template slot="brand">
         <b-navbar-item class="logo" tag="router-link" :to="{ path: '/' }">
-          <img class="logo__img" src="@/assets/images/logo.png" />Localizer
+          <img class="logo__img" src="@/assets/images/logo.png" />CopyCat
         </b-navbar-item>
       </template>
       <template slot="start">
