@@ -5,7 +5,7 @@
     </header>
     <section class="modal-card-body">
       <b-field label="Name">
-        <b-input type="text" v-model="displayName" placeholder="Dev deployment" required></b-input>
+        <b-input type="text" v-model="name" placeholder="Dev deployment" required></b-input>
       </b-field>
       <b-field label="Version">
         <b-input type="text" v-model="value" placeholder="cb-vue-1.0.0" required></b-input>
@@ -48,8 +48,8 @@ export default {
   components: { NewRule },
   data() {
     return {
-      name: "app.copy.version",
-      displayName: "",
+      key: "app.copy.version",
+      name: "",
       value: "",
       priority: 0,
       comment: "",

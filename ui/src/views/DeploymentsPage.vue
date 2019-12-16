@@ -9,8 +9,8 @@
         @click="openDeployModal"
       >Create Deployment</b-button>
     </div>
-    <div class="deploy-item" v-for="data in deploySchema" :key="data.value">
-      <h3>{{data.displayName}}</h3>
+    <div class="deploy-item" v-for="data in deployments" :key="data.value">
+      <h3>{{data.name}}</h3>
       <div>
         <b>Version:</b>
         {{ data.value }}
@@ -44,8 +44,8 @@ export default {
     return {
       deploySchema: [
         {
-          displayName: "deploy",
-          name: "app.copy.version",
+          name: "deploy",
+          key: "app.copy.version",
           value: "copy-1.0.0",
           priority: 2,
           comment: "hello",
@@ -106,11 +106,16 @@ export default {
   },
   mounted() {
     deploymentService
-    .getDeployments()
-    .then(result => {
-      this.deployments = result;
-    })
-    .catch(this.$error)
+      .getDeployments()
+      .then(result => {
+        this.deployments = result.map(deploy => {
+          return {
+            ...deploy,
+            rules: JSON.parse(deploy.rawCondition || {})
+          };
+        });
+      })
+      .catch(this.$error);
   }
 };
 </script>
