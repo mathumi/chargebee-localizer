@@ -13,7 +13,10 @@ module.exports = function (BranchText) {
     const Branch = BranchText.app.models.Branches
     const Collection = BranchText.app.models.BranchedCollection
 
-    const { key, branchId, collectionId, versionId, locale, value = '', archived = false } = data;
+    const { 
+      key,  branchId,  collectionId,  versionId,  locale, 
+      value = '', archived = false, description = ''
+    } = data;
     if (!(key && branchId && collectionId && versionId && locale))
       throw new Error('Missing parameters')
 
@@ -32,6 +35,7 @@ module.exports = function (BranchText) {
       value,
       archived,
       locale,
+      description,
       collection_id: collection.id,
     })
     return text

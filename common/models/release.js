@@ -1,6 +1,5 @@
 'use strict';
 const async = require('async')
-const serialize = require("loopback-jsonapi-model-serializer");
 
 module.exports = function (Release) {
   Release.disableRemoteMethod("create", true);
@@ -94,48 +93,36 @@ module.exports = function (Release) {
     http: { verb: 'get', path: '/:releaseId/collections', errorStatus: 400 }
   })
 
-  Release.getCollections = function (releaseId, cb) {
+  Release.getCollections = async function (releaseId) {
     const Collection = Release.app.models.ReleaseCollection
-    Release.findById(releaseId)
-      .then(release => {
-        if (!release) throw new Error('Not found')
+    const release = await Release.findById(releaseId)
+    if (!release) throw new Error('Not found')
 
-        return Collection.find({
-          where: { release_id: releaseId },
-          include: {
-            relation: 'text',
-            scope: {
-              fields: ['key']
-            }
-          }
-        })
-      })
-      .then(data => {
-        const rawData = serialize(data, Collection)
-        const collectionMap = {}
-        rawData.data.map(collection => {
-          collectionMap[collection.id] = {
-            id: collection.id,
-            handle: collection.attributes.handle,
-            name: collection.attributes.name,
-            description: collection.attributes.description,
-            created_at: collection.attributes.created_at,
-            keyCount: 0
-          }
-        })
-
-        if (rawData.included) {
-          rawData.included.map(key => {
-            const _collection = collectionMap[key.attributes.collection_id]
-            _collection.keyCount = _collection.keyCount + 1
-          })
+    const filter = {
+      where: { release_id: releaseId },
+      include: {
+        relation: 'text',
+        scope: {
+          fields: ['key', 'locale', 'collection_id']
         }
-
-        const formattedData = Object.values(collectionMap)
-
-        cb(null, formattedData)
+      }
+    }
+    const collections = await Collection.find(filter)
+    const output = []
+    collections.map(collection => {
+      const count = collection.text().length
+      output.push({
+        id: collection.id,
+        version: collection.version,
+        handle: collection.handle,
+        name: collection.name,
+        description: collection.description,
+        created_at: collection.created_at,
+        keyCount: count
       })
-      .catch(err => cb(err))
+    })
+
+    return output
   }
 
   Release.remoteMethod("getTextKeys", {
@@ -165,7 +152,7 @@ module.exports = function (Release) {
     }
   });
 
-  Release.getTextKeys = function (releaseId, collectionId, locale, cb) {
+  Release.getTextKeys = async function (releaseId, collectionId, locale) {
     if (!locale) locale = 'en'
     const filter = {
       include: {
@@ -181,21 +168,26 @@ module.exports = function (Release) {
         }
       }
     };
-    Release.findById(releaseId, filter, function (err, release) {
-      if (err || !release) return cb(err);
-      const rawData = serialize(release, Release)
-      const texts = rawData.included ?
-        rawData.included.filter(obj => obj.type == 'released_texts')
-          .map(text => ({
-            key: text.id,
-            value: text.attributes.value,
-            locale: text.attributes.locale,
-            collection_id: text.attributes.collection_id,
-          })) : []
+    const release = await Release.findById(releaseId, filter)
+    if(!release) throw new Error('Release not found')
 
-      return cb(null, texts);
-    }
-    );
+    const collections = release.collections()
+    const output = []
+
+    collections.map(collection => {
+      const texts = collection.text()
+      texts.map(text => {
+        output.push({
+          key: text.id,
+          value: text.value,
+          locale: text.locale,
+          description: text.description,
+          collection_id: text.collection_id,
+        })
+      })
+    })
+
+    return output;
   };
 
   Release.remoteMethod('getTextByCollections', {

@@ -1,6 +1,5 @@
 var Promise = require("bluebird");
 const app = require("../../server/server");
-const serialize = require("loopback-jsonapi-model-serializer");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
@@ -141,14 +140,11 @@ module.exports = function (Branches) {
 
   Branches.createBranch = async function (data) {
     const { name, description, from_branch } = data;
-    let draft_version;
-
-    if (!name || !description) {
-      throw new Error("Missing parameters");
-    }
+    if (!name || !description) throw new Error("Missing parameters");
 
     const newDraftVersion = await getNewDraftVersion()
-    const newBranch = Branches.create({ name, description, draft_version: newDraftVersion });
+    const newBranch = await Branches
+      .create({ name, description, draft_version: newDraftVersion });
 
     if (from_branch) {
       await duplicateCollectionsAndText(from_branch, newBranch);
@@ -157,11 +153,16 @@ module.exports = function (Branches) {
     return newBranch;
   };
 
-  let duplicateCollectionsAndText = async function (fromBranchId, newBranch) {
+  async function duplicateCollectionsAndText (fromBranchId, newBranch) {
+    let baseBranch = await Branches.findById(fromBranchId);
+    if(!baseBranch.published_version) 
+      throw new Error('Cannot create a new branch from an unpublished branch')
+
     const filter = {
       include: {
         relation: "collections",
         scope: {
+          where : { version: baseBranch.published_version },
           include: {
             relation: "text",
             scope: { where: { archived: false } }
@@ -170,10 +171,10 @@ module.exports = function (Branches) {
       }
     };
 
-    const baseBranch = await Branches.findById(fromBranchId, filter);
-
-    for (let i = 0; i < baseBranch.collections().length; i++) {
-      let collection = baseBranch.collections()[i];
+    baseBranch = await Branches.findById(fromBranchId, filter);
+    const collections = baseBranch.collections()
+    for (let i in collections) {
+      let collection = collections[i];
 
       let newCollection = {
         version: newBranch.draft_version,
@@ -183,24 +184,22 @@ module.exports = function (Branches) {
         branch_id: newBranch.id
       };
 
-      await Branches.app.models.branched_collection
+      const newCollectionInstance = await Branches.app.models.BranchedCollection
         .create(newCollection)
-        .then(data => {
-          let newTextArr = [];
-          for (let i = 0; i < collection.text().length; i++) {
-            let text = collection.text()[i];
-            newTextArr.push({
-              key: text.key,
-              value: text.value,
-              locale: text.locale,
-              collection_id: data.id
-            });
-          }
-          return Branches.app.models.branch_text.create(newTextArr);
-        });
-    }
 
-    return Promise.resolve(true);
+      const newTexts = []
+      const texts = collection.text()
+      texts.map(text => {
+        newTexts.push({
+          key: text.key,
+          value: text.value,
+          locale: text.locale,
+          description: text.description,
+          collection_id: newCollectionInstance.id
+        })
+      })
+      await Branches.app.models.BranchText.create(newTextArr);
+    }
   };
 
   Branches.listBranches = function (callback) {
@@ -273,40 +272,13 @@ module.exports = function (Branches) {
           key: text.key,
           value: text.value,
           locale: text.locale,
+          description: text.description,
           collection_id: text.collection_id,
         })
       })
     })
     return output;
   };
-
-  function getCollectionsJSON(branchData) {
-    const result = branchData.included
-      ? branchData.included
-        .filter(obj => obj.type == "collections")
-        .map(collection => ({
-          id: collection.id,
-          name: collection.attributes.name,
-          handle: collection.attributes.handle,
-          description: collection.attributes.description
-        }))
-      : [];
-    return result;
-  }
-
-  function getTextsJSON(branchData) {
-    const result = branchData.included
-      ? branchData.included
-        .filter(obj => obj.type == "text")
-        .map(text => ({
-          key: text.id,
-          value: text.attributes.value,
-          locale: text.attributes.locale,
-          collection_id: text.attributes.collection_id
-        }))
-      : [];
-    return result;
-  }
 
   Branches.publish = async function (branchId, releaseData) {
     await app.dataSources.mysqldb.transaction(async models => {
@@ -345,30 +317,29 @@ module.exports = function (Branches) {
         description: releaseData.description
       });
 
-      const collections = getCollectionsJSON(serialize(branch, Branches));
-      const texts = getTextsJSON(serialize(branch, Branches));
+      const collections = branch.collections()
+      for(i in collections) {
+        const collection = collections[i]
+        const texts = collection.text()
 
-      for (let i = 0; i < collections.length; i++) {
-        const collectionObj = collections[i];
         // Create each collection under release
         const releaseCollection = await ReleaseCollection.create({
-          name: collectionObj.name,
-          handle: collectionObj.handle,
-          description: collectionObj.description,
+          name: collection.name,
+          handle: collection.handle,
+          description: collection.description,
           release_id: release.id
         });
 
-        const filteredText = texts
-          .filter(text => text.collection_id == collectionObj.id)
-          .map(text => ({
-            key: text.key,
-            value: text.value,
-            locale: text.locale,
-            collection_id: releaseCollection.id
-          }));
+        const newTexts = texts.map(text => ({
+          key: text.key,
+          value: text.value,
+          locale: text.locale,
+          collection_id: releaseCollection.id,
+          description: text.description,
+        }))
 
         // Create text under each collection
-        await ReleasedText.create(filteredText);
+        await ReleasedText.create(newTexts);
       }
 
       return release;
@@ -435,6 +406,7 @@ module.exports = function (Branches) {
           key,
           value: textData[key],
           locale,
+          description: '',
           collection_id: collection.id
         });
       });
@@ -495,6 +467,7 @@ module.exports = function (Branches) {
         key: text.key,
         value: text.value,
         locale: text.locale,
+        description: text.description,
         archived: false,
         collection_id: newCollection.id
       }))
@@ -544,6 +517,10 @@ module.exports = function (Branches) {
       await collection.updateAttribute('description', data.description)
     }
 
+    if(data.name) {
+      await collection.updateAttribute('name', data.name) 
+    }
+
     if (data.fileContents) {
       const localesInFile = Object.keys(data.fileContents).filter(locale => isValidLocale(locale))
       const allText = await Text.find({
@@ -585,6 +562,7 @@ module.exports = function (Branches) {
               key,
               value: textMap[key],
               locale,
+              description: '',
               archived: false,
               collection_id: collection.id
             })

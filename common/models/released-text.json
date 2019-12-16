@@ -20,6 +20,9 @@
       "type": "string",
       "required": true
     },
+    "description": {
+      "type": "string"
+    },
     "collection_id": {
       "type": "number",
       "id": 1
