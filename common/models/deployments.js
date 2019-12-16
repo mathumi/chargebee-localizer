@@ -22,7 +22,7 @@ module.exports = function(Deployments) {
     http: {path: '/', verb: 'patch', errorStatus: 400},
   });
   Deployments.createDeployment = async function(data) {
-    const { id, name, value, priority, rules, comment } = data;
+    const { id, name, key, value, priority, rules, comment } = data;
     let deployment;
     let evalCondition 
 
@@ -46,6 +46,7 @@ module.exports = function(Deployments) {
     } else {
       deployment = await Deployments.create({
         name,
+        key,
         value,
         priority,
         enabled: true,
@@ -97,10 +98,10 @@ module.exports = function(Deployments) {
     http: {path: '/match', verb: 'post', errorStatus: 400},
   });
   Deployments.match = async function(data) {
-    const name = 'app.copy.version'
+    const key = 'app.copy.version'
     const deployments = await Deployments.find({
       where: {
-        and: [ {name}, {enabled: true} ]
+        and: [ {key}, {enabled: true} ]
       }, 
       order: 'priority DESC'
     })
