@@ -4,6 +4,7 @@
       <p class="modal-card-title">Deploy</p>
     </header>
     <section class="modal-card-body">
+      hello
       <!-- <b-field label="Release Target">
         <b-select v-model="selectedEnv">
           <option v-for="env in environments" value="dev" key="dev">
