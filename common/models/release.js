@@ -198,7 +198,7 @@ module.exports = function (Release) {
     ],
     description: 'Get all text by release name and collection names',
     returns: { arg: 'localeTextObj', type: 'object', root: true },
-    http: { verb: 'get', path: '/:releaseId', errorStatus: 400 }
+    http: { verb: 'get', path: '/:releaseName', errorStatus: 400 }
   })
 
   Release.getTextByCollections = async function (releaseName, collectionsStr, locale) {
