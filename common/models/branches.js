@@ -157,6 +157,8 @@ module.exports = function (Branches) {
     let baseBranch = await Branches.findById(fromBranchId);
     if(!baseBranch.published_version) 
       throw new Error('Cannot create a new branch from an unpublished branch')
+    if(baseBranch.archived) 
+      throw new Error('Source Branch deleted')
 
     const filter = {
       include: {
@@ -202,16 +204,15 @@ module.exports = function (Branches) {
     }
   };
 
-  Branches.listBranches = function (callback) {
-    Branches.find().then(data => {
-      return callback(null, data);
-    });
+  Branches.listBranches = async function () {
+    return await Branches.find({ where: { archived: false }})
   };
 
   Branches.getCollections = async function (branchId, versionId) {
     const Collection = Branches.app.models.BranchedCollection;
     const branch = await Branches.findById(branchId)
     if (!branch) throw new Error("Not found");
+    if(branch.archived) throw new Error("Branch deleted")
 
     const filter = {
       where: {
@@ -262,6 +263,7 @@ module.exports = function (Branches) {
 
     const branch = await Branches.findById(branchId, filter)
     if (!branch) throw new Error('Branch not found')
+    if(branch.archived) throw new error('Branch deleted')
 
     let output = []
     const collections = branch.collections()
@@ -292,6 +294,7 @@ module.exports = function (Branches) {
       // Fetch all draft collections with texts
       let branch = await Branches.findById(branchId);
       if (!branch.draft_version) throw new Error('Cannot release a publised branch')
+      if(branch.archived) throw new error('Cannot publish deleted branch')
 
       const filter = {
         include: {
@@ -314,7 +317,8 @@ module.exports = function (Branches) {
       // Create a release
       const release = await Release.create({
         name: releaseData.name,
-        description: releaseData.description
+        description: releaseData.description,
+        version: branch.published_version
       });
 
       const collections = branch.collections()
@@ -381,7 +385,7 @@ module.exports = function (Branches) {
 
     const branch = await Branches.findOne({
       where: {
-        and: [{ id: branchId }, { draft_version: versionId }]
+        and: [{ id: branchId }, { draft_version: versionId }, { archived: false }]
       }
     });
 
@@ -445,6 +449,7 @@ module.exports = function (Branches) {
     if (branch.draft_version) {
       throw new Error('Draft already exists')
     }
+    if(branch.archived) throw new error('Cannot draft deleted branch')
 
     const publishedCollections = branch.collections()
       .filter(collection => collection.version == branch.published_version)
@@ -501,7 +506,7 @@ module.exports = function (Branches) {
     let overwrite = false;
 
     const branch = await Branches.findById(branchId)
-    if (!branch) throw new Error('Branch not found')
+    if (!branch || branch.archived) throw new Error('Branch not found')
     if (branch.draft_version !== versionId) throw new Error('Cannot update branch version')
     if (branch.published_version == versionId) throw new Error('Cannot update published branch')
 
@@ -586,6 +591,7 @@ module.exports = function (Branches) {
     const Collection = Branches.app.models.BranchedCollection;
 
     let branch = await Branches.findById(branchId)
+    if(branch.archived) throw new error('Branch not found')
 
     if (!branch.draft_version) throw new Error('No collections or keys to discard')
 
@@ -610,6 +616,69 @@ module.exports = function (Branches) {
     branch = await branch.updateAttribute('draft_version', null)
     return branch
 
+  }
+
+  Branches.remoteMethod("deleteBranch", {
+    accepts: [{ arg: "branchId", type: "number" }],
+    returns: { arg: "success", type: "object", root: true },
+    http: { verb: "delete", path: "/:branchId", errorStatus: 400 }
+  });
+  Branches.deleteBranch = async function(branchId) {
+    const branch = await Branches.findById(branchId)
+    if(!branch || branch.archived) throw new Error('Branch not found')
+    if(branchId == 1) throw new Error('Cannot delete master branch')
+
+    branch.updateAttribute('archived', true);
+    return { success: true }
+  }
+
+  Branches.remoteMethod("getLatest", {
+    accepts: [
+      { arg: "branchName", type: "string"},
+      { arg: 'locale', required: true, type: 'string', http: { source: 'query' } }
+    ],
+    returns: { arg: "success", type: "object", root: true },
+    http: { verb: "get", path: "/:branchName/latest", errorStatus: 400 }
+  });
+  Branches.getLatest = async function(branchName, locale) {
+    let branch = await Branches.findOne({ name: branchName });
+    if(branch.archived) throw new Error('Branch not found')
+
+    let collectionHandles = []
+
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          where: { and: [{ branch_id: branch.id }, { version: branch.published_version }] },
+          include: {
+            relation: 'text',
+            scope: {
+              where: { locale }
+            }
+          }
+        }
+      }
+    }
+
+    if (collectionHandles.length) {
+      filter.include.scope.where.and.push({
+        handle: { inq: collectionHandles }
+      })
+    }
+
+    branch = await Branches.findById(branch.id, filter)
+    const collections = branch.collections()
+    const output = {
+      [locale]: {}
+    }
+    collections.map(collection => {
+      const texts = collection.text()
+      texts.map(text => {
+        output[locale][`${collection.handle}.${text.key}`] = text.value
+      })
+    })
+    return output
   }
 
   Branches.observe("before save", async function (ctx) {

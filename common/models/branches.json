@@ -41,6 +41,10 @@
       "mysql": {
         "default": "now"
       }
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false
     }
   },
   "validations": [],
