@@ -654,7 +654,7 @@ module.exports = function (Branches) {
           include: {
             relation: 'text',
             scope: {
-              where: { locale }
+              where: { and: [ {locale}, { archived: false} ] }
             }
           }
         }
