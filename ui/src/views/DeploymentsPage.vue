@@ -7,30 +7,36 @@
         icon-left="plus"
         class="mar--l-mi"
         @click="openDeployModal"
-        >Create Deployment</b-button
-      >
+      >Create Deployment</b-button>
     </div>
-    <div class="deploy-item" v-for="data in deploySchema" :key="data.value">
+    <div class="deploy-item" v-for="data in deployments" :key="data.value">
       <h3>{{ data.name }}</h3>
       <div>{{ data.comment }}</div>
 
       <div class="flex mar--t-st">
         <div class="flex-grow">
-          <div
-            v-for="(rule, index) in data.rules"
-            class="mar--b-xs deploy-tags"
-          >
-            <span class="tag is-light tag-attribute ">{{
+          <div v-for="(rule, index) in data.rules" class="mar--b-xs deploy-tags">
+            <span class="tag is-light tag-attribute">
+              {{
               rule.attribute
-            }}</span>
+              }}
+            </span>
             <span class="tag is-light tag-operator">{{ rule.operator }}</span>
             <span class="tag is-light tag-value">{{ rule.value }}</span>
-            <span v-if="index !== data.rules.length - 1"><b>AND</b></span>
+            <span v-if="index !== data.rules.length - 1">
+              <b>AND</b>
+            </span>
           </div>
         </div>
         <div class="flex-grow">
-          <div><b>Version:</b> {{ data.value }}</div>
-          <div><b>Priority:</b> {{ data.priority }}</div>
+          <div>
+            <b>Version:</b>
+            {{ data.value }}
+          </div>
+          <div>
+            <b>Priority:</b>
+            {{ data.priority }}
+          </div>
         </div>
         <div class="text-right">
           <b-button
@@ -38,8 +44,7 @@
             class="mar--l-mi"
             outlined
             @click="openDeployModal"
-            >Update Deployment</b-button
-          >
+          >Update Deployment</b-button>
         </div>
       </div>
     </div>
@@ -57,56 +62,6 @@ import { deploymentService } from "@/services";
 export default {
   data() {
     return {
-      deploySchema: [
-        {
-          name: "deploy",
-          key: "app.copy.version",
-          value: "copy-1.0.0",
-          priority: 2,
-          comment: "hello",
-          rules: [
-            {
-              attribute: "environment",
-              value: "predev",
-              operator: "is"
-            },
-            {
-              attribute: "ui_version",
-              value: "cb-vue-1.0.0",
-              operator: "is"
-            },
-            {
-              attribute: "domain",
-              value: "mannar-test,mannar",
-              operator: "contains"
-            }
-          ]
-        },
-        {
-          name: "app.copy.version",
-          value: "copy-2.0.0",
-          priority: 2,
-          comment:
-            "hello hellohellohellohellohello hellohello hellohello hello",
-          rules: [
-            {
-              attribute: "environment",
-              value: "predev",
-              operator: "is"
-            },
-            {
-              attribute: "ui_version",
-              value: "cb-vue-1.0.0",
-              operator: "is"
-            },
-            {
-              attribute: "domain",
-              value: "mannar-test,mannar",
-              operator: "contains"
-            }
-          ]
-        }
-      ],
       isNewDeployModalActive: false,
       deployments: []
     };
