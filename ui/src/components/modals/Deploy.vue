@@ -25,7 +25,13 @@
           @remove="removeRule(index)"
           @data="updateRuleData"
         >
-          <b-button slot="newRule" class="mar--l-mi"  v-if="index===rules.length-1" type="is-primary" @click="addRule">Add rule</b-button>
+          <b-button
+            slot="newRule"
+            class="mar--l-mi"
+            v-if="index===rules.length-1"
+            type="is-primary"
+            @click="addRule"
+          >Add rule</b-button>
         </new-rule>
       </div>
     </section>
@@ -47,7 +53,7 @@ export default {
       value: "",
       priority: 0,
       comment: "",
-      rules: []
+      rules: [{}]
     };
   },
   methods: {
@@ -65,12 +71,12 @@ export default {
 </script>
 
 <style lang="scss">
-.deploy-rules{
+.deploy-rules {
   .field {
-  &:not(:last-child){
-    margin-right: 8px;
-    margin-bottom: 0;
+    &:not(:last-child) {
+      margin-right: 8px;
+      margin-bottom: 0;
+    }
   }
-}
 }
 </style>
