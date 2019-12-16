@@ -317,7 +317,8 @@ module.exports = function (Branches) {
       // Create a release
       const release = await Release.create({
         name: releaseData.name,
-        description: releaseData.description
+        description: releaseData.description,
+        version: branch.published_version
       });
 
       const collections = branch.collections()
