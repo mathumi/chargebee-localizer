@@ -22,12 +22,6 @@
                   <p class="heading">{{ release.name }}</p>
                   <p style="max-width:60%;">{{ release.description }}</p>
                 </div>
-                <b-button
-                  type="is-primary "
-                  class="mar--l-mi"
-                  @click="openDeployModal"
-                  >Deploy</b-button
-                >
               </div>
             </div>
           </div>
@@ -42,14 +36,10 @@
 </template>
 
 <script>
-import DeployModal from '@/components/modals/Deploy.vue';
 
 export default {
   name: "Releases",
   props: ["branches"],
-  components: {
-    DeployModal
-  },
   data() {
     return {
       currentPage: 0,

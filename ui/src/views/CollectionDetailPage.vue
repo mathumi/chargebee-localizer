@@ -122,6 +122,7 @@
                     <b-table-column
                       class="text-right cursor-pointer"
                       @click.native="confirmArchive(props.row.key)"
+                      v-if="isBranchInDraftMode"
                     >
                       <b-icon v-if="!props.row.archived" icon="delete"></b-icon>
                       <span v-else class="text-light">Archived</span>

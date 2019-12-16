@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import BranchPage from '@/views/BranchPage.vue';
 import BranchesPage from '@/views/BranchesPage.vue';
 import ReleasesPage from '@/views/ReleasesPage.vue';
+import DeploymentsPage from '@/views/DeploymentsPage.vue';
 import CollectionDetailPage from '@/views/CollectionDetailPage.vue';
 
 Vue.use(VueRouter);
@@ -33,6 +34,11 @@ const routes = [
     name: 'Releases',
     path: '/releases',
     component: ReleasesPage
+  },
+  {
+    name: 'Deployments',
+    path: '/deployments',
+    component: DeploymentsPage
   },
   {
     name: 'CollectionDetail',
