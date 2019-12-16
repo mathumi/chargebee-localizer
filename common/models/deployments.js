@@ -70,7 +70,7 @@ module.exports = function(Deployments) {
       },
     ],
     returns: {arg: 'deployment', type: 'object', root: true},
-    http: {path: '/:deploymentId', verb: 'delete', errorStatus: 400},
+    http: {path: '/:deploymentId', verb: 'post', errorStatus: 400},
   });
   Deployments.deleteDeployment = async function(deploymentId) {
     const deployment = await Deployments.findById(deploymentId)
