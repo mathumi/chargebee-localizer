@@ -632,6 +632,55 @@ module.exports = function (Branches) {
     return { success: true }
   }
 
+  Branches.remoteMethod("getLatest", {
+    accepts: [
+      { arg: "branchName", type: "string"},
+      { arg: 'locale', required: true, type: 'string', http: { source: 'query' } }
+    ],
+    returns: { arg: "success", type: "object", root: true },
+    http: { verb: "get", path: "/:branchName/latest", errorStatus: 400 }
+  });
+  Branches.getLatest = async function(branchName, locale) {
+    let branch = await Branches.findOne({ name: branchName });
+    if(branch.archived) throw new Error('Branch not found')
+
+    let collectionHandles = []
+
+    const filter = {
+      include: {
+        relation: 'collections',
+        scope: {
+          where: { and: [{ branch_id: branch.id }, { version: branch.published_version }] },
+          include: {
+            relation: 'text',
+            scope: {
+              where: { locale }
+            }
+          }
+        }
+      }
+    }
+
+    if (collectionHandles.length) {
+      filter.include.scope.where.and.push({
+        handle: { inq: collectionHandles }
+      })
+    }
+
+    branch = await Branches.findById(branch.id, filter)
+    const collections = branch.collections()
+    const output = {
+      [locale]: {}
+    }
+    collections.map(collection => {
+      const texts = collection.text()
+      texts.map(text => {
+        output[locale][`${collection.handle}.${text.key}`] = text.value
+      })
+    })
+    return output
+  }
+
   Branches.observe("before save", async function (ctx) {
     const instance = ctx.instance || ctx.currentInstance;
     if (instance) instance.updated_at = new Date();
