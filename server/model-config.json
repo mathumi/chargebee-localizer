@@ -113,5 +113,18 @@
         }
       }
     }
+  },
+  "deployments": {
+    "dataSource": "mysqldb",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "createDeployment": true,
+          "find": true,
+          "deleteDeployment": true
+        }
+      }
+    }
   }
 }

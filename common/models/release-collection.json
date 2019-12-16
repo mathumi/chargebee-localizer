@@ -2,14 +2,14 @@
   "name": "release_collection",
   "base": "PersistedModel",
   "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
   "indexes": {
     "handle_index": {
       "columns": "handle, release_id",
       "kind": "unique"
     }
+  },
+  "options": {
+    "validateUpsert": true
   },
   "properties": {
     "handle": {
@@ -35,7 +35,7 @@
     },
     "release_id": {
       "type": "number",
-      "required":true
+      "required": true
     }
   },
   "validations": [],

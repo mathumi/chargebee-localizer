@@ -3,14 +3,14 @@
   "plural": "collections",
   "base": "PersistedModel",
   "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
   "indexes": {
     "handle_index": {
       "columns": "handle, branch_id, version",
       "kind": "unique"
     }
+  },
+  "options": {
+    "validateUpsert": true
   },
   "properties": {
     "version": {

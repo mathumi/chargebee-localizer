@@ -1,0 +1,67 @@
+{
+  "name": "deployments",
+  "plural": "deployments",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "indexes": {
+    "name_index": {
+      "columns": "name, priority",
+      "kind": "unique"
+    }
+  },
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "mysql": {
+        "dataType": "VARCHAR",
+        "dataLength": 50
+      }
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    },
+    "priority": {
+      "type": "number",
+      "required": true
+    },
+    "enabled": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "raw_condition": {
+      "type": "string",
+      "required": true
+    },
+    "condition": {
+      "type": "string",
+      "required": true,
+      "default": "false"
+    },
+    "comment": {
+      "type": "string",
+      "required": true
+    },
+    "created_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    },
+    "updated_at": {
+      "type": "date",
+      "mysql": {
+        "default": "now"
+      }
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
